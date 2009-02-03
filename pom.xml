@@ -26,13 +26,13 @@
     <module>constretto-core</module>
   </modules>
   <scm>
-    <connection>scm:hg:http://hg.constretto.org/constretto-hackaton</connection>
-    <developerConnection>scm:hg:hg:http://hg.constretto.org/constretto-hackaton</developerConnection>
-    <url>http://hg.constretto.org/constretto-hackaton</url>
+    <connection>scm:svn:http://svn.constretto.org</connection>
+    <developerConnection>scm:svn:http://svn.constretto.org</developerConnection>
+    <url>http://constretto.org/repositories/show/constretto</url>
   </scm>
   <issueManagement>
     <system>redmine</system>
-    <url>http://constretto.org/projects/constretto-hackaton/issues</url>
+    <url>http://constretto.org/projects/constretto/issues</url>
   </issueManagement>
   <developers>
     <developer>
