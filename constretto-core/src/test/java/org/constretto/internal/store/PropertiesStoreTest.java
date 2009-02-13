@@ -15,23 +15,19 @@
  */
 package org.constretto.internal.store;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.constretto.ConfigurationStore;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 /**
- * @author <a href="mailto:kristoffer.moum@arktekk.no">Kristoffer Moum</a>
+ * @author <a href="mailto:thor.aage.eldby@arktekk.no">Thor &Aring;ge Eldby</a>
  */
-public class IniFileConfigurationStoreTest extends AbstractConfigurationStoreTest {
+public class PropertiesStoreTest extends AbstractConfigurationStoreTest {
 
     @Override
     protected ConfigurationStore getStore() {
-        List<Resource> resources = new ArrayList<Resource>();
-        resources.add(new ClassPathResource("/test.ini"));
-        return new IniFileConfigurationStore(resources);
+        Resource props = new ClassPathResource("/test.properties");
+        return new PropertiesStore().addResource(props);
     }
 
 }

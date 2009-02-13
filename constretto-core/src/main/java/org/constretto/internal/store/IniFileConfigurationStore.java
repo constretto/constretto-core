@@ -34,6 +34,7 @@ import java.util.prefs.Preferences;
  * @author <a href="mailto:kristoffer.moum@arktekk.no">Kristoffer Moum</a>
  */
 public class IniFileConfigurationStore extends AbstractConfigurationStore {
+    private static final String DEFAULT_LABEL = "default";
     private List<Resource> resources = new ArrayList<Resource>();
 
     public IniFileConfigurationStore() {}
@@ -60,6 +61,10 @@ public class IniFileConfigurationStore extends AbstractConfigurationStore {
                 for (String key : keysPerNode) {
                     String value = node.get(key, null);
                     properties.put(key, value);
+                }
+                if (label.equals(DEFAULT_LABEL)) {
+                    // Ensure context-less label
+                    label = null;
                 }
                 PropertySet propertySet = new PropertySet(label, properties);
                 propertySets.add(propertySet);

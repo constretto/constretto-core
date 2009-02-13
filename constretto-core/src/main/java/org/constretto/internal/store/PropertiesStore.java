@@ -166,7 +166,10 @@ public class PropertiesStore extends AbstractConfigurationStore {
     private Set<String> getLabels(Map<String, String> properties) {
         Set<String> labels = new HashSet<String>();
         for (String key : properties.keySet()) {
-            labels.add(removePrefixLabel(key));
+    	    String label = getLabel(key);
+            if (label != null) {
+                labels.add(label);
+            }
         }
         return labels;
     }
@@ -175,13 +178,13 @@ public class PropertiesStore extends AbstractConfigurationStore {
      * Remove the actual label from the passed key. I.e. a key is flagged as a label by the following
      * entry: @label.key=value. This method removes the label information, i.e. "@label.".
      * @param key full, labelled key
-     * @return the trimmed key, i.e. non-labelled. For passed keys that are non-labelled, the input argument is returned
+     * @return the trimmed key, i.e. non-labelled. For passed keys that are non-labelled, null is returned
      */
-    private String removePrefixLabel(String key) {
+    private String getLabel(String key) {
         if (isLabel(key)) {
             return StringUtils.substringBetween(key, labelPrefix, PROPERTY_CONTEXT_SEPARATOR);
         } else {
-            return key;
+            return null;
         }
     }
 

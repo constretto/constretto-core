@@ -19,8 +19,10 @@ import static junit.framework.Assert.assertEquals;
 
 import java.util.Collection;
 
+import org.constretto.ConfigurationStore;
 import org.constretto.Constretto;
 import org.constretto.ConstrettoConfiguration;
+import org.constretto.annotation.ConfigurationSource;
 import org.constretto.internal.store.helper.DefaultCustomerDataSourceConfigurer;
 import org.constretto.internal.store.helper.DevelopmentCustomerDataSourceConfigurer;
 import org.constretto.internal.store.helper.GenericDataSourceConfigurer;
@@ -33,7 +35,7 @@ import org.junit.Test;
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
-public class ObjectConfigurationStoreTest {
+public class ObjectConfigurationStoreTest extends AbstractConfigurationStoreTest {
 
     private final ObjectConfigurationStore store = new ObjectConfigurationStore();
 
@@ -96,6 +98,49 @@ public class ObjectConfigurationStoreTest {
     public void givenNoLabelAndFromRootThenProviderChoosesGenericValues() {
         ConstrettoConfiguration configuration = new Constretto().addConfigurationStore(store).done().getConfiguration();
         assertEquals("generic-url", configuration.evaluateToString("url"));
+    }
+
+
+	@Override
+	protected ConfigurationStore getStore() {
+		ObjectConfigurationStore ocStore = new ObjectConfigurationStore();
+		ocStore.addObject(new TestConfig("user0"));
+		ocStore.addObject(new ProductionTestConfig("user1"));
+		ocStore.addObject(new SysTestTestConfig("user2"));
+		return ocStore;
+	}
+
+	@ConfigurationSource(basePath = "somedb")
+    public static class TestConfig {
+
+        private String username;
+
+        TestConfig(String username) {
+            this.username = username;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+    }
+
+    @ConfigurationSource(label = "production", basePath = "somedb")
+    public static class ProductionTestConfig extends TestConfig {
+
+        public ProductionTestConfig(String username) {
+            super(username);
+        }
+
+    }
+
+    @ConfigurationSource(label = "systest", basePath = "somedb")
+    public static class SysTestTestConfig extends TestConfig {
+
+        public SysTestTestConfig(String username) {
+            super(username);
+        }
+
     }
 
 }

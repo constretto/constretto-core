@@ -57,12 +57,16 @@ public class ObjectConfigurationStore extends AbstractConfigurationStore {
     }
 
     private PropertySet createPropertySetForObject(Object configurationObject) {
-        String label = "";
+        String label = null;
         String basePath = "";
         Map<String, String> properties = new HashMap<String, String>();
         if (configurationObject.getClass().isAnnotationPresent(ConfigurationSource.class)) {
             ConfigurationSource configurationAnnotation = configurationObject.getClass().getAnnotation(ConfigurationSource.class);
             label = configurationAnnotation.label();
+            if (label.equals("")) {
+                // Ensure context-less label
+                label = null;
+            }
             basePath = configurationAnnotation.basePath();
         }
 

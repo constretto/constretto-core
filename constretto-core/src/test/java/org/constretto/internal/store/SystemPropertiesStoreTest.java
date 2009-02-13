@@ -15,23 +15,27 @@
  */
 package org.constretto.internal.store;
 
-import java.util.ArrayList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.util.List;
 
-import org.constretto.ConfigurationStore;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
+import org.constretto.model.PropertySet;
+import org.junit.Test;
 
 /**
- * @author <a href="mailto:kristoffer.moum@arktekk.no">Kristoffer Moum</a>
+ * @author <a href="mailto:thor.aage.eldby@arktekk.no">Thor &Aring;ge Eldby</a>
  */
-public class IniFileConfigurationStoreTest extends AbstractConfigurationStoreTest {
+public class SystemPropertiesStoreTest {
 
-    @Override
-    protected ConfigurationStore getStore() {
-        List<Resource> resources = new ArrayList<Resource>();
-        resources.add(new ClassPathResource("/test.ini"));
-        return new IniFileConfigurationStore(resources);
+    @Test
+    public void load() {
+        System.setProperty("somedb.username", "user0");
+        SystemPropertiesStore store = new SystemPropertiesStore();
+        List<PropertySet> set = store.load();
+        assertNotNull(set);
+        assertEquals(1, set.size());
+        assertEquals("user0", set.get(0).getProperties().get("somedb.username"));
     }
 
 }
