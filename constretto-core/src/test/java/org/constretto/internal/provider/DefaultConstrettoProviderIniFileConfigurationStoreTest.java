@@ -18,7 +18,7 @@ package org.constretto.internal.provider;
 import org.constretto.Constretto;
 import org.constretto.ConstrettoConfiguration;
 import org.constretto.internal.store.IniFileConfigurationStore;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.io.FileSystemResource;
@@ -34,7 +34,7 @@ public class DefaultConstrettoProviderIniFileConfigurationStoreTest {
     @Before
     public void setUp() {
         Resource iniFileResource = new FileSystemResource("src/test/resources/test.ini");
-        config = new Constretto().addLabel("production").addConfigurationStore(
+        config = new Constretto().addTag("production").addConfigurationStore(
                 new IniFileConfigurationStore().addResource(iniFileResource)).done().getConfiguration();
     }
 

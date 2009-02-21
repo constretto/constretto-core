@@ -15,7 +15,7 @@
  */
 package org.constretto;
 
-import org.constretto.model.PropertySet;
+import org.constretto.model.ConfigurationSet;
 
 /**
  * 
@@ -23,5 +23,5 @@ import org.constretto.model.PropertySet;
  */
 public interface ConfigurationValueFactory<T> {
 
-    T getValue(String key, PropertySet propertySet);
+    T getValue(String key, ConfigurationSet configurationSet);
 }

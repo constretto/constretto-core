@@ -15,19 +15,19 @@
  */
 package org.constretto.internal.provider;
 
-import static java.util.Arrays.asList;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
 import org.constretto.ConfigurationContextResolver;
 import org.constretto.ConfigurationStore;
 import org.constretto.ConstrettoConfiguration;
 import org.constretto.internal.DefaultConstrettoConfiguration;
 import org.constretto.model.ConfigurationElement;
-import org.constretto.model.PropertySet;
+import org.constretto.model.ConfigurationSet;
+
+import java.util.ArrayList;
+import static java.util.Arrays.asList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
 /**
  * 
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
@@ -35,7 +35,7 @@ import org.constretto.model.PropertySet;
 public class ConfigurationProvider {
     private ConstrettoConfiguration configuration;
     private List<ConfigurationStore> configurationStores = new ArrayList<ConfigurationStore>();
-    private List<String> labels = new ArrayList<String>();
+    private List<String> tags = new ArrayList<String>();
 
     public ConfigurationProvider() {}
 
@@ -44,31 +44,32 @@ public class ConfigurationProvider {
     }
 
     public ConfigurationProvider(ConfigurationContextResolver configurationContextResolver) {
-        this.labels = configurationContextResolver.getLabels();
+        this.tags = configurationContextResolver.getTags();
     }
 
-    public ConfigurationProvider(List<String> labels, List<ConfigurationStore> configurationStores) {
+    public ConfigurationProvider(List<String> tags, List<ConfigurationStore> configurationStores) {
         this(configurationStores.toArray(new ConfigurationStore[configurationStores.size()]));
-        this.labels = labels;
+        this.tags = tags;
     }
 
     public ConfigurationProvider(ConfigurationContextResolver resolver, List<ConfigurationStore> configurationStores) {
         this(configurationStores.toArray(new ConfigurationStore[configurationStores.size()]));
-        this.labels.addAll(resolver.getLabels());
+        this.tags.addAll(resolver.getTags());
     }
 
-    public ConfigurationProvider addLabel(String label) {
-        labels.add(label);
+    public ConfigurationProvider addTag(String tag) {
+        tags.add(tag);
         return this;
     }
 
     public ConfigurationProvider setConfigurationContextResolver(ConfigurationContextResolver configurationContextResolver) {
-        this.labels.addAll(configurationContextResolver.getLabels());
+        this.tags.addAll(configurationContextResolver.getTags());
         return this;
     }
 
-    public void addConfigurationStore(ConfigurationStore configurationStore) {
+    public ConfigurationProvider addConfigurationStore(ConfigurationStore configurationStore) {
         configurationStores.add(configurationStore);
+        return this;
     }
 
     public ConstrettoConfiguration getConfiguration() {
@@ -80,10 +81,10 @@ public class ConfigurationProvider {
 
     private ConstrettoConfiguration buildConfiguration() {
         ConfigurationElement rootElement = new ConfigurationElement("constretto-configuration");
-        Collection<PropertySet> propertySets = loadPropertySets();
-        for (PropertySet propertySet : propertySets) {
-            if (allowLabel(propertySet.getLabel())) {
-                Map<String, String> properties = propertySet.getProperties();
+        Collection<ConfigurationSet> configurationSets = loadPropertySets();
+        for (ConfigurationSet configurationSet : configurationSets) {
+            if (allowTag(configurationSet.getTag())) {
+                Map<String, String> properties = configurationSet.getProperties();
                 for (String expression : properties.keySet()) {
                     rootElement.update(expression, properties.get(expression));
                 }
@@ -93,17 +94,17 @@ public class ConfigurationProvider {
         return new DefaultConstrettoConfiguration(rootElement);
     }
 
-    private boolean allowLabel(String currentLabel) {
-        return this.labels.isEmpty() || currentLabel == null || this.labels.contains(currentLabel);
+    private boolean allowTag(String tagToMatch) {
+        return (this.tags.isEmpty() && tagToMatch == null) || this.tags.contains(tagToMatch);
 
     }
 
-    private Collection<PropertySet> loadPropertySets() {
-        List<PropertySet> propertySets = new ArrayList<PropertySet>();
+    private Collection<ConfigurationSet> loadPropertySets() {
+        List<ConfigurationSet> configurationSets = new ArrayList<ConfigurationSet>();
         for (ConfigurationStore configurationStore : configurationStores) {
-            propertySets.addAll(configurationStore.load());
+            configurationSets.addAll(configurationStore.load());
         }
-        return propertySets;
+        return configurationSets;
     }
 
 }

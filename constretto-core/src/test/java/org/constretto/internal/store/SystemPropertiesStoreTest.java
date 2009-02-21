@@ -15,13 +15,12 @@
  */
 package org.constretto.internal.store;
 
+import org.constretto.model.ConfigurationSet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import org.junit.Test;
 
 import java.util.List;
-
-import org.constretto.model.PropertySet;
-import org.junit.Test;
 
 /**
  * @author <a href="mailto:thor.aage.eldby@arktekk.no">Thor &Aring;ge Eldby</a>
@@ -32,7 +31,7 @@ public class SystemPropertiesStoreTest {
     public void load() {
         System.setProperty("somedb.username", "user0");
         SystemPropertiesStore store = new SystemPropertiesStore();
-        List<PropertySet> set = store.load();
+        List<ConfigurationSet> set = store.load();
         assertNotNull(set);
         assertEquals(1, set.size());
         assertEquals("user0", set.get(0).getProperties().get("somedb.username"));

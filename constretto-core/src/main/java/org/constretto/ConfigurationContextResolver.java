@@ -22,6 +22,6 @@ import java.util.List;
  */
 public interface ConfigurationContextResolver {
 
-    List<String> getLabels();
+    List<String> getTags();
 
 }

@@ -15,9 +15,9 @@
  */
 package org.constretto;
 
-import java.util.Collection;
+import org.constretto.model.ConfigurationSet;
 
-import org.constretto.model.PropertySet;
+import java.util.Collection;
 
 /**
  * 
@@ -25,7 +25,7 @@ import org.constretto.model.PropertySet;
  */
 public interface ConfigurationStore {
 
-    Collection<PropertySet> load();
+    Collection<ConfigurationSet> load();
     
     void belongsTo(Constretto constretto);
 

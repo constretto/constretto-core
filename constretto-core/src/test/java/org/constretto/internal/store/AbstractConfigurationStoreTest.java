@@ -15,16 +15,12 @@
  */
 package org.constretto.internal.store;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
+import org.constretto.ConfigurationStore;
+import org.constretto.model.ConfigurationSet;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
 import java.util.Collection;
-
-import org.constretto.ConfigurationStore;
-import org.constretto.model.PropertySet;
-import org.junit.Test;
 
 /**
  * @author <a href="mailto:thor.aage.eldby@arktekk.no">Thor &Aring;ge Eldby</a>
@@ -33,19 +29,20 @@ public abstract class AbstractConfigurationStoreTest {
 
     @Test
     public void load() {
-        Collection<PropertySet> props = getStore().load();
+        ConfigurationStore store = getStore();
+        Collection<ConfigurationSet> props = store.load();
         assertNotNull(props);
-        assertEquals("Unexpected number of labels in ini file", 3, props.size());
-        for (PropertySet prop : props) {
+        assertEquals("Unexpected number of tags loaded for " + store, 3, props.size());
+        for (ConfigurationSet prop : props) {
             String value = prop.getProperties().get("somedb.username");
-            if (prop.getLabel() == null) {
+            if (prop.getTag() == null) {
                 assertEquals("user0", value);
-            } else if (prop.getLabel().equals("production")) {
+            } else if (prop.getTag().equals("production")) {
                 assertEquals("user1", value);
-            } else if (prop.getLabel().equals("systest")) {
+            } else if (prop.getTag().equals("systest")) {
                 assertEquals("user2", value);
             } else {
-                fail("Unexpected label " + prop.getLabel());
+                fail("Unexpected tag " + prop.getTag());
             }
             assertNull(prop.getProperties().get("barekudd"));
         }

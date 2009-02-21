@@ -15,50 +15,44 @@
  */
 package org.constretto.internal.store;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-
 import org.apache.commons.lang.StringUtils;
 import org.constretto.exception.ConstrettoException;
-import org.constretto.model.PropertySet;
+import org.constretto.model.ConfigurationSet;
 import org.springframework.core.io.Resource;
 import org.springframework.util.CollectionUtils;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
+
 /**
- * This is a store for text files implementing key=value pairs. Also, it supports adding a convention of labels to
- * ordinary properties. For labels, we use a specific prefix which can be configured by the user, whose default value is "@".
+ * This is a store for text files implementing key=value pairs. Also, it supports adding a convention of tgsa to
+ * ordinary properties. For tags, we use a specific prefix which can be configured by the user, whose default value is "@".
  *
- * Please see {@link org.constretto.Constretto#addLabel(String)} for more information on the label concept.
+ * Please see {@link org.constretto.Constretto#addTag(String)} for more information on the tag concept.
  *
  * @author <a href="mailto:kristoffer.moum@arktekk.no">Kristoffer Moum</a>
  */
 public class PropertiesStore extends AbstractConfigurationStore {
 
-    private static final String DEFAULT_LABEL_PREFIX = "@";
+    private static final String DEFAULT_TAG_PREFIX = "@";
     private static final String PROPERTY_CONTEXT_SEPARATOR = ".";
 
     private final Map<String, String> properties = new HashMap<String, String>();
 
     /**
-     * Label prefix specifies the contract of which is used in property files to flag that an entry is coupled to a label,
+     * Tag prefix specifies the contract of which is used in property files to flag that an entry is coupled to a tag,
      * i.e.:
      * @production.datasource.username=produser means that the property datasource.username exists in context of the
-     * production label only.
+     * production tag only.
      *
-     * Unless anything else is specified, the default value is used, i.e. ´@´.
+     * Unless anything else is specified, the default value is used, i.e. datasource.username=default value
      *
      */
-    private String labelPrefix;
+    private String tagPrefix;
 
     public PropertiesStore() {
-        this.labelPrefix = DEFAULT_LABEL_PREFIX;
+        this.tagPrefix = DEFAULT_TAG_PREFIX;
     }
 
     public PropertiesStore(Properties... properties) {
@@ -80,12 +74,12 @@ public class PropertiesStore extends AbstractConfigurationStore {
         addResourcesAsProperties(resources);
     }
 
-    public List<PropertySet> load() {
+    public List<ConfigurationSet> load() {
         return getPropertySets();
     }
 
-    public void setLabelPrefix(String labelPrefix) {
-        this.labelPrefix = labelPrefix;
+    public void setTagPrefix(String tagPrefix) {
+        this.tagPrefix = tagPrefix;
     }
 
     private void addPropertiesToMap(Properties... props) {
@@ -97,7 +91,7 @@ public class PropertiesStore extends AbstractConfigurationStore {
     /**
      * Assumes that the passed resources wrap files that conform to {@link java.util.Properties}. The contents of these
      * files are added to the local representation of all application properties to be handled by this store.
-     * @param resources
+     * @param resources Spring resource paths to the property files used to back this store
      */
     private void addResourcesAsProperties(Resource... resources) {
         for (Resource r : resources) {
@@ -113,86 +107,86 @@ public class PropertiesStore extends AbstractConfigurationStore {
     }
 
     /**
-     * Get all property sets that are relevant to this store, i.e. both labelled as well as unlabelled properties. A
-     * single PropertySet is added per label and then finally a single PropertySet containing all non-labelled
+     * Get all property sets that are relevant to this store, i.e. both tagged as well as untagged properties. A
+     * single PropertySet is added per tag and then finally a single PropertySet containing all untaggef
      * properties.
      * @return A list of all property sets, never null.
      */
-    private List<PropertySet> getPropertySets() {
-        List<PropertySet> propertySets = new ArrayList<PropertySet>();
-        Set<String> labels = getLabels(this.properties);
-        for (String label : labels) {
-            propertySets.add(new PropertySet(label, getPropertiesByLabel(label, this.properties)));
+    private List<ConfigurationSet> getPropertySets() {
+        List<ConfigurationSet> configurationSets = new ArrayList<ConfigurationSet>();
+        Set<String> tags = getTags(this.properties);
+        for (String tag : tags) {
+            configurationSets.add(new ConfigurationSet(tag, getPropertiesByTag(tag, this.properties)));
         }
-        Map<String, String> nonLabelledProperties = getNonLabelledProperties(this.properties);
-        if (!nonLabelledProperties.isEmpty()) {
-            propertySets.add(new PropertySet(getNonLabelledProperties(this.properties)));
+        Map<String, String> unTaggedProperties = getUnTaggedProperties(this.properties);
+        if (!unTaggedProperties.isEmpty()) {
+            configurationSets.add(new ConfigurationSet(getUnTaggedProperties(this.properties)));
         }
-        return propertySets;
+        return configurationSets;
     }
 
-    private boolean isLabel(String key) {
-        return key.startsWith(labelPrefix);
+    private boolean isTag(String key) {
+        return key.startsWith(tagPrefix);
     }
 
-    private Map<String, String> getPropertiesByLabel(String nonPrefixedLabel, Map<String, String> allProperties) {
-        String prefixedLabel = prefixLabel(nonPrefixedLabel);
+    private Map<String, String> getPropertiesByTag(String nonPrefixedTag, Map<String, String> allProperties) {
+        String prefixedTag = prefixTag(nonPrefixedTag);
 
-        Map<String, String> labelledProperties = new HashMap<String, String>();
+        Map<String, String> taggedProperties = new HashMap<String, String>();
         for (String key : allProperties.keySet()) {
-            if (key.startsWith(prefixedLabel)) {
-                String strippedKey = stripLabel(key, nonPrefixedLabel);
-                labelledProperties.put(strippedKey, allProperties.get(key));
+            if (key.startsWith(prefixedTag)) {
+                String strippedKey = stripTag(key, nonPrefixedTag);
+                taggedProperties.put(strippedKey, allProperties.get(key));
             }
         }
-        return labelledProperties;
+        return taggedProperties;
     }
 
     /**
-     * Get a map of non-labelled properties, i.e. their keys do not conform to {@link #isLabel(String)}.
+     * Get a map of untagged properties, i.e. their keys do not conform to {@link #isTag(String)}.
      * @param properties a map of the properties of which to run through
-     * @return a map of non-labelled properties, never null
+     * @return a map of untagged properties, never null
      */
-    private Map<String, String> getNonLabelledProperties(Map<String, String> properties) {
-        Map<String, String> nonLabelledProperties = new HashMap<String, String>();
+    private Map<String, String> getUnTaggedProperties(Map<String, String> properties) {
+        Map<String, String> unTagged = new HashMap<String, String>();
         for (String key : properties.keySet()) {
-            if (!isLabel(key)) {
-                nonLabelledProperties.put(key, properties.get(key));
+            if (!isTag(key)) {
+                unTagged.put(key, properties.get(key));
             }
         }
-        return nonLabelledProperties;
+        return unTagged;
     }
 
-    private Set<String> getLabels(Map<String, String> properties) {
-        Set<String> labels = new HashSet<String>();
+    private Set<String> getTags(Map<String, String> properties) {
+        Set<String> tags = new HashSet<String>();
         for (String key : properties.keySet()) {
-    	    String label = getLabel(key);
-            if (label != null) {
-                labels.add(label);
+    	    String tag = getTag(key);
+            if (tag != null) {
+                tags.add(tag);
             }
         }
-        return labels;
+        return tags;
     }
 
     /**
-     * Remove the actual label from the passed key. I.e. a key is flagged as a label by the following
-     * entry: @label.key=value. This method removes the label information, i.e. "@label.".
-     * @param key full, labelled key
-     * @return the trimmed key, i.e. non-labelled. For passed keys that are non-labelled, null is returned
+     * Remove the actual tag from the passed key. I.e. a key is flagged as a tag by the following
+     * entry: @tag.key=value. This method removes the tag information, i.e. "@tag.".
+     * @param key full, tagged key
+     * @return the trimmed key, i.e. untagged. For passed keys that are untagged, null is returned
      */
-    private String getLabel(String key) {
-        if (isLabel(key)) {
-            return StringUtils.substringBetween(key, labelPrefix, PROPERTY_CONTEXT_SEPARATOR);
+    private String getTag(String key) {
+        if (isTag(key)) {
+            return StringUtils.substringBetween(key, tagPrefix, PROPERTY_CONTEXT_SEPARATOR);
         } else {
             return null;
         }
     }
 
-    private String prefixLabel(String label) {
-        return labelPrefix + label;
+    private String prefixTag(String tag) {
+        return tagPrefix + tag;
     }
 
-    private String stripLabel(String key, String label) {
-        return StringUtils.substringAfter(key, labelPrefix + label + PROPERTY_CONTEXT_SEPARATOR);
+    private String stripTag(String key, String tag) {
+        return StringUtils.substringAfter(key, tagPrefix + tag + PROPERTY_CONTEXT_SEPARATOR);
     }
 }

@@ -16,9 +16,6 @@
 package org.constretto.internal.store;
 
 import static junit.framework.Assert.assertEquals;
-
-import java.util.Collection;
-
 import org.constretto.ConfigurationStore;
 import org.constretto.Constretto;
 import org.constretto.ConstrettoConfiguration;
@@ -27,10 +24,11 @@ import org.constretto.internal.store.helper.DefaultCustomerDataSourceConfigurer;
 import org.constretto.internal.store.helper.DevelopmentCustomerDataSourceConfigurer;
 import org.constretto.internal.store.helper.GenericDataSourceConfigurer;
 import org.constretto.internal.store.helper.ProductionCustomerDataSourceConfigurer;
-import org.constretto.model.PropertySet;
+import org.constretto.model.ConfigurationSet;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
+
+import java.util.Collection;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
@@ -57,7 +55,7 @@ public class ObjectConfigurationStoreTest extends AbstractConfigurationStoreTest
      * 2. That placeholders in the config is resolved properly
      * 3. When properties exists in more than one "resource" inside a store, the one listed last overrides any previous values
      * 4. When properties exists in more than one store, the one listed in the last store overrides any previuos values
-     * 5. When a key is labeled, the most spesific one wins. That is the one listed first in the lables list from the resolver
+     * 5. When a key is tagged, the most spesific one wins. That is the one listed first in the tags list from the resolver
      * 6. Circular key/value replacements should raise constretto exception.
      * 7. All native types should have a converter
      * 8. Configuration should be navigated via the at() method
@@ -68,34 +66,33 @@ public class ObjectConfigurationStoreTest extends AbstractConfigurationStoreTest
 
     @Test
     public void loadConfiguration() {
-        Collection<PropertySet> propertySets = store.load();
-        assertEquals(3, propertySets.size());
+        Collection<ConfigurationSet> configurationSets = store.load();
+        assertEquals(3, configurationSets.size());
     }
 
     @Test
-    public void givenLabelDevelopmentThenProviderChoosesDevelopmentValues() {
-        ConstrettoConfiguration configuration = new Constretto().addConfigurationStore(store).done().addLabel("development")
+    public void givenTagDevelopmentThenProviderChoosesDevelopmentValues() {
+        ConstrettoConfiguration configuration = new Constretto().addConfigurationStore(store).done().addTag("development")
                 .getConfiguration().at("datasources.customer");
         assertEquals("development-url", configuration.evaluateToString("url"));
     }
 
     @Test
-    @Ignore
-    public void givenNoLabelThenProviderChoosesDefaultValues() {
+    public void givenNoTagThenProviderChoosesDefaultValues() {
         ConstrettoConfiguration configuration = new Constretto().addConfigurationStore(store).done().getConfiguration().at(
                 "datasources.customer");
         assertEquals("default-url", configuration.evaluateToString("url"));
     }
 
     @Test
-    public void givenLabelProductionThenProviderChoosesProductionValues() {
-        ConstrettoConfiguration configuration = new Constretto().addConfigurationStore(store).done().addLabel("production")
+    public void givenTagProductionThenProviderChoosesProductionValues() {
+        ConstrettoConfiguration configuration = new Constretto().addConfigurationStore(store).done().addTag("production")
                 .getConfiguration().at("datasources.customer");
         assertEquals("production-url", configuration.evaluateToString("url"));
     }
 
     @Test
-    public void givenNoLabelAndFromRootThenProviderChoosesGenericValues() {
+    public void givenNoTagAndFromRootThenProviderChoosesGenericValues() {
         ConstrettoConfiguration configuration = new Constretto().addConfigurationStore(store).done().getConfiguration();
         assertEquals("generic-url", configuration.evaluateToString("url"));
     }
@@ -125,7 +122,7 @@ public class ObjectConfigurationStoreTest extends AbstractConfigurationStoreTest
 
     }
 
-    @ConfigurationSource(label = "production", basePath = "somedb")
+    @ConfigurationSource(tag = "production", basePath = "somedb")
     public static class ProductionTestConfig extends TestConfig {
 
         public ProductionTestConfig(String username) {
@@ -134,7 +131,7 @@ public class ObjectConfigurationStoreTest extends AbstractConfigurationStoreTest
 
     }
 
-    @ConfigurationSource(label = "systest", basePath = "somedb")
+    @ConfigurationSource(tag = "systest", basePath = "somedb")
     public static class SysTestTestConfig extends TestConfig {
 
         public SysTestTestConfig(String username) {

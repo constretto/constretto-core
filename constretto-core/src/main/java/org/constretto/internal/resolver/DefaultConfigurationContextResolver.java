@@ -17,21 +17,21 @@ package org.constretto.internal.resolver;
 
 import org.constretto.ConfigurationContextResolver;
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * 
- * -DAPP_LABELS=a,b,c,d
+ * -DCONSTRETTO_TAGS=a,b,c,d
  * 
  * @author <a href="mailto:kristoffer.moum@arktekk.no">Kristoffer Moum</a>
  */
 public class DefaultConfigurationContextResolver implements ConfigurationContextResolver {
 
-    private static final String APP_LABELS = "APP_LABELS";
+    private static final String TAGS = "CONSTRETTO_TAGS";
 
-    public List<String> getLabels() {
+    public List<String> getTags() {
         return new ArrayList<String>() {
             {
                 addAll(Arrays.asList(getFromSystemPropertyOrSystemEnv().split(",")));
@@ -40,9 +40,9 @@ public class DefaultConfigurationContextResolver implements ConfigurationContext
     }
 
     private String getFromSystemPropertyOrSystemEnv() {
-        String assemblyEnvironment = System.getProperty(APP_LABELS);
+        String assemblyEnvironment = System.getProperty(TAGS);
         if (null == assemblyEnvironment) {
-            assemblyEnvironment = System.getenv(APP_LABELS);
+            assemblyEnvironment = System.getenv(TAGS);
         }
         return assemblyEnvironment;
     }

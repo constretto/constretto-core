@@ -34,11 +34,11 @@ public class AnnotatedPropertiesConfigurationTest {
     @Before
     public void setUp() {
         Resource annotatedProperties = new FileSystemResource("src/test/resources/annotatedTest.properties");
-        config = new Constretto().addLabel("dev").addConfigurationStore(new PropertiesStore()).addResource(annotatedProperties).done().getConfiguration();
+        config = new Constretto().addTag("dev").addConfigurationStore(new PropertiesStore()).addResource(annotatedProperties).done().getConfiguration();
     }
 
     @Test
-    public void getLabelledProperty() {
+    public void getTaggedProperty() {
         Assert.assertEquals("devuser", config.evaluateToString("datasource.username"));
     }
 

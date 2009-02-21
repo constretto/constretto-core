@@ -20,20 +20,22 @@ import static org.apache.commons.lang.builder.ToStringBuilder.reflectionToString
 import java.util.Map;
 
 /**
- * 
+ * ConfigurationSet represents a tagged subset of configuration loaded
+ * by a ConfigurationStore.
+ *
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
-public class PropertySet {
-    private String label;
+public class ConfigurationSet {
+    private String tag;
 
     private final Map<String, String> properties;
 
-    public PropertySet(Map<String, String> properties) {
+    public ConfigurationSet(Map<String, String> properties) {
         this.properties = properties;
     }
 
-    public PropertySet(String label, Map<String, String> properties) {
-        this.label = label;
+    public ConfigurationSet(String tag, Map<String, String> properties) {
+        this.tag = tag;
         this.properties = properties;
     }
 
@@ -41,8 +43,8 @@ public class PropertySet {
         return properties;
     }
 
-    public String getLabel() {
-        return label;
+    public String getTag() {
+        return tag;
     }
 
     @Override

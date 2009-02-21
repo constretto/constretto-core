@@ -16,16 +16,12 @@
 package org.constretto.internal.store;
 
 import org.constretto.exception.ConstrettoException;
-import org.constretto.model.PropertySet;
+import org.constretto.model.ConfigurationSet;
 import org.ini4j.IniFile;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
@@ -34,10 +30,11 @@ import java.util.prefs.Preferences;
  * @author <a href="mailto:kristoffer.moum@arktekk.no">Kristoffer Moum</a>
  */
 public class IniFileConfigurationStore extends AbstractConfigurationStore {
-    private static final String DEFAULT_LABEL = "default";
+    private static final String DEFAULT_TAG = "default";
     private List<Resource> resources = new ArrayList<Resource>();
 
-    public IniFileConfigurationStore() {}
+    public IniFileConfigurationStore() {
+    }
 
     public IniFileConfigurationStore(List<Resource> resources) {
         this.resources = resources;
@@ -48,13 +45,13 @@ public class IniFileConfigurationStore extends AbstractConfigurationStore {
         return this;
     }
 
-    public List<PropertySet> load() {
-        List<PropertySet> propertySets = new ArrayList<PropertySet>();
+    public List<ConfigurationSet> load() {
+        List<ConfigurationSet> configurationSets = new ArrayList<ConfigurationSet>();
         for (Resource r : resources) {
             Preferences prefs = load(r);
-            List<String> labels = getChildren(prefs);
-            for (String label : labels) {
-                Preferences node = prefs.node(label);
+            List<String> tags = getChildren(prefs);
+            for (String tag : tags) {
+                Preferences node = prefs.node(tag);
                 List<String> keysPerNode = getKeys(node);
                 Map<String, String> properties = new HashMap<String, String>();
 
@@ -62,15 +59,14 @@ public class IniFileConfigurationStore extends AbstractConfigurationStore {
                     String value = node.get(key, null);
                     properties.put(key, value);
                 }
-                if (label.equals(DEFAULT_LABEL)) {
-                    // Ensure context-less label
-                    label = null;
+                if (tag.equals(DEFAULT_TAG)) {
+                    tag = null;
                 }
-                PropertySet propertySet = new PropertySet(label, properties);
-                propertySets.add(propertySet);
+                ConfigurationSet configurationSet = new ConfigurationSet(tag, properties);
+                configurationSets.add(configurationSet);
             }
         }
-        return propertySets;
+        return configurationSets;
     }
 
     private List<String> getKeys(Preferences p) {
@@ -99,4 +95,8 @@ public class IniFileConfigurationStore extends AbstractConfigurationStore {
         }
     }
 
+    @Override
+    public String toString() {
+        return "Ini file store " + resources + ".";
+    }
 }

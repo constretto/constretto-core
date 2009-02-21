@@ -15,18 +15,14 @@
  */
 package org.constretto.internal.store;
 
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
 import org.constretto.annotation.ConfigurationSource;
-import org.constretto.model.PropertySet;
+import org.constretto.model.ConfigurationSet;
+
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 
 /**
  * 
@@ -40,32 +36,31 @@ public class ObjectConfigurationStore extends AbstractConfigurationStore {
         return this;
     }
 
-    public Collection<PropertySet> load() {
-        Map<String, PropertySet> propertySets = new HashMap<String, PropertySet>();
+    public Collection<ConfigurationSet> load() {
+        Map<String, ConfigurationSet> propertySets = new HashMap<String, ConfigurationSet>();
         for (Object configurationObject : configurationObjects) {
-            PropertySet propertySet = createPropertySetForObject(configurationObject);
-            if (propertySets.containsKey(propertySet.getLabel())) {
-                PropertySet orginialSet = propertySets.get(propertySet.getLabel());
-                orginialSet.getProperties().putAll(propertySet.getProperties());
-                propertySets.put(propertySet.getLabel(), orginialSet);
+            ConfigurationSet configurationSet = createPropertySetForObject(configurationObject);
+            if (propertySets.containsKey(configurationSet.getTag())) {
+                ConfigurationSet orginialSet = propertySets.get(configurationSet.getTag());
+                orginialSet.getProperties().putAll(configurationSet.getProperties());
+                propertySets.put(configurationSet.getTag(), orginialSet);
             } else {
-                propertySets.put(propertySet.getLabel(), propertySet);
+                propertySets.put(configurationSet.getTag(), configurationSet);
             }
         }
 
         return propertySets.values();
     }
 
-    private PropertySet createPropertySetForObject(Object configurationObject) {
-        String label = null;
+    private ConfigurationSet createPropertySetForObject(Object configurationObject) {
+        String tag = null;
         String basePath = "";
         Map<String, String> properties = new HashMap<String, String>();
         if (configurationObject.getClass().isAnnotationPresent(ConfigurationSource.class)) {
             ConfigurationSource configurationAnnotation = configurationObject.getClass().getAnnotation(ConfigurationSource.class);
-            label = configurationAnnotation.label();
-            if (label.equals("")) {
-                // Ensure context-less label
-                label = null;
+            tag = configurationAnnotation.tag();
+            if (tag.equals("")) {
+                tag = null;
             }
             basePath = configurationAnnotation.basePath();
         }
@@ -92,6 +87,6 @@ public class ObjectConfigurationStore extends AbstractConfigurationStore {
 
         }
 
-        return new PropertySet(label, properties);
+        return new ConfigurationSet(tag, properties);
     }
 }

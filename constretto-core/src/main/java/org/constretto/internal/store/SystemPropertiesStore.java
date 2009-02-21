@@ -15,16 +15,11 @@
  */
 package org.constretto.internal.store;
 
+import org.constretto.model.ConfigurationSet;
+
 import static java.lang.System.getProperties;
 import static java.lang.System.getProperty;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
-import org.constretto.model.PropertySet;
+import java.util.*;
 
 /**
  * 
@@ -32,7 +27,7 @@ import org.constretto.model.PropertySet;
  */
 public class SystemPropertiesStore extends AbstractConfigurationStore {
 
-    public List<PropertySet> load() {
+    public List<ConfigurationSet> load() {
         final Map<String, String> properties = new HashMap<String, String>();
         Properties systemProperties = getProperties();
         for (Object key : systemProperties.keySet()) {
@@ -40,9 +35,9 @@ public class SystemPropertiesStore extends AbstractConfigurationStore {
             properties.put(keyAsString, getProperty(keyAsString));
         }
 
-        return new ArrayList<PropertySet>() {
+        return new ArrayList<ConfigurationSet>() {
             {
-                add(new PropertySet(properties));
+                add(new ConfigurationSet(properties));
             }
         };
     }

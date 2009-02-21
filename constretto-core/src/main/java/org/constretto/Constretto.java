@@ -35,8 +35,8 @@ public class Constretto {
         return configurationProvider.getConfiguration();
     }
 
-    public Constretto addLabel(String label) {
-        configurationProvider.addLabel(label);
+    public Constretto addTag(String tag) {
+        configurationProvider.addTag(tag);
         return this;
     }
 }
