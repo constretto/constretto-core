@@ -30,7 +30,7 @@ public abstract class AbstractConfigurationStoreTest {
     @Test
     public void load() {
         ConfigurationStore store = getStore();
-        Collection<ConfigurationSet> props = store.load();
+        Collection<ConfigurationSet> props = store.parseConfiguration();
         assertNotNull(props);
         assertEquals("Unexpected number of tags loaded for " + store, 3, props.size());
         for (ConfigurationSet prop : props) {

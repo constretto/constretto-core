@@ -13,21 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.constretto.internal.store;
+package org.constretto.internal.converter;
 
-import org.constretto.ConfigurationStore;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
+import org.constretto.exception.ConstrettoConversionException;
 
 /**
- * @author <a href="mailto:thor.aage.eldby@arktekk.no">Thor &Aring;ge Eldby</a>
+ * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
-public class PropertiesStoreTest extends AbstractConfigurationStoreTest {
+public class ShortValueConverter implements ValueConverter<Short> {
 
-    @Override
-    protected ConfigurationStore getStore() {
-        Resource props = new ClassPathResource("test.properties");
-        return new PropertiesStore().addResource(props);
+    public Short fromString(String value) throws ConstrettoConversionException {
+        try {
+            return Short.parseShort(value);
+        } catch (NumberFormatException e) {
+            throw new ConstrettoConversionException(value, Short.class, e);
+        }
     }
 
+    public String toString(Short value) {
+        return value.toString();
+    }
 }

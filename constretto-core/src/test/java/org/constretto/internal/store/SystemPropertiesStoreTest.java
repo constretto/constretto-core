@@ -31,7 +31,7 @@ public class SystemPropertiesStoreTest {
     public void load() {
         System.setProperty("somedb.username", "user0");
         SystemPropertiesStore store = new SystemPropertiesStore();
-        List<ConfigurationSet> set = store.load();
+        List<ConfigurationSet> set = store.parseConfiguration();
         assertNotNull(set);
         assertEquals(1, set.size());
         assertEquals("user0", set.get(0).getProperties().get("somedb.username"));

@@ -15,13 +15,14 @@
  */
 package org.constretto.internal.converter;
 
+import org.constretto.exception.ConstrettoConversionException;
+
 /**
- * 
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class StringValueConverter implements ValueConverter<String> {
 
-    public String fromString(String value) {
+    public String fromString(String value) throws ConstrettoConversionException {
         return value;
     }
 

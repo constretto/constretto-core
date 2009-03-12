@@ -13,24 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.constretto.internal.store;
+package org.constretto.internal.converter;
 
-import org.constretto.ConfigurationStore;
-import org.constretto.Constretto;
+import org.constretto.exception.ConstrettoConversionException;
 
 /**
- * 
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
-public abstract class AbstractConfigurationStore implements ConfigurationStore {
-    private Constretto constretto;
+public class ByteValueConverter implements ValueConverter<Byte> {
 
-    public final void belongsTo(Constretto constretto) {
-        this.constretto = constretto;
+    public Byte fromString(String value) throws ConstrettoConversionException {
+        try {
+            return Byte.parseByte(value);
+        } catch (NumberFormatException e) {
+            throw new ConstrettoConversionException(value, Byte.class, e);
+        }
     }
 
-    public final Constretto done() {
-        return constretto;
+    public String toString(Byte value) {
+        return value.toString();
     }
-
 }

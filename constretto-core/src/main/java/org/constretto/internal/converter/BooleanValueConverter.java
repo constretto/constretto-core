@@ -15,13 +15,24 @@
  */
 package org.constretto.internal.converter;
 
+import org.constretto.exception.ConstrettoConversionException;
+
+import java.util.HashSet;
+import java.util.Set;
+
 /**
- * 
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class BooleanValueConverter implements ValueConverter<Boolean> {
+    private static Set<String> validStrings = new HashSet<String>() {{
+        add("true");
+        add("false");
+    }};
 
-    public Boolean fromString(String value) {
+    public Boolean fromString(String value) throws ConstrettoConversionException {
+        if (!validStrings.contains(value.toLowerCase())) {
+            throw new ConstrettoConversionException(value, Boolean.class, "valid values are \"true\" and \"false\" ignoring case.");
+        }
         return Boolean.valueOf(value);
     }
 

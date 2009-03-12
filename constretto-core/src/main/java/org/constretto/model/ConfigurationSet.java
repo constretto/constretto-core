@@ -27,6 +27,7 @@ import java.util.Map;
  */
 public class ConfigurationSet {
     private String tag;
+    private int priority;
 
     private final Map<String, String> properties;
 
@@ -45,6 +46,14 @@ public class ConfigurationSet {
 
     public String getTag() {
         return tag;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
+    public int getPriority() {
+        return priority;
     }
 
     @Override

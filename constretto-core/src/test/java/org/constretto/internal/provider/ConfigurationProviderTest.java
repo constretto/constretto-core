@@ -15,18 +15,16 @@
  */
 package org.constretto.internal.provider;
 
-import static java.lang.System.setProperty;
 import static junit.framework.Assert.assertEquals;
-
-import org.constretto.Constretto;
+import org.constretto.ConstrettoBuilder;
 import org.constretto.ConstrettoConfiguration;
 import org.constretto.internal.provider.helper.DataSourceConfiguration;
-import org.constretto.internal.store.SystemPropertiesStore;
 import org.junit.Before;
 import org.junit.Test;
 
+import static java.lang.System.setProperty;
+
 /**
- * 
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class ConfigurationProviderTest {
@@ -38,7 +36,7 @@ public class ConfigurationProviderTest {
         setProperty("datasources.customer.username", "username");
         setProperty("datasources.customer.password", "password");
 
-        configuration = new Constretto().addConfigurationStore(new SystemPropertiesStore()).done().getConfiguration();
+        configuration = new ConstrettoBuilder().createSystemPropertiesStore().getConfiguration();
 
     }
 

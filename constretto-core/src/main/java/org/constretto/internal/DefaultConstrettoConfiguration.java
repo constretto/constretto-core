@@ -15,16 +15,16 @@
  */
 package org.constretto.internal;
 
-import java.lang.reflect.Field;
-
 import org.constretto.ConstrettoConfiguration;
+import org.constretto.exception.ConstrettoConversionException;
 import org.constretto.exception.ConstrettoException;
 import org.constretto.exception.ConstrettoExpressionException;
-import org.constretto.internal.converter.ConstrettoValueConverter;
+import static org.constretto.internal.converter.ValueConverterRegistry.convert;
 import org.constretto.model.ConfigurationElement;
 
+import java.lang.reflect.Field;
+
 /**
- * 
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
@@ -34,9 +34,61 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         this.configuration = configuration;
     }
 
-    public <T> T applyOn(T objectToConfigure) throws ConstrettoException {
-        injectConfigurationWithReflection(objectToConfigure);
-        return objectToConfigure;
+    @SuppressWarnings("unchecked")
+    public <K> K evaluate(String expression, K defaultValue) {
+        ConfigurationElement element = configuration.find(expression);
+        K value;
+        try {
+            value = (K) convert(defaultValue.getClass(), element.getValue());
+        } catch (ConstrettoConversionException e) {
+            value = null;
+        }
+        return null != value ? value : defaultValue;
+    }
+
+    public <K> K evaluateTo(Class<K> targetClass, String expression) throws ConstrettoExpressionException {
+        ConfigurationElement element = findElementOrThrowException(expression);
+        return convert(targetClass, element.getValue());
+    }
+
+    public String evaluateToString(String expression) throws ConstrettoExpressionException {
+        ConfigurationElement element = findElementOrThrowException(expression);
+        return element.getValue();
+    }
+
+    public Boolean evaluateToBoolean(String expression) throws ConstrettoExpressionException {
+        ConfigurationElement element = findElementOrThrowException(expression);
+        return convert(Boolean.class, element.getValue());
+    }
+
+    public Double evaluateToDouble(String expression) throws ConstrettoExpressionException {
+        ConfigurationElement element = findElementOrThrowException(expression);
+        return convert(Double.class, element.getValue());
+    }
+
+    public Long evaluateToLong(String expression) throws ConstrettoExpressionException {
+        ConfigurationElement element = findElementOrThrowException(expression);
+        return convert(Long.class, element.getValue());
+    }
+
+    public Float evaluateToFloat(String expression) throws ConstrettoExpressionException {
+        ConfigurationElement element = findElementOrThrowException(expression);
+        return convert(Float.class, element.getValue());
+    }
+
+    public Integer evaluateToInt(String expression) throws ConstrettoExpressionException {
+        ConfigurationElement element = findElementOrThrowException(expression);
+        return convert(Integer.class, element.getValue());
+    }
+
+    public Short evaluateToShort(String expression) throws ConstrettoExpressionException {
+        ConfigurationElement element = findElementOrThrowException(expression);
+        return convert(Short.class, element.getValue());
+    }
+
+    public Byte evaluateToByte(String expression) throws ConstrettoExpressionException {
+        ConfigurationElement element = findElementOrThrowException(expression);
+        return convert(Byte.class, element.getValue());
     }
 
     public <T> T as(Class<T> configurationClass) throws ConstrettoException {
@@ -48,8 +100,13 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
                     + " when trying to inject it with configuration", e);
         }
 
-        injectConfigurationWithReflection(objectToConfigure);
+        injectConfigurationUsingReflection(objectToConfigure);
 
+        return objectToConfigure;
+    }
+
+    public <T> T applyOn(T objectToConfigure) throws ConstrettoException {
+        injectConfigurationUsingReflection(objectToConfigure);
         return objectToConfigure;
     }
 
@@ -61,46 +118,15 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         return new DefaultConstrettoConfiguration(currentConfigurationElement);
     }
 
-    @SuppressWarnings("unchecked")
-    public <K> K evaluate(String expression, K defaultValue) {
+    public boolean hasValue(String expression) {
         ConfigurationElement element = configuration.find(expression);
-        return null != element ? (K) ConstrettoValueConverter.convert(defaultValue.getClass(), element.getValue()) : defaultValue;
+        return null != element;
     }
 
-    public boolean evaluateToBoolean(String expression) throws ConstrettoExpressionException {
-        ConfigurationElement element = findElementOrThrowException(expression);
-        return ConstrettoValueConverter.convert(Boolean.class, element.getValue());
-    }
 
-    public byte evaluateToByte(String expression) throws ConstrettoExpressionException {
-        return 0;
-    }
-
-    public double evaluateToDouble(String expression) throws ConstrettoExpressionException {
-        return 0;
-    }
-
-    public float evaluateToFloat(String expression) throws ConstrettoExpressionException {
-        return 0;
-    }
-
-    public int evaluateToInt(String expression) throws ConstrettoExpressionException {
-        return 0;
-    }
-
-    public long evaluateToLong(String expression) throws ConstrettoExpressionException {
-        return 0;
-    }
-
-    public short evaluateToShort(String expression) throws ConstrettoExpressionException {
-        return 0;
-    }
-
-    public String evaluateToString(String expression) throws ConstrettoExpressionException {
-        ConfigurationElement element = findElementOrThrowException(expression);
-        return element.getValue();
-    }
-
+    //
+    // Helper methods
+    //
     private ConfigurationElement findElementOrThrowException(String expression) {
         ConfigurationElement element = configuration.find(expression);
         if (null == element) {
@@ -109,19 +135,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         return element;
     }
 
-    public <T> T get(String key, Class<T> configuredClass) throws ConstrettoExpressionException {
-        return null;
-    }
-
-    public <T> T get(String key, T defaultValue, Class<T> configuredClass) {
-        return null;
-    }
-
-    public boolean hasValue(String key) {
-        return false;
-    }
-
-    private <T> void injectConfigurationWithReflection(T objectToConfigure) {
+    private <T> void injectConfigurationUsingReflection(T objectToConfigure) {
         Field[] fields = objectToConfigure.getClass().getDeclaredFields();
         for (Field field : fields) {
             String name = field.getName();
@@ -129,7 +143,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
             Class<?> fieldType = field.getType();
             ConfigurationElement element = findElementOrThrowException(name);
             try {
-                field.set(objectToConfigure, ConstrettoValueConverter.convert(fieldType, element.getValue()));
+                field.set(objectToConfigure, convert(fieldType, element.getValue()));
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
             } catch (IllegalAccessException e) {
@@ -137,5 +151,4 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
             }
         }
     }
-
 }

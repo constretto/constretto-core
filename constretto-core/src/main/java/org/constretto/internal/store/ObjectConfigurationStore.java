@@ -17,6 +17,7 @@ package org.constretto.internal.store;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
+import org.constretto.ConfigurationStore;
 import org.constretto.annotation.ConfigurationSource;
 import org.constretto.model.ConfigurationSet;
 
@@ -25,10 +26,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
- * 
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
-public class ObjectConfigurationStore extends AbstractConfigurationStore {
+public class ObjectConfigurationStore implements ConfigurationStore {
     private final List<Object> configurationObjects = new ArrayList<Object>();
 
     public ObjectConfigurationStore addObject(Object configurationObject) {
@@ -36,7 +36,7 @@ public class ObjectConfigurationStore extends AbstractConfigurationStore {
         return this;
     }
 
-    public Collection<ConfigurationSet> load() {
+    public Collection<ConfigurationSet> parseConfiguration() {
         Map<String, ConfigurationSet> propertySets = new HashMap<String, ConfigurationSet>();
         for (Object configurationObject : configurationObjects) {
             ConfigurationSet configurationSet = createPropertySetForObject(configurationObject);

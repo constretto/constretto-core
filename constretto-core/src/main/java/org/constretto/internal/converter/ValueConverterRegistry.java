@@ -15,19 +15,25 @@
  */
 package org.constretto.internal.converter;
 
+import org.constretto.exception.ConstrettoConversionException;
+import org.constretto.exception.ConstrettoException;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import org.constretto.exception.ConstrettoException;
-
 /**
- * 
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
-public class ConstrettoValueConverter {
+public class ValueConverterRegistry {
     private static final Map<Class<?>, ValueConverter<?>> converters = new HashMap<Class<?>, ValueConverter<?>>() {
         {
             put(Boolean.class, new BooleanValueConverter());
+            put(Float.class, new FloatValueConverter());
+            put(Double.class, new DoubleValueConverter());
+            put(Long.class, new LongValueConverter());
+            put(Integer.class, new IntegerValueConverter());
+            put(Byte.class, new ByteValueConverter());
+            put(Short.class, new ShortValueConverter());
             put(String.class, new StringValueConverter());
         }
     };
@@ -37,11 +43,11 @@ public class ConstrettoValueConverter {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> T convert(Class<T> clazz, String value) {
-        ValueConverter<?> converter = converters.get(clazz);
-        if (null == converter) {
+    public static <T> T convert(Class<T> clazz, String value) throws ConstrettoException, ConstrettoConversionException {
+        if (!converters.containsKey(clazz)) {
             throw new ConstrettoException("No converter found for class: " + clazz.getName());
         }
+        ValueConverter<?> converter = converters.get(clazz);
         return (T) converter.fromString(value);
     }
 

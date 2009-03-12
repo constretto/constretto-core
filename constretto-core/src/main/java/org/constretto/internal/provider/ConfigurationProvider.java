@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class ConfigurationProvider {
@@ -37,7 +36,8 @@ public class ConfigurationProvider {
     private List<ConfigurationStore> configurationStores = new ArrayList<ConfigurationStore>();
     private List<String> tags = new ArrayList<String>();
 
-    public ConfigurationProvider() {}
+    public ConfigurationProvider() {
+    }
 
     private ConfigurationProvider(ConfigurationStore... configurationStores) {
         this.configurationStores = asList(configurationStores);
@@ -82,12 +82,14 @@ public class ConfigurationProvider {
     private ConstrettoConfiguration buildConfiguration() {
         ConfigurationElement rootElement = new ConfigurationElement("constretto-configuration");
         Collection<ConfigurationSet> configurationSets = loadPropertySets();
+        int priority = configurationSets.size();
         for (ConfigurationSet configurationSet : configurationSets) {
             if (allowTag(configurationSet.getTag())) {
                 Map<String, String> properties = configurationSet.getProperties();
                 for (String expression : properties.keySet()) {
-                    rootElement.update(expression, properties.get(expression));
+                    rootElement.update(expression, properties.get(expression), configurationSet.getTag(), priority);
                 }
+                priority--;
             }
         }
 
@@ -102,7 +104,7 @@ public class ConfigurationProvider {
     private Collection<ConfigurationSet> loadPropertySets() {
         List<ConfigurationSet> configurationSets = new ArrayList<ConfigurationSet>();
         for (ConfigurationStore configurationStore : configurationStores) {
-            configurationSets.addAll(configurationStore.load());
+            configurationSets.addAll(configurationStore.parseConfiguration());
         }
         return configurationSets;
     }

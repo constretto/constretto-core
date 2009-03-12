@@ -15,9 +15,8 @@
  */
 package org.constretto.internal.provider;
 
-import org.constretto.Constretto;
+import org.constretto.ConstrettoBuilder;
 import org.constretto.ConstrettoConfiguration;
-import org.constretto.internal.store.IniFileConfigurationStore;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,8 +33,12 @@ public class DefaultConstrettoProviderIniFileConfigurationStoreTest {
     @Before
     public void setUp() {
         Resource iniFileResource = new FileSystemResource("src/test/resources/test.ini");
-        config = new Constretto().addTag("production").addConfigurationStore(
-                new IniFileConfigurationStore().addResource(iniFileResource)).done().getConfiguration();
+        config = new ConstrettoBuilder()
+                .addCurrentTag("production")
+                .createIniFileConfigurationStore()
+                .addResource(iniFileResource)
+                .done()
+                .getConfiguration();
     }
 
     @Test

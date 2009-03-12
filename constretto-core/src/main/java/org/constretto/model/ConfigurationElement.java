@@ -16,20 +16,20 @@
 package org.constretto.model;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.constretto.exception.ConstrettoExpressionException;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class ConfigurationElement {
     private ConfigurationElement parent;
     private final String name;
     private String value;
+    private String tag;
+    private int priority;
     private final List<ConfigurationElement> children = new ArrayList<ConfigurationElement>();
 
     public ConfigurationElement(String name) {
@@ -73,7 +73,7 @@ public class ConfigurationElement {
         parentElement.getChildren().remove(currentElement);
     }
 
-    public void update(String expression, String value) {
+    public void update(String expression, String value, String tag, int priority) {
         ConfigurationElement currentElement = this;
         if (expression.contains(".")) {
             for (String subExpression : expression.split("\\.")) {
@@ -95,7 +95,11 @@ public class ConfigurationElement {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "ConfigurationElement{" +
+                "name='" + name + '\'' +
+                ", value='" + value + '\'' +
+                ", tag='" + tag + '\'' +
+                '}';
     }
 
     @Override
@@ -122,11 +126,14 @@ public class ConfigurationElement {
     }
 
     private ConfigurationElement getChild(String name) {
+        ConfigurationElement foundElement = null;
         for (ConfigurationElement currentElement : children) {
             if (currentElement.getName().equals(name)) {
-                return currentElement;
+                foundElement = currentElement;
             }
         }
-        return null;
+        return foundElement;
     }
+
+
 }

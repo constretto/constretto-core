@@ -13,30 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.constretto;
+package org.constretto.internal.converter;
 
-import org.constretto.internal.provider.ConfigurationProvider;
+import org.constretto.exception.ConstrettoConversionException;
 
 /**
- * 
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
-public class Constretto {
+public class DoubleValueConverter implements ValueConverter<Double> {
 
-    private final ConfigurationProvider configurationProvider = new ConfigurationProvider();
-    
-    public <T extends ConfigurationStore> T addConfigurationStore(T configurationStore) {
-        configurationStore.belongsTo(this);
-        configurationProvider.addConfigurationStore(configurationStore);
-        return configurationStore;
+    public Double fromString(String value) throws ConstrettoConversionException {
+        try {
+            return Double.parseDouble(value);
+        } catch (NumberFormatException e) {
+            throw new ConstrettoConversionException(value, Double.class, e);
+        }
     }
 
-    public ConstrettoConfiguration getConfiguration() {
-        return configurationProvider.getConfiguration();
-    }
-
-    public Constretto addTag(String tag) {
-        configurationProvider.addTag(tag);
-        return this;
+    public String toString(Double value) {
+        return value.toString();
     }
 }

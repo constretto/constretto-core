@@ -15,42 +15,61 @@
  */
 package org.constretto;
 
+import org.constretto.exception.ConstrettoConversionException;
 import org.constretto.exception.ConstrettoException;
+import org.constretto.exception.ConstrettoExpressionException;
 
 /**
  * Client interface.
- * 
+ *
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public interface ConstrettoConfiguration {
 
+    /**
+     * Looks up an expression in the configuration.
+     *
+     * @param expression   The expression to look up
+     * @param defaultValue The value to return of no value found for the expression
+     * @param <K>          The target Type
+     * @return The converted value for the expression, or the passed default value if expression not found, or conversion error occured.
+     * @throws ConstrettoExpressionException If a valid converter is not found for the target Type
+     */
+    <K> K evaluate(String expression, K defaultValue) throws ConstrettoExpressionException;
+
+    /**
+     * Looks up an expression in the configuration.
+     *
+     * @param targetClass the class to convert the value
+     * @param expression  the expression to look up
+     * @param <K>         the target Type
+     * @return The converted value for the expression.
+     * @throws ConstrettoExpressionException if the expression is malformed, or a value not found for the expression
+     * @throws ConstrettoConversionException If a conversion error occures for the resolved value
+     */
+    <K> K evaluateTo(Class<K> targetClass, String expression) throws ConstrettoExpressionException, ConstrettoConversionException;
+
     String evaluateToString(String expression) throws ConstrettoException;
 
-    int evaluateToInt(String expression) throws ConstrettoException;
+    Boolean evaluateToBoolean(String expression) throws ConstrettoException;
 
-    float evaluateToFloat(String expression) throws ConstrettoException;
+    Double evaluateToDouble(String expression) throws ConstrettoException;
 
-    boolean evaluateToBoolean(String expression) throws ConstrettoException;
+    Long evaluateToLong(String expression) throws ConstrettoException;
 
-    double evaluateToDouble(String expression) throws ConstrettoException;
+    Float evaluateToFloat(String expression) throws ConstrettoException;
 
-    byte evaluateToByte(String expression) throws ConstrettoException;
+    Integer evaluateToInt(String expression) throws ConstrettoException;
 
-    short evaluateToShort(String expression) throws ConstrettoException;
+    Short evaluateToShort(String expression) throws ConstrettoException;
 
-    long evaluateToLong(String expression) throws ConstrettoException;
-
-    <K> K evaluate(String expression, K defaultValue);
-
-    ConstrettoConfiguration at(String expression);
+    Byte evaluateToByte(String expression) throws ConstrettoException;
 
     <T> T as(Class<T> configurationClass) throws ConstrettoException;
 
     <T> T applyOn(T objectToConfigure) throws ConstrettoException;
 
-    <T> T get(String key, Class<T> configuredClass) throws ConstrettoException;
+    ConstrettoConfiguration at(String expression);
 
-    <T> T get(String key, T defaultValue, Class<T> configuredClass);
-
-    boolean hasValue(String key);
+    boolean hasValue(String expression);
 }

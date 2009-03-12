@@ -17,7 +17,7 @@ package org.constretto.internal.store;
 
 import static junit.framework.Assert.assertEquals;
 import org.constretto.ConfigurationStore;
-import org.constretto.Constretto;
+import org.constretto.ConstrettoBuilder;
 import org.constretto.ConstrettoConfiguration;
 import org.constretto.annotation.ConfigurationSource;
 import org.constretto.internal.store.helper.DefaultCustomerDataSourceConfigurer;
@@ -40,17 +40,17 @@ public class ObjectConfigurationStoreTest extends AbstractConfigurationStoreTest
     @Before
     public void setUp() {
         store.addObject(new DefaultCustomerDataSourceConfigurer())
-             .addObject(new GenericDataSourceConfigurer())
-             .addObject(new DevelopmentCustomerDataSourceConfigurer())
-             .addObject(new ProductionCustomerDataSourceConfigurer());
+                .addObject(new GenericDataSourceConfigurer())
+                .addObject(new DevelopmentCustomerDataSourceConfigurer())
+                .addObject(new ProductionCustomerDataSourceConfigurer());
     }
-    
-    
+
+
     /**
-     * Tests to run for configuration stores.. 
-     * this goes for all stores. tests should have one abstract testcase with all the tests, 
+     * Tests to run for configuration stores..
+     * this goes for all stores. tests should have one abstract testcase with all the tests,
      * and subclasses only do setup of the store.
-     * 
+     * <p/>
      * 1. That the configuration is loaded as expected
      * 2. That placeholders in the config is resolved properly
      * 3. When properties exists in more than one "resource" inside a store, the one listed last overrides any previous values
@@ -62,52 +62,52 @@ public class ObjectConfigurationStoreTest extends AbstractConfigurationStoreTest
      * 9. Objects should be configured using the as() method
      * 10. Already instansiated objects should have config injected with the applyOn() method (@Configuration annotated fields, using their setters if available)
      */
-    
+
 
     @Test
     public void loadConfiguration() {
-        Collection<ConfigurationSet> configurationSets = store.load();
+        Collection<ConfigurationSet> configurationSets = store.parseConfiguration();
         assertEquals(3, configurationSets.size());
     }
 
     @Test
     public void givenTagDevelopmentThenProviderChoosesDevelopmentValues() {
-        ConstrettoConfiguration configuration = new Constretto().addConfigurationStore(store).done().addTag("development")
+        ConstrettoConfiguration configuration = new ConstrettoBuilder().addConfigurationStore(store).addCurrentTag("development")
                 .getConfiguration().at("datasources.customer");
         assertEquals("development-url", configuration.evaluateToString("url"));
     }
 
     @Test
     public void givenNoTagThenProviderChoosesDefaultValues() {
-        ConstrettoConfiguration configuration = new Constretto().addConfigurationStore(store).done().getConfiguration().at(
+        ConstrettoConfiguration configuration = new ConstrettoBuilder().addConfigurationStore(store).getConfiguration().at(
                 "datasources.customer");
         assertEquals("default-url", configuration.evaluateToString("url"));
     }
 
     @Test
     public void givenTagProductionThenProviderChoosesProductionValues() {
-        ConstrettoConfiguration configuration = new Constretto().addConfigurationStore(store).done().addTag("production")
+        ConstrettoConfiguration configuration = new ConstrettoBuilder().addConfigurationStore(store).addCurrentTag("production")
                 .getConfiguration().at("datasources.customer");
         assertEquals("production-url", configuration.evaluateToString("url"));
     }
 
     @Test
     public void givenNoTagAndFromRootThenProviderChoosesGenericValues() {
-        ConstrettoConfiguration configuration = new Constretto().addConfigurationStore(store).done().getConfiguration();
+        ConstrettoConfiguration configuration = new ConstrettoBuilder().addConfigurationStore(store).getConfiguration();
         assertEquals("generic-url", configuration.evaluateToString("url"));
     }
 
 
-	@Override
-	protected ConfigurationStore getStore() {
-		ObjectConfigurationStore ocStore = new ObjectConfigurationStore();
-		ocStore.addObject(new TestConfig("user0"));
-		ocStore.addObject(new ProductionTestConfig("user1"));
-		ocStore.addObject(new SysTestTestConfig("user2"));
-		return ocStore;
-	}
+    @Override
+    protected ConfigurationStore getStore() {
+        ObjectConfigurationStore ocStore = new ObjectConfigurationStore();
+        ocStore.addObject(new TestConfig("user0"));
+        ocStore.addObject(new ProductionTestConfig("user1"));
+        ocStore.addObject(new SysTestTestConfig("user2"));
+        return ocStore;
+    }
 
-	@ConfigurationSource(basePath = "somedb")
+    @ConfigurationSource(basePath = "somedb")
     public static class TestConfig {
 
         private String username;

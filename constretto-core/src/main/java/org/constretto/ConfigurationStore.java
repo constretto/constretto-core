@@ -20,13 +20,9 @@ import org.constretto.model.ConfigurationSet;
 import java.util.Collection;
 
 /**
- * 
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public interface ConfigurationStore {
 
-    Collection<ConfigurationSet> load();
-    
-    void belongsTo(Constretto constretto);
-
+    Collection<ConfigurationSet> parseConfiguration();
 }

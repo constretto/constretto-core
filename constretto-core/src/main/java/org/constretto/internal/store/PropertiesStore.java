@@ -16,6 +16,7 @@
 package org.constretto.internal.store;
 
 import org.apache.commons.lang.StringUtils;
+import org.constretto.ConfigurationStore;
 import org.constretto.exception.ConstrettoException;
 import org.constretto.model.ConfigurationSet;
 import org.springframework.core.io.Resource;
@@ -28,12 +29,12 @@ import java.util.*;
 /**
  * This is a store for text files implementing key=value pairs. Also, it supports adding a convention of tgsa to
  * ordinary properties. For tags, we use a specific prefix which can be configured by the user, whose default value is "@".
- *
- * Please see {@link org.constretto.Constretto#addTag(String)} for more information on the tag concept.
+ * <p/>
+ * Please see {@link org.constretto.ConstrettoBuilder#addCurrentTag(String)} for more information on the tag concept.
  *
  * @author <a href="mailto:kristoffer.moum@arktekk.no">Kristoffer Moum</a>
  */
-public class PropertiesStore extends AbstractConfigurationStore {
+public class PropertiesStore implements ConfigurationStore {
 
     private static final String DEFAULT_TAG_PREFIX = "@";
     private static final String PROPERTY_CONTEXT_SEPARATOR = ".";
@@ -43,11 +44,11 @@ public class PropertiesStore extends AbstractConfigurationStore {
     /**
      * Tag prefix specifies the contract of which is used in property files to flag that an entry is coupled to a tag,
      * i.e.:
+     *
      * @production.datasource.username=produser means that the property datasource.username exists in context of the
      * production tag only.
-     *
+     * <p/>
      * Unless anything else is specified, the default value is used, i.e. datasource.username=default value
-     *
      */
     private String tagPrefix;
 
@@ -74,7 +75,7 @@ public class PropertiesStore extends AbstractConfigurationStore {
         addResourcesAsProperties(resources);
     }
 
-    public List<ConfigurationSet> load() {
+    public List<ConfigurationSet> parseConfiguration() {
         return getPropertySets();
     }
 
@@ -91,6 +92,7 @@ public class PropertiesStore extends AbstractConfigurationStore {
     /**
      * Assumes that the passed resources wrap files that conform to {@link java.util.Properties}. The contents of these
      * files are added to the local representation of all application properties to be handled by this store.
+     *
      * @param resources Spring resource paths to the property files used to back this store
      */
     private void addResourcesAsProperties(Resource... resources) {
@@ -110,6 +112,7 @@ public class PropertiesStore extends AbstractConfigurationStore {
      * Get all property sets that are relevant to this store, i.e. both tagged as well as untagged properties. A
      * single PropertySet is added per tag and then finally a single PropertySet containing all untaggef
      * properties.
+     *
      * @return A list of all property sets, never null.
      */
     private List<ConfigurationSet> getPropertySets() {
@@ -144,6 +147,7 @@ public class PropertiesStore extends AbstractConfigurationStore {
 
     /**
      * Get a map of untagged properties, i.e. their keys do not conform to {@link #isTag(String)}.
+     *
      * @param properties a map of the properties of which to run through
      * @return a map of untagged properties, never null
      */
@@ -160,7 +164,7 @@ public class PropertiesStore extends AbstractConfigurationStore {
     private Set<String> getTags(Map<String, String> properties) {
         Set<String> tags = new HashSet<String>();
         for (String key : properties.keySet()) {
-    	    String tag = getTag(key);
+            String tag = getTag(key);
             if (tag != null) {
                 tags.add(tag);
             }
@@ -171,6 +175,7 @@ public class PropertiesStore extends AbstractConfigurationStore {
     /**
      * Remove the actual tag from the passed key. I.e. a key is flagged as a tag by the following
      * entry: @tag.key=value. This method removes the tag information, i.e. "@tag.".
+     *
      * @param key full, tagged key
      * @return the trimmed key, i.e. untagged. For passed keys that are untagged, null is returned
      */

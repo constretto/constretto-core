@@ -15,12 +15,11 @@
  */
 package org.constretto.internal.provider;
 
-import org.constretto.Constretto;
+import org.constretto.ConstrettoBuilder;
 import org.constretto.ConstrettoConfiguration;
-import org.constretto.internal.store.PropertiesStore;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.Assert;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
@@ -34,7 +33,7 @@ public class SimplePropertiesConfigurationTest {
     @Before
     public void setUp() {
         Resource props = new FileSystemResource("src/test/resources/test.properties");
-        this.configuration = new Constretto().addConfigurationStore(new PropertiesStore().addResource(props)).done().getConfiguration();
+        this.configuration = new ConstrettoBuilder().createPropertiesStore().addResource(props).done().getConfiguration();
     }
 
     @Test

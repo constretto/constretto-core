@@ -15,6 +15,7 @@
  */
 package org.constretto.internal.store;
 
+import org.constretto.ConfigurationStore;
 import org.constretto.exception.ConstrettoException;
 import org.constretto.model.ConfigurationSet;
 import org.ini4j.IniFile;
@@ -29,7 +30,7 @@ import java.util.prefs.Preferences;
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  * @author <a href="mailto:kristoffer.moum@arktekk.no">Kristoffer Moum</a>
  */
-public class IniFileConfigurationStore extends AbstractConfigurationStore {
+public class IniFileConfigurationStore implements ConfigurationStore {
     private static final String DEFAULT_TAG = "default";
     private List<Resource> resources = new ArrayList<Resource>();
 
@@ -45,7 +46,7 @@ public class IniFileConfigurationStore extends AbstractConfigurationStore {
         return this;
     }
 
-    public List<ConfigurationSet> load() {
+    public List<ConfigurationSet> parseConfiguration() {
         List<ConfigurationSet> configurationSets = new ArrayList<ConfigurationSet>();
         for (Resource r : resources) {
             Preferences prefs = load(r);
