@@ -19,8 +19,8 @@ import org.constretto.ConfigurationContextResolver;
 import org.constretto.ConfigurationStore;
 import org.constretto.ConstrettoConfiguration;
 import org.constretto.internal.DefaultConstrettoConfiguration;
-import org.constretto.model.ConfigurationElement;
-import org.constretto.model.ConfigurationSet;
+import org.constretto.model.ConfigurationNode;
+import org.constretto.model.TaggedPropertySet;
 
 import java.util.ArrayList;
 import static java.util.Arrays.asList;
@@ -80,33 +80,24 @@ public class ConfigurationProvider {
     }
 
     private ConstrettoConfiguration buildConfiguration() {
-        ConfigurationElement rootElement = new ConfigurationElement("constretto-configuration");
-        Collection<ConfigurationSet> configurationSets = loadPropertySets();
-        int priority = configurationSets.size();
-        for (ConfigurationSet configurationSet : configurationSets) {
-            if (allowTag(configurationSet.getTag())) {
-                Map<String, String> properties = configurationSet.getProperties();
-                for (String expression : properties.keySet()) {
-                    rootElement.update(expression, properties.get(expression), configurationSet.getTag(), priority);
-                }
-                priority--;
+        ConfigurationNode rootNode = ConfigurationNode.createRootElement();
+        Collection<TaggedPropertySet> taggedPropertySets = loadPropertySets();
+        for (TaggedPropertySet taggedPropertySet : taggedPropertySets) {
+            Map<String, String> properties = taggedPropertySet.getProperties();
+            for (String expression : properties.keySet()) {
+                rootNode.update(expression, properties.get(expression), taggedPropertySet.getTag());
             }
         }
 
-        return new DefaultConstrettoConfiguration(rootElement);
+        return new DefaultConstrettoConfiguration(rootNode, tags);
     }
 
-    private boolean allowTag(String tagToMatch) {
-        return (this.tags.isEmpty() && tagToMatch == null) || this.tags.contains(tagToMatch);
-
-    }
-
-    private Collection<ConfigurationSet> loadPropertySets() {
-        List<ConfigurationSet> configurationSets = new ArrayList<ConfigurationSet>();
+    private Collection<TaggedPropertySet> loadPropertySets() {
+        List<TaggedPropertySet> taggedPropertySets = new ArrayList<TaggedPropertySet>();
         for (ConfigurationStore configurationStore : configurationStores) {
-            configurationSets.addAll(configurationStore.parseConfiguration());
+            taggedPropertySets.addAll(configurationStore.parseConfiguration());
         }
-        return configurationSets;
+        return taggedPropertySets;
     }
 
 }

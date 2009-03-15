@@ -15,13 +15,12 @@
  */
 package org.constretto;
 
-import org.constretto.model.ConfigurationSet;
+import org.constretto.model.TaggedPropertySet;
 
 /**
- * 
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public interface ConfigurationValueFactory<T> {
 
-    T getValue(String key, ConfigurationSet configurationSet);
+    T getValue(String key, TaggedPropertySet taggedPropertySet);
 }

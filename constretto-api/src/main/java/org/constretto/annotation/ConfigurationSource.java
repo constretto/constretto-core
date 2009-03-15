@@ -20,10 +20,11 @@ import java.lang.annotation.*;
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
-@Target( { ElementType.TYPE, ElementType.FIELD })
+@Target({ElementType.TYPE, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 public @interface ConfigurationSource {
     String tag() default "";
+
     String basePath() default "";
 }

@@ -16,7 +16,8 @@
 package org.constretto.internal.store;
 
 import org.constretto.ConfigurationStore;
-import org.constretto.model.ConfigurationSet;
+import org.constretto.model.ConfigurationNode;
+import org.constretto.model.TaggedPropertySet;
 
 import static java.lang.System.getProperties;
 import static java.lang.System.getProperty;
@@ -27,7 +28,7 @@ import java.util.*;
  */
 public class SystemPropertiesStore implements ConfigurationStore {
 
-    public List<ConfigurationSet> parseConfiguration() {
+    public List<TaggedPropertySet> parseConfiguration() {
         final Map<String, String> properties = new HashMap<String, String>();
         Properties systemProperties = getProperties();
         for (Object key : systemProperties.keySet()) {
@@ -35,9 +36,9 @@ public class SystemPropertiesStore implements ConfigurationStore {
             properties.put(keyAsString, getProperty(keyAsString));
         }
 
-        return new ArrayList<ConfigurationSet>() {
+        return new ArrayList<TaggedPropertySet>() {
             {
-                add(new ConfigurationSet(properties));
+                add(new TaggedPropertySet(ConfigurationNode.ALL_TAG, properties));
             }
         };
     }

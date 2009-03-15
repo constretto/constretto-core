@@ -17,7 +17,8 @@ package org.constretto.internal.store;
 
 import org.constretto.ConfigurationStore;
 import org.constretto.exception.ConstrettoException;
-import org.constretto.model.ConfigurationSet;
+import org.constretto.model.ConfigurationNode;
+import org.constretto.model.TaggedPropertySet;
 import org.ini4j.IniFile;
 import org.springframework.core.io.Resource;
 
@@ -46,8 +47,8 @@ public class IniFileConfigurationStore implements ConfigurationStore {
         return this;
     }
 
-    public List<ConfigurationSet> parseConfiguration() {
-        List<ConfigurationSet> configurationSets = new ArrayList<ConfigurationSet>();
+    public List<TaggedPropertySet> parseConfiguration() {
+        List<TaggedPropertySet> taggedPropertySets = new ArrayList<TaggedPropertySet>();
         for (Resource r : resources) {
             Preferences prefs = load(r);
             List<String> tags = getChildren(prefs);
@@ -61,13 +62,13 @@ public class IniFileConfigurationStore implements ConfigurationStore {
                     properties.put(key, value);
                 }
                 if (tag.equals(DEFAULT_TAG)) {
-                    tag = null;
+                    tag = ConfigurationNode.DEFAULT_TAG;
                 }
-                ConfigurationSet configurationSet = new ConfigurationSet(tag, properties);
-                configurationSets.add(configurationSet);
+                TaggedPropertySet taggedPropertySet = new TaggedPropertySet(tag, properties);
+                taggedPropertySets.add(taggedPropertySet);
             }
         }
-        return configurationSets;
+        return taggedPropertySets;
     }
 
     private List<String> getKeys(Preferences p) {

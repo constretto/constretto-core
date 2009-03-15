@@ -15,7 +15,7 @@
  */
 package org.constretto.internal.store;
 
-import org.constretto.model.ConfigurationSet;
+import org.constretto.model.TaggedPropertySet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
@@ -31,7 +31,7 @@ public class SystemPropertiesStoreTest {
     public void load() {
         System.setProperty("somedb.username", "user0");
         SystemPropertiesStore store = new SystemPropertiesStore();
-        List<ConfigurationSet> set = store.parseConfiguration();
+        List<TaggedPropertySet> set = store.parseConfiguration();
         assertNotNull(set);
         assertEquals(1, set.size());
         assertEquals("user0", set.get(0).getProperties().get("somedb.username"));

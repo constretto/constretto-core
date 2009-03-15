@@ -16,7 +16,6 @@
 package org.constretto.exception;
 
 /**
- * 
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class ConstrettoException extends RuntimeException {

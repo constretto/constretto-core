@@ -18,7 +18,7 @@ package org.constretto.internal.store;
 import org.apache.commons.lang.StringUtils;
 import org.constretto.ConfigurationStore;
 import org.constretto.exception.ConstrettoException;
-import org.constretto.model.ConfigurationSet;
+import org.constretto.model.TaggedPropertySet;
 import org.springframework.core.io.Resource;
 import org.springframework.util.CollectionUtils;
 
@@ -75,7 +75,7 @@ public class PropertiesStore implements ConfigurationStore {
         addResourcesAsProperties(resources);
     }
 
-    public List<ConfigurationSet> parseConfiguration() {
+    public List<TaggedPropertySet> parseConfiguration() {
         return getPropertySets();
     }
 
@@ -115,17 +115,17 @@ public class PropertiesStore implements ConfigurationStore {
      *
      * @return A list of all property sets, never null.
      */
-    private List<ConfigurationSet> getPropertySets() {
-        List<ConfigurationSet> configurationSets = new ArrayList<ConfigurationSet>();
+    private List<TaggedPropertySet> getPropertySets() {
+        List<TaggedPropertySet> taggedPropertySets = new ArrayList<TaggedPropertySet>();
         Set<String> tags = getTags(this.properties);
         for (String tag : tags) {
-            configurationSets.add(new ConfigurationSet(tag, getPropertiesByTag(tag, this.properties)));
+            taggedPropertySets.add(new TaggedPropertySet(tag, getPropertiesByTag(tag, this.properties)));
         }
         Map<String, String> unTaggedProperties = getUnTaggedProperties(this.properties);
         if (!unTaggedProperties.isEmpty()) {
-            configurationSets.add(new ConfigurationSet(getUnTaggedProperties(this.properties)));
+            taggedPropertySets.add(new TaggedPropertySet(getUnTaggedProperties(this.properties)));
         }
-        return configurationSets;
+        return taggedPropertySets;
     }
 
     private boolean isTag(String key) {

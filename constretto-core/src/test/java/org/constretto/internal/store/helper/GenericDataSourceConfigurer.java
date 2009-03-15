@@ -17,7 +17,6 @@ package org.constretto.internal.store.helper;
 
 
 /**
- * 
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class GenericDataSourceConfigurer {
@@ -25,13 +24,13 @@ public class GenericDataSourceConfigurer {
     public String getUrl() {
         return "generic-url";
     }
-    
+
     public String getUsername() {
         return "generic-username";
     }
-    
+
     public String getPassword() {
         return "generic-password";
     }
-    
+
 }

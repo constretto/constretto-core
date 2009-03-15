@@ -20,22 +20,21 @@ import static org.apache.commons.lang.builder.ToStringBuilder.reflectionToString
 import java.util.Map;
 
 /**
- * ConfigurationSet represents a tagged subset of configuration loaded
- * by a ConfigurationStore.
- *
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
-public class ConfigurationSet {
-    private String tag;
-    private int priority;
-
+public class TaggedPropertySet {
+    private final String tag;
     private final Map<String, String> properties;
 
-    public ConfigurationSet(Map<String, String> properties) {
+    public TaggedPropertySet(Map<String, String> properties) {
+        this.tag = ConfigurationNode.DEFAULT_TAG;
         this.properties = properties;
     }
 
-    public ConfigurationSet(String tag, Map<String, String> properties) {
+    public TaggedPropertySet(String tag, Map<String, String> properties) {
+        if (tag == null) {
+            throw new IllegalArgumentException("A tagged property set cannot have \"null\" as tag");
+        }
         this.tag = tag;
         this.properties = properties;
     }
@@ -46,14 +45,6 @@ public class ConfigurationSet {
 
     public String getTag() {
         return tag;
-    }
-
-    public void setPriority(int priority) {
-        this.priority = priority;
-    }
-
-    public int getPriority() {
-        return priority;
     }
 
     @Override

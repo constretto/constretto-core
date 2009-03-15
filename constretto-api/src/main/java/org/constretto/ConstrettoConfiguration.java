@@ -35,7 +35,7 @@ public interface ConstrettoConfiguration {
      * @return The converted value for the expression, or the passed default value if expression not found, or conversion error occured.
      * @throws ConstrettoExpressionException If a valid converter is not found for the target Type
      */
-    <K> K evaluate(String expression, K defaultValue) throws ConstrettoExpressionException;
+    <K> K evaluateTo(String expression, K defaultValue) throws ConstrettoExpressionException;
 
     /**
      * Looks up an expression in the configuration.

@@ -18,21 +18,20 @@ package org.constretto.internal.store.helper;
 import org.constretto.annotation.ConfigurationSource;
 
 /**
- * 
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
-@ConfigurationSource(basePath="datasources.customer",tag="development")
+@ConfigurationSource(basePath = "datasources.customer", tag = "development")
 public class DevelopmentCustomerDataSourceConfigurer {
-    
+
     public String getUrl() {
         return "development-url";
     }
-    
+
     public String getUsername() {
         return "development-username";
     }
-    
+
     public String getPassword() {
         return "development-password";
-    }    
+    }
 }

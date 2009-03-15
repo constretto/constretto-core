@@ -22,9 +22,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * 
  * -DCONSTRETTO_TAGS=a,b,c,d
- * 
+ *
  * @author <a href="mailto:kristoffer.moum@arktekk.no">Kristoffer Moum</a>
  */
 public class DefaultConfigurationContextResolver implements ConfigurationContextResolver {

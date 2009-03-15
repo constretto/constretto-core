@@ -17,6 +17,8 @@ package org.constretto.internal.provider;
 
 import org.constretto.ConstrettoBuilder;
 import org.constretto.ConstrettoConfiguration;
+import org.constretto.exception.ConstrettoException;
+import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
@@ -27,6 +29,11 @@ import org.springframework.core.io.ClassPathResource;
  */
 public class ConfigurationProviderLookupTest {
 
+    @After
+    public void cleanup() {
+        System.clearProperty("key1");
+    }
+
     @Test
     public void simpleLookupForExistingKeyNotUsingDefaultValue() {
         ConstrettoConfiguration config = prepareTests();
@@ -36,7 +43,7 @@ public class ConfigurationProviderLookupTest {
     @Test
     public void simpleLookupForExistingKeyUsingDefaultValue() {
         ConstrettoConfiguration config = prepareTests();
-        assertEquals("key1-value", config.evaluate("key1", "default-key-value"));
+        assertEquals("key1-value", config.evaluateTo("key1", "default-key-value"));
     }
 
     @Test
@@ -50,16 +57,31 @@ public class ConfigurationProviderLookupTest {
 
     }
 
+    @Test(expected = ConstrettoException.class)
     public void simpleLookupForMissingKeyNotUsingDefaultValue() {
+        ConstrettoConfiguration constrettoConfiguration = prepareTests();
+        constrettoConfiguration.evaluateTo(Integer.class, "missing.key");
     }
 
+    @Test
     public void simpleLookupForMissingKeyUsingDefaultValue() {
+        ConstrettoConfiguration constrettoConfiguration = prepareTests();
+        Integer value = constrettoConfiguration.evaluateTo("missing.key", Integer.MIN_VALUE);
+        assertEquals(new Integer(Integer.MIN_VALUE), value);
     }
 
+    @Test(expected = ConstrettoException.class)
     public void simpleTaggedLookupForKeyNotInCurrentTagAndNotInDefaultTag() {
+        ConstrettoConfiguration constrettoConfiguration = prepareTests("production");
+        assertEquals("I only exist in development", constrettoConfiguration.evaluateToString("ionlyexistindevelopment"));
+        constrettoConfiguration = prepareTests("production");
+        constrettoConfiguration.evaluateToString("ionlyexistindevelopment");
     }
 
+    @Test
     public void simpleTaggedLookupForKeyNotInCurrentTagButExistsInDefaultTag() {
+        ConstrettoConfiguration constrettoConfiguration = prepareTests("production");
+        assertEquals("key1-value", constrettoConfiguration.evaluateToString("key1"));
     }
 
     public void multiTaggedLookupForKeyNotInAnyCurrentTagsAndNotInDefaultTag() {

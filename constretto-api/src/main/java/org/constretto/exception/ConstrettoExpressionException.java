@@ -15,31 +15,32 @@
  */
 package org.constretto.exception;
 
+import java.util.List;
+
 /**
  * Thrown when a expression could not be found, or the expression is illegal in it self.
- * 
+ *
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class ConstrettoExpressionException extends ConstrettoException {
     private final String expression;
+    private List<String> currentTags;
 
-    public ConstrettoExpressionException(String expression, String message) {
+    public ConstrettoExpressionException(String expression, List<String> currentTags, String message) {
         super(message);
         this.expression = expression;
+        this.currentTags = currentTags;
     }
 
-    public ConstrettoExpressionException(String expression, String message, Throwable cause) {
+    public ConstrettoExpressionException(String expression, List<String> currentTags, String message, Throwable cause) {
         super(message, cause);
         this.expression = expression;
-    }
-
-    public String getExpression() {
-        return expression;
+        this.currentTags = currentTags;
     }
 
     @Override
     public String toString() {
-        return "Evalutation of expression [" + expression + "] failed with message: " + getMessage();
+        return "Evalutation of expression [" + expression + "] failed with message: " + getMessage() + ". Current tags " + currentTags + "";
     }
 
 }

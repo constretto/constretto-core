@@ -15,7 +15,7 @@
  */
 package org.constretto;
 
-import org.constretto.model.ConfigurationSet;
+import org.constretto.model.TaggedPropertySet;
 
 import java.util.Collection;
 
@@ -24,5 +24,5 @@ import java.util.Collection;
  */
 public interface ConfigurationStore {
 
-    Collection<ConfigurationSet> parseConfiguration();
+    Collection<TaggedPropertySet> parseConfiguration();
 }

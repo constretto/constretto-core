@@ -16,10 +16,10 @@
 package org.constretto.internal.provider.helper;
 
 /**
- * 
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class DataSourceConfiguration {
+
     private String url;
     private String username;
     private String password;

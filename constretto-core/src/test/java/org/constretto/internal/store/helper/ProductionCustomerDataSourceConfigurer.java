@@ -18,7 +18,6 @@ package org.constretto.internal.store.helper;
 import org.constretto.annotation.ConfigurationSource;
 
 /**
- * 
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 @ConfigurationSource(basePath = "datasources.customer", tag = "production")

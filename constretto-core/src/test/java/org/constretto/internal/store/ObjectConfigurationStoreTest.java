@@ -24,7 +24,7 @@ import org.constretto.internal.store.helper.DefaultCustomerDataSourceConfigurer;
 import org.constretto.internal.store.helper.DevelopmentCustomerDataSourceConfigurer;
 import org.constretto.internal.store.helper.GenericDataSourceConfigurer;
 import org.constretto.internal.store.helper.ProductionCustomerDataSourceConfigurer;
-import org.constretto.model.ConfigurationSet;
+import org.constretto.model.TaggedPropertySet;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -66,8 +66,8 @@ public class ObjectConfigurationStoreTest extends AbstractConfigurationStoreTest
 
     @Test
     public void loadConfiguration() {
-        Collection<ConfigurationSet> configurationSets = store.parseConfiguration();
-        assertEquals(3, configurationSets.size());
+        Collection<TaggedPropertySet> taggedPropertySets = store.parseConfiguration();
+        assertEquals(3, taggedPropertySets.size());
     }
 
     @Test
