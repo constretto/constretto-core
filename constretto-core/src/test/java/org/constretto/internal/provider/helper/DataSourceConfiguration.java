@@ -26,8 +26,10 @@ public class DataSourceConfiguration {
     private String myUrl;
     private String myPassword;
     private Integer version;
+
     @Property
     private String vendor;
+
     @Property(name = "username")
     private String myUsername;
 
