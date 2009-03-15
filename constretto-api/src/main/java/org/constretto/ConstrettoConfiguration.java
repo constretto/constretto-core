@@ -67,9 +67,11 @@ public interface ConstrettoConfiguration {
 
     <T> T as(Class<T> configurationClass) throws ConstrettoException;
 
-    <T> T applyOn(T objectToConfigure) throws ConstrettoException;
+    <T> T on(T objectToConfigure) throws ConstrettoException;
 
-    ConstrettoConfiguration at(String expression);
+    ConstrettoConfiguration at(String expression) throws ConstrettoException;
+
+    ConstrettoConfiguration from(String expression) throws ConstrettoException;
 
     boolean hasValue(String expression);
 }

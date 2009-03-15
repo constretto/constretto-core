@@ -15,24 +15,52 @@
  */
 package org.constretto.internal.provider.helper;
 
+import org.constretto.annotation.Configure;
+import org.constretto.annotation.Property;
+
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class DataSourceConfiguration {
 
-    private String url;
-    private String username;
-    private String password;
+    private String myUrl;
+    private String myPassword;
+    private Integer version;
+    @Property
+    private String vendor;
+    @Property(name = "username")
+    private String myUsername;
+
+
+    @Configure
+    public void configureMe(@Property String url, @Property(name = "password") String secret) {
+        this.myUrl = url;
+        this.myPassword = secret;
+
+    }
 
     public String getUrl() {
-        return url;
+        return myUrl;
     }
 
     public String getUsername() {
-        return username;
+        return myUsername;
     }
 
     public String getPassword() {
-        return password;
+        return myPassword;
+    }
+
+    public String getVendor() {
+        return vendor;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    @Configure
+    public void setVersion(@Property Integer version) {
+        this.version = version;
     }
 }

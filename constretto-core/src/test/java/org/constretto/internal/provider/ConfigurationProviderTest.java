@@ -35,6 +35,8 @@ public class ConfigurationProviderTest {
         setProperty("datasources.customer.url", "jdbc://url");
         setProperty("datasources.customer.username", "username");
         setProperty("datasources.customer.password", "password");
+        setProperty("datasources.customer.vendor", "derby");
+        setProperty("datasources.customer.version", "10");
 
         configuration = new ConstrettoBuilder().createSystemPropertiesStore().getConfiguration();
 
@@ -61,14 +63,17 @@ public class ConfigurationProviderTest {
         assertEquals("jdbc://url", customerDataSource.getUrl());
         assertEquals("username", customerDataSource.getUsername());
         assertEquals("password", customerDataSource.getPassword());
+        assertEquals("derby", customerDataSource.getVendor());
     }
 
     @Test
     public void applyConfigurationObject() {
         DataSourceConfiguration customerDataSource = new DataSourceConfiguration();
-        configuration.at("datasources.customer").applyOn(customerDataSource);
-        assertEquals("jdbc://url", customerDataSource.getUrl());
+        configuration.at("datasources").from("customer").on(customerDataSource);
+        assertEquals("derby", customerDataSource.getVendor());
         assertEquals("username", customerDataSource.getUsername());
+        assertEquals("jdbc://url", customerDataSource.getUrl());
         assertEquals("password", customerDataSource.getPassword());
+        assertEquals(new Integer(10), customerDataSource.getVersion());
     }
 }

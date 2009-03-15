@@ -16,13 +16,19 @@
 package org.constretto.internal;
 
 import org.constretto.ConstrettoConfiguration;
+import org.constretto.annotation.Configure;
+import org.constretto.annotation.Property;
 import org.constretto.exception.ConstrettoConversionException;
 import org.constretto.exception.ConstrettoException;
 import org.constretto.exception.ConstrettoExpressionException;
 import static org.constretto.internal.converter.ValueConverterRegistry.convert;
 import org.constretto.model.ConfigurationNode;
+import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 
 /**
@@ -31,6 +37,7 @@ import java.util.List;
 public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     private List<String> currentTags;
     private final ConfigurationNode configuration;
+    private LocalVariableTableParameterNameDiscoverer nameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
 
     public DefaultConstrettoConfiguration(ConfigurationNode configuration, List<String> currentTags) {
         this.configuration = configuration;
@@ -106,19 +113,23 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
                     + " when trying to inject it with configuration", e);
         }
 
-        injectConfigurationUsingReflection(objectToConfigure);
+        injectConfigurationUsingAnnotations(objectToConfigure);
 
         return objectToConfigure;
     }
 
-    public <T> T applyOn(T objectToConfigure) throws ConstrettoException {
-        injectConfigurationUsingReflection(objectToConfigure);
+    public <T> T on(T objectToConfigure) throws ConstrettoException {
+        injectConfigurationUsingAnnotations(objectToConfigure);
         return objectToConfigure;
     }
 
-    public ConstrettoConfiguration at(String expression) {
+    public ConstrettoConfiguration at(String expression) throws ConstrettoException {
         ConfigurationNode currentConfigurationNode = findElementOrThrowException(expression);
         return new DefaultConstrettoConfiguration(currentConfigurationNode, currentTags);
+    }
+
+    public ConstrettoConfiguration from(String expression) throws ConstrettoException {
+        return at(expression);
     }
 
     public boolean hasValue(String expression) {
@@ -169,19 +180,68 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         return bestMatch;
     }
 
-    private <T> void injectConfigurationUsingReflection(T objectToConfigure) {
+    private <T> void injectConfigurationUsingAnnotations(T objectToConfigure) {
+        injectFields(objectToConfigure);
+        Method[] methods = objectToConfigure.getClass().getMethods();
+        for (Method method : methods) {
+            if (method.isAnnotationPresent(Configure.class)) {
+                Annotation[][] methodAnnotations = method.getParameterAnnotations();
+                String[] parameterNames = nameDiscoverer.getParameterNames(method);
+                Object[] resolvedArguments = new Object[methodAnnotations.length];
+                int i = 0;
+                for (Annotation[] parameterAnnotations : methodAnnotations) {
+                    if (parameterAnnotations.length == 0) {
+                        throw new ConstrettoException("Method annotated with @Configure, is missing one or more @Property parameterAnnotation on its fields");
+                    }
+                    for (Annotation parameterAnnotation : parameterAnnotations) {
+                        if (parameterAnnotation.annotationType() == Property.class) {
+                            Property property = (Property) parameterAnnotation;
+                            Class<?> parameterTargetClass = method.getParameterTypes()[i];
+                            String name = property.name();
+                            if (name.equals("")) {
+                                if (parameterNames == null) {
+                                    throw new ConstrettoException("Could not resolve lookup key from method parameter name. " +
+                                            "The application could be compiled without debug mode enabled. " +
+                                            "If The application is compiled without debug " +
+                                            "the name attribute on @Property is required.");
+                                } else {
+                                    name = parameterNames[i];
+                                }
+                            }
+                            ConfigurationNode node = findElementOrThrowException(name);
+                            resolvedArguments[i] = convert(parameterTargetClass, node.getValue());
+                        }
+                    }
+                    i++;
+                }
+                try {
+                    method.invoke(objectToConfigure, resolvedArguments);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+    }
+
+    private <T> void injectFields(T objectToConfigure) {
         Field[] fields = objectToConfigure.getClass().getDeclaredFields();
         for (Field field : fields) {
-            String name = field.getName();
-            field.setAccessible(true);
-            Class<?> fieldType = field.getType();
-            ConfigurationNode node = findElementOrThrowException(name);
-            try {
-                field.set(objectToConfigure, convert(fieldType, node.getValue()));
-            } catch (IllegalArgumentException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
+            if (field.isAnnotationPresent(Property.class)) {
+                Property propertyAnnotation = field.getAnnotation(Property.class);
+                String name = "".equals(propertyAnnotation.name()) ? field.getName() : propertyAnnotation.name();
+                field.setAccessible(true);
+                Class<?> fieldType = field.getType();
+                ConfigurationNode node = findElementOrThrowException(name);
+                try {
+                    field.set(objectToConfigure, convert(fieldType, node.getValue()));
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
