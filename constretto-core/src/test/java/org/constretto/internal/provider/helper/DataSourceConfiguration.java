@@ -60,7 +60,7 @@ public class DataSourceConfiguration {
     }
 
     @Configure
-    public void setVersion(@Property Integer version) {
+    public void setVersion(Integer version) {
         this.version = version;
     }
 }

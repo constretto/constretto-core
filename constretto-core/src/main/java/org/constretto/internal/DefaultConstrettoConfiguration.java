@@ -190,28 +190,28 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
                 Object[] resolvedArguments = new Object[methodAnnotations.length];
                 int i = 0;
                 for (Annotation[] parameterAnnotations : methodAnnotations) {
-                    if (parameterAnnotations.length == 0) {
-                        throw new ConstrettoException("Method annotated with @Configure, is missing one or more @Property parameterAnnotation on its fields");
-                    }
-                    for (Annotation parameterAnnotation : parameterAnnotations) {
-                        if (parameterAnnotation.annotationType() == Property.class) {
-                            Property property = (Property) parameterAnnotation;
-                            Class<?> parameterTargetClass = method.getParameterTypes()[i];
-                            String name = property.name();
-                            if (name.equals("")) {
-                                if (parameterNames == null) {
-                                    throw new ConstrettoException("Could not resolve lookup key from method parameter name. " +
-                                            "The application could be compiled without debug mode enabled. " +
-                                            "If The application is compiled without debug " +
-                                            "the name attribute on @Property is required.");
-                                } else {
-                                    name = parameterNames[i];
-                                }
+                    String name = "";
+                    Class<?> parameterTargetClass = method.getParameterTypes()[i];
+                    if (parameterAnnotations.length != 0) {
+                        for (Annotation parameterAnnotation : parameterAnnotations) {
+                            if (parameterAnnotation.annotationType() == Property.class) {
+                                Property property = (Property) parameterAnnotation;
+                                name = property.name();
                             }
-                            ConfigurationNode node = findElementOrThrowException(name);
-                            resolvedArguments[i] = convert(parameterTargetClass, node.getValue());
                         }
                     }
+                    if (name.equals("")) {
+                        if (parameterNames == null) {
+                            throw new ConstrettoException("Could not resolve lookup key from method parameter name. " +
+                                    "The application could be compiled without debug mode enabled. " +
+                                    "If The application is compiled without debug " +
+                                    "the name attribute on @Property is required.");
+                        } else {
+                            name = parameterNames[i];
+                        }
+                    }
+                    ConfigurationNode node = findElementOrThrowException(name);
+                    resolvedArguments[i] = convert(parameterTargetClass, node.getValue());
                     i++;
                 }
                 try {
