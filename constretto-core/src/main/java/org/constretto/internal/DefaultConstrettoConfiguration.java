@@ -27,7 +27,6 @@ import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -110,16 +109,16 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
             objectToConfigure = configurationClass.newInstance();
         } catch (Exception e) {
             throw new ConstrettoException("Could not instansiate class of type: " + configurationClass.getName()
-                    + " when trying to inject it with configuration", e);
+                    + " when trying to inject it with configuration, It may be missing a default constructor", e);
         }
 
-        injectConfigurationUsingAnnotations(objectToConfigure);
+        injectConfiguration(objectToConfigure);
 
         return objectToConfigure;
     }
 
     public <T> T on(T objectToConfigure) throws ConstrettoException {
-        injectConfigurationUsingAnnotations(objectToConfigure);
+        injectConfiguration(objectToConfigure);
         return objectToConfigure;
     }
 
@@ -180,8 +179,12 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         return bestMatch;
     }
 
-    private <T> void injectConfigurationUsingAnnotations(T objectToConfigure) {
+    private <T> void injectConfiguration(T objectToConfigure) {
         injectFields(objectToConfigure);
+        injectMethods(objectToConfigure);
+    }
+
+    private <T> void injectMethods(T objectToConfigure) {
         Method[] methods = objectToConfigure.getClass().getMethods();
         for (Method method : methods) {
             if (method.isAnnotationPresent(Configure.class)) {
@@ -202,10 +205,10 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
                     }
                     if (name.equals("")) {
                         if (parameterNames == null) {
-                            throw new ConstrettoException("Could not resolve lookup key from method parameter name. " +
-                                    "The application could be compiled without debug mode enabled. " +
-                                    "If The application is compiled without debug " +
-                                    "the name attribute on @Property is required.");
+                            throw new ConstrettoException("Could not resolve the name of the property to look up. " +
+                                    "The cause of this could be that the class is compiled without debug enabled. " +
+                                    "when a class is compiled without debug, the @Property with a name attribute is required " +
+                                    "to correctly resolve the property name.");
                         } else {
                             name = parameterNames[i];
                         }
@@ -216,14 +219,12 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
                 }
                 try {
                     method.invoke(objectToConfigure, resolvedArguments);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
+                } catch (Exception e) {
+                    throw new ConstrettoException("Cold not invoke method ["
+                            + method.getName() + "] annotated with @Configured,", e);
                 }
             }
         }
-
     }
 
     private <T> void injectFields(T objectToConfigure) {
@@ -237,10 +238,9 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
                 ConfigurationNode node = findElementOrThrowException(name);
                 try {
                     field.set(objectToConfigure, convert(fieldType, node.getValue()));
-                } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
+                } catch (Exception e) {
+                    throw new ConstrettoException("Cold not inject configuration into field ["
+                            + field.getName() + "] annotated with @Property,", e);
                 }
             }
         }
