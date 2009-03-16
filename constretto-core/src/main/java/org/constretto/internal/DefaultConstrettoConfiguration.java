@@ -218,6 +218,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
                     i++;
                 }
                 try {
+                    method.setAccessible(true);
                     method.invoke(objectToConfigure, resolvedArguments);
                 } catch (Exception e) {
                     throw new ConstrettoException("Cold not invoke method ["
