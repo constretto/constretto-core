@@ -84,19 +84,32 @@ public class ConfigurationProviderLookupTest {
         assertEquals("key1-value", constrettoConfiguration.evaluateToString("key1"));
     }
 
+    @Test(expected = ConstrettoException.class)
     public void multiTaggedLookupForKeyNotInAnyCurrentTagsAndNotInDefaultTag() {
+        ConstrettoConfiguration constrettoConfiguration = prepareTests("production", "test", "some-tag");
+        constrettoConfiguration.evaluateToString("ionlyexistindevelopment");
     }
 
+    @Test
     public void multiTaggedLookupForKeyNotInAnyCurrentTagsButExistsInDefaultTag() {
+        ConstrettoConfiguration constrettoConfiguration = prepareTests("productiontest", "test", "some-tag");
+        assertEquals("http://webservice", constrettoConfiguration.evaluateToString("webservices-base-url"));
     }
 
+    @Test
     public void multiTaggedLookupForKeyInOneOfTheCurrentTagsButNotInDefaultTag() {
+        ConstrettoConfiguration constrettoConfiguration = prepareTests("production", "development", "some-tag");
+        assertEquals("I only exist in development", constrettoConfiguration.evaluateToString("ionlyexistindevelopment"));
     }
 
-    public void multiTaggedLookupForKeyInOneOfTheCurrentTagsAndInDefaultTag() {
-    }
-
-    public void multiTaggedLookupForKeyInSeveralOfTheCurrentTagsButNotInDefaultTag() {
+    @Test
+    public void multiTaggedLookupForKeyInSeveralOfTheCurrentTagsAndInDefaultTag() {
+        ConstrettoConfiguration constrettoConfiguration = prepareTests("production", "development");
+        assertEquals("http://production.webservice", constrettoConfiguration.evaluateToString("webservices-base-url"));
+        constrettoConfiguration = prepareTests("development", "production");
+        assertEquals("http://development.webservice", constrettoConfiguration.evaluateToString("webservices-base-url"));
+        constrettoConfiguration = prepareTests();
+        assertEquals("http://webservice", constrettoConfiguration.evaluateToString("webservices-base-url"));
     }
 
     public void simpleLookupForKeyContainingReferencesToOtherKeys() {

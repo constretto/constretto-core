@@ -32,12 +32,6 @@ public class ConstrettoExpressionException extends ConstrettoException {
         this.currentTags = currentTags;
     }
 
-    public ConstrettoExpressionException(String expression, List<String> currentTags, String message, Throwable cause) {
-        super(message, cause);
-        this.expression = expression;
-        this.currentTags = currentTags;
-    }
-
     @Override
     public String toString() {
         return "Evalutation of expression [" + expression + "] failed with message: " + getMessage() + ". Current tags " + currentTags + "";

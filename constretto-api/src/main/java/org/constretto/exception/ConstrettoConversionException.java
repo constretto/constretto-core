@@ -37,14 +37,6 @@ public class ConstrettoConversionException extends ConstrettoException {
         this.targetClass = targetClass;
     }
 
-    public String getValue() {
-        return value;
-    }
-
-    public Class getTargetClass() {
-        return targetClass;
-    }
-
     @Override
     public String toString() {
         return "Conversion failed for value \"" + value + "\" to type \"" + targetClass.getName() + "\" with message \"" + getMessage() + "\"";

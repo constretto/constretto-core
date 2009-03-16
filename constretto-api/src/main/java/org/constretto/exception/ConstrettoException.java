@@ -20,10 +20,6 @@ package org.constretto.exception;
  */
 public class ConstrettoException extends RuntimeException {
 
-    ConstrettoException() {
-        super();
-    }
-
     public ConstrettoException(String message, Throwable cause) {
         super(message, cause);
     }

@@ -38,7 +38,6 @@ public class DataSourceConfiguration {
     public void configureMe(@Configuration String url, @Configuration(expression = "password") String secret) {
         this.myUrl = url;
         this.myPassword = secret;
-
     }
 
     public String getUrl() {

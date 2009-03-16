@@ -140,27 +140,4 @@ public class ConfigurationNode {
                 ", tag='" + tag + '\'' +
                 '}';
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ConfigurationNode that = (ConfigurationNode) o;
-
-        return !(name != null ? !name.equals(that.name) : that.name != null) &&
-                !(tag != null ? !tag.equals(that.tag) : that.tag != null) &&
-                !(value != null ? !value.equals(that.value) : that.value != null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + (tag != null ? tag.hashCode() : 0);
-        result = 31 * result + (children != null ? children.hashCode() : 0);
-        result = 31 * result + (parent != null ? parent.hashCode() : 0);
-        result = 31 * result + (value != null ? value.hashCode() : 0);
-        return result;
-    }
 }
