@@ -16,8 +16,8 @@
 package org.constretto.internal;
 
 import org.constretto.ConstrettoConfiguration;
+import org.constretto.annotation.Configuration;
 import org.constretto.annotation.Configure;
-import org.constretto.annotation.Property;
 import org.constretto.exception.ConstrettoConversionException;
 import org.constretto.exception.ConstrettoException;
 import org.constretto.exception.ConstrettoExpressionException;
@@ -197,18 +197,18 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
                     Class<?> parameterTargetClass = method.getParameterTypes()[i];
                     if (parameterAnnotations.length != 0) {
                         for (Annotation parameterAnnotation : parameterAnnotations) {
-                            if (parameterAnnotation.annotationType() == Property.class) {
-                                Property property = (Property) parameterAnnotation;
-                                name = property.name();
+                            if (parameterAnnotation.annotationType() == Configuration.class) {
+                                Configuration configuration = (Configuration) parameterAnnotation;
+                                name = configuration.expression();
                             }
                         }
                     }
                     if (name.equals("")) {
                         if (parameterNames == null) {
-                            throw new ConstrettoException("Could not resolve the name of the property to look up. " +
+                            throw new ConstrettoException("Could not resolve the expression of the property to look up. " +
                                     "The cause of this could be that the class is compiled without debug enabled. " +
-                                    "when a class is compiled without debug, the @Property with a name attribute is required " +
-                                    "to correctly resolve the property name.");
+                                    "when a class is compiled without debug, the @Configuration with a expression attribute is required " +
+                                    "to correctly resolve the property expression.");
                         } else {
                             name = parameterNames[i];
                         }
@@ -231,9 +231,9 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     private <T> void injectFields(T objectToConfigure) {
         Field[] fields = objectToConfigure.getClass().getDeclaredFields();
         for (Field field : fields) {
-            if (field.isAnnotationPresent(Property.class)) {
-                Property propertyAnnotation = field.getAnnotation(Property.class);
-                String name = "".equals(propertyAnnotation.name()) ? field.getName() : propertyAnnotation.name();
+            if (field.isAnnotationPresent(Configuration.class)) {
+                Configuration configurationAnnotation = field.getAnnotation(Configuration.class);
+                String name = "".equals(configurationAnnotation.expression()) ? field.getName() : configurationAnnotation.expression();
                 field.setAccessible(true);
                 Class<?> fieldType = field.getType();
                 ConfigurationNode node = findElementOrThrowException(name);
@@ -241,7 +241,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
                     field.set(objectToConfigure, convert(fieldType, node.getValue()));
                 } catch (Exception e) {
                     throw new ConstrettoException("Cold not inject configuration into field ["
-                            + field.getName() + "] annotated with @Property,", e);
+                            + field.getName() + "] annotated with @Configuration,", e);
                 }
             }
         }

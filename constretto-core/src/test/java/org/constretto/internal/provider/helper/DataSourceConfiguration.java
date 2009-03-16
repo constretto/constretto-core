@@ -15,8 +15,8 @@
  */
 package org.constretto.internal.provider.helper;
 
+import org.constretto.annotation.Configuration;
 import org.constretto.annotation.Configure;
-import org.constretto.annotation.Property;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
@@ -27,15 +27,15 @@ public class DataSourceConfiguration {
     private String myPassword;
     private Integer version;
 
-    @Property
+    @Configuration
     private String vendor;
 
-    @Property(name = "username")
+    @Configuration(expression = "username")
     private String myUsername;
 
 
     @Configure
-    public void configureMe(@Property String url, @Property(name = "password") String secret) {
+    public void configureMe(@Configuration String url, @Configuration(expression = "password") String secret) {
         this.myUrl = url;
         this.myPassword = secret;
 

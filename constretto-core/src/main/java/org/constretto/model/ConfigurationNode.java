@@ -135,7 +135,7 @@ public class ConfigurationNode {
     @Override
     public String toString() {
         return "ConfigurationNode{" +
-                "name='" + name + '\'' +
+                "expression='" + name + '\'' +
                 ", value='" + value + '\'' +
                 ", tag='" + tag + '\'' +
                 '}';

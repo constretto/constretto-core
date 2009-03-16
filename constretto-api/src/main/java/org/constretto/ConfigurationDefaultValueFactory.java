@@ -13,16 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.constretto.annotation;
-
-import java.lang.annotation.*;
+package org.constretto;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
-@Target({ElementType.PARAMETER, ElementType.FIELD})
-@Retention(RetentionPolicy.RUNTIME)
-@Inherited
-public @interface Property {
-    String name() default "";
+public interface ConfigurationDefaultValueFactory<T> {
+
+    T getDefaultValue();
 }
