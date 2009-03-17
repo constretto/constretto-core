@@ -283,10 +283,8 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
 
     }
 
-
     private boolean hasAnnotationDefaults(Configuration configurationAnnotation) {
-        return !("".equals(configurationAnnotation.defaultValue()) &&
-                configurationAnnotation.defaultValueFactory().equals(Configuration.EmptyValueFactory.class));
+        return !("".equals(configurationAnnotation.defaultValue()) && configurationAnnotation.defaultValueFactory().equals(Configuration.EmptyValueFactory.class));
     }
 
     private String processVariablesInProperty(final String expression, final Collection<String> visitedPlaceholders) {
