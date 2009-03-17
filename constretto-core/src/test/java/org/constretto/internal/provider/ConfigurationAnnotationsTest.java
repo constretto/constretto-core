@@ -27,7 +27,7 @@ import static java.lang.System.setProperty;
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
-public class ConfigurationProviderTest {
+public class ConfigurationAnnotationsTest {
     private ConstrettoConfiguration configuration;
 
     @Before
