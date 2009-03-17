@@ -29,8 +29,4 @@ public class FloatValueConverter implements ValueConverter<Float> {
             throw new ConstrettoConversionException(value, Float.class, e);
         }
     }
-
-    public String toString(Float value) {
-        return value.toString();
-    }
 }

@@ -25,8 +25,4 @@ public class StringValueConverter implements ValueConverter<String> {
     public String fromString(String value) throws ConstrettoConversionException {
         return value;
     }
-
-    public String toString(String value) {
-        return value;
-    }
 }

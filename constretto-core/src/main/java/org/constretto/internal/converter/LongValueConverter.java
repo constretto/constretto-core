@@ -29,8 +29,4 @@ public class LongValueConverter implements ValueConverter<Long> {
             throw new ConstrettoConversionException(value, Long.class, e);
         }
     }
-
-    public String toString(Long value) {
-        return value.toString();
-    }
 }

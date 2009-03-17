@@ -40,7 +40,7 @@ public class DefaultConfigurationContextResolver implements ConfigurationContext
 
     private String getFromSystemPropertyOrSystemEnv() {
         String assemblyEnvironment = System.getProperty(TAGS);
-        if (null == assemblyEnvironment) {
+        if (assemblyEnvironment == null) {
             assemblyEnvironment = System.getenv(TAGS);
         }
         return assemblyEnvironment;

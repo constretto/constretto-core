@@ -23,7 +23,4 @@ import org.constretto.exception.ConstrettoConversionException;
 public interface ValueConverter<T> {
 
     T fromString(String value) throws ConstrettoConversionException;
-
-    String toString(T value);
-
 }

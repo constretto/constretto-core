@@ -35,8 +35,4 @@ public class BooleanValueConverter implements ValueConverter<Boolean> {
         }
         return Boolean.valueOf(value);
     }
-
-    public String toString(Boolean value) {
-        return value.toString();
-    }
 }

@@ -41,29 +41,10 @@ public class PropertiesStore implements ConfigurationStore {
 
     private final Map<String, String> properties = new HashMap<String, String>();
 
-    /**
-     * Tag prefix specifies the contract of which is used in property files to flag that an entry is coupled to a tag,
-     * i.e.:
-     *
-     * @production.datasource.username=produser means that the property datasource.username exists in context of the
-     * production tag only.
-     * <p/>
-     * Unless anything else is specified, the default value is used, i.e. datasource.username=default value
-     */
     private String tagPrefix;
 
     public PropertiesStore() {
         this.tagPrefix = DEFAULT_TAG_PREFIX;
-    }
-
-    public PropertiesStore(Properties... properties) {
-        this();
-        addPropertiesToMap(properties);
-    }
-
-    public PropertiesStore addProperties(Properties props) {
-        addPropertiesToMap(props);
-        return this;
     }
 
     public PropertiesStore addResource(Resource resource) {
@@ -77,10 +58,6 @@ public class PropertiesStore implements ConfigurationStore {
 
     public List<TaggedPropertySet> parseConfiguration() {
         return getPropertySets();
-    }
-
-    public void setTagPrefix(String tagPrefix) {
-        this.tagPrefix = tagPrefix;
     }
 
     private void addPropertiesToMap(Properties... props) {

@@ -19,11 +19,11 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
 import org.constretto.ConfigurationStore;
 import org.constretto.annotation.ConfigurationSource;
+import org.constretto.exception.ConstrettoException;
 import org.constretto.model.ConfigurationNode;
 import org.constretto.model.TaggedPropertySet;
 
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
@@ -77,12 +77,8 @@ public class ObjectConfigurationStore implements ConfigurationStore {
                         path = basePath + "." + path;
                     }
                     properties.put(path, value);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                } catch (NoSuchMethodException e) {
-                    e.printStackTrace();
+                } catch (Exception e) {
+                    throw new ConstrettoException("Could not access data in field", e);
                 }
             }
 

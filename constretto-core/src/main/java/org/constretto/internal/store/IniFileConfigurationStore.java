@@ -22,7 +22,6 @@ import org.constretto.model.TaggedPropertySet;
 import org.ini4j.IniFile;
 import org.springframework.core.io.Resource;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
@@ -90,9 +89,7 @@ public class IniFileConfigurationStore implements ConfigurationStore {
     private Preferences load(Resource resource) {
         try {
             return new IniFile(resource.getFile());
-        } catch (BackingStoreException e) {
-            throw new ConstrettoException(e);
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new ConstrettoException(e);
         }
     }

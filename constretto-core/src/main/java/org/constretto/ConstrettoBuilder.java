@@ -22,8 +22,6 @@ import org.constretto.internal.store.PropertiesStore;
 import org.constretto.internal.store.SystemPropertiesStore;
 import org.springframework.core.io.Resource;
 
-import java.util.Properties;
-
 /**
  * Provides a fluent Java api to build a constretto configuration object.
  *
@@ -79,11 +77,6 @@ public class ConstrettoBuilder {
 
     public class PropertiesStoreBuilder implements StoreBuilder {
         private final PropertiesStore store = new PropertiesStore();
-
-        public PropertiesStoreBuilder addProperties(Properties properties) {
-            store.addProperties(properties);
-            return this;
-        }
 
         public PropertiesStoreBuilder addResource(Resource resource) {
             store.addResource(resource);

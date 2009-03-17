@@ -29,8 +29,4 @@ public class ShortValueConverter implements ValueConverter<Short> {
             throw new ConstrettoConversionException(value, Short.class, e);
         }
     }
-
-    public String toString(Short value) {
-        return value.toString();
-    }
 }

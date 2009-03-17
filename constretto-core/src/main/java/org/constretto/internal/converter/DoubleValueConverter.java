@@ -29,8 +29,4 @@ public class DoubleValueConverter implements ValueConverter<Double> {
             throw new ConstrettoConversionException(value, Double.class, e);
         }
     }
-
-    public String toString(Double value) {
-        return value.toString();
-    }
 }

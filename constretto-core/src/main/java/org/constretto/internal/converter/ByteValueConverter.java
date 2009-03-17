@@ -29,8 +29,4 @@ public class ByteValueConverter implements ValueConverter<Byte> {
             throw new ConstrettoConversionException(value, Byte.class, e);
         }
     }
-
-    public String toString(Byte value) {
-        return value.toString();
-    }
 }

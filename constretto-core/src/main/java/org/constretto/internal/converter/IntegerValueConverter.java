@@ -29,8 +29,4 @@ public class IntegerValueConverter implements ValueConverter<Integer> {
             throw new ConstrettoConversionException(value, Integer.class, e);
         }
     }
-
-    public String toString(Integer value) {
-        return value.toString();
-    }
 }
