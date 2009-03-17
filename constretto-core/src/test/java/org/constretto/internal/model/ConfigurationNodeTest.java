@@ -52,6 +52,7 @@ public class ConfigurationNodeTest {
 
         List<ConfigurationNode> key4Node = configurationNode.findAllBy("parent-3.child-2.child3.key-4");
         assertEquals(1, key4Node.size());
+        assertEquals("parent-3.child-2.child3.key-4", key4Node.get(0).getExpression());
 
 
     }

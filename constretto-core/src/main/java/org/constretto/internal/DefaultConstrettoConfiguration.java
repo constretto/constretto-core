@@ -21,19 +21,23 @@ import org.constretto.annotation.Configure;
 import org.constretto.exception.ConstrettoConversionException;
 import org.constretto.exception.ConstrettoException;
 import org.constretto.exception.ConstrettoExpressionException;
-import static org.constretto.internal.converter.ValueConverterRegistry.convert;
+import org.constretto.internal.converter.ValueConverterRegistry;
 import org.constretto.model.ConfigurationNode;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
+    private final String VARIABLE_PREFIX = "#{";
+    private final String VARIABLE_SUFFIX = "}";
     private List<String> currentTags;
     private final ConfigurationNode configuration;
     private LocalVariableTableParameterNameDiscoverer nameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
@@ -45,13 +49,12 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
 
     @SuppressWarnings("unchecked")
     public <K> K evaluateTo(String expression, K defaultValue) {
-        ConfigurationNode node = findElementOrNull(expression);
-        if (node == null) {
+        if (!hasValue(expression)) {
             return defaultValue;
         }
         K value;
         try {
-            value = (K) convert(defaultValue.getClass(), node.getValue());
+            value = (K) processAndConvert(defaultValue.getClass(), expression);
         } catch (ConstrettoConversionException e) {
             value = null;
         }
@@ -59,48 +62,39 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     }
 
     public <K> K evaluateTo(Class<K> targetClass, String expression) throws ConstrettoExpressionException {
-        ConfigurationNode node = findElementOrThrowException(expression);
-        return convert(targetClass, node.getValue());
+        return processAndConvert(targetClass, expression);
     }
 
     public String evaluateToString(String expression) throws ConstrettoExpressionException {
-        ConfigurationNode node = findElementOrThrowException(expression);
-        return node.getValue();
+        return processAndConvert(String.class, expression);
     }
 
     public Boolean evaluateToBoolean(String expression) throws ConstrettoExpressionException {
-        ConfigurationNode node = findElementOrThrowException(expression);
-        return convert(Boolean.class, node.getValue());
+        return processAndConvert(Boolean.class, expression);
     }
 
     public Double evaluateToDouble(String expression) throws ConstrettoExpressionException {
-        ConfigurationNode node = findElementOrThrowException(expression);
-        return convert(Double.class, node.getValue());
+        return processAndConvert(Double.class, expression);
     }
 
     public Long evaluateToLong(String expression) throws ConstrettoExpressionException {
-        ConfigurationNode node = findElementOrThrowException(expression);
-        return convert(Long.class, node.getValue());
+        return processAndConvert(Long.class, expression);
     }
 
     public Float evaluateToFloat(String expression) throws ConstrettoExpressionException {
-        ConfigurationNode node = findElementOrThrowException(expression);
-        return convert(Float.class, node.getValue());
+        return processAndConvert(Float.class, expression);
     }
 
     public Integer evaluateToInt(String expression) throws ConstrettoExpressionException {
-        ConfigurationNode node = findElementOrThrowException(expression);
-        return convert(Integer.class, node.getValue());
+        return processAndConvert(Integer.class, expression);
     }
 
     public Short evaluateToShort(String expression) throws ConstrettoExpressionException {
-        ConfigurationNode node = findElementOrThrowException(expression);
-        return convert(Short.class, node.getValue());
+        return processAndConvert(Short.class, expression);
     }
 
     public Byte evaluateToByte(String expression) throws ConstrettoExpressionException {
-        ConfigurationNode node = findElementOrThrowException(expression);
-        return convert(Byte.class, node.getValue());
+        return processAndConvert(Byte.class, expression);
     }
 
     public <T> T as(Class<T> configurationClass) throws ConstrettoException {
@@ -124,6 +118,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
 
     public ConstrettoConfiguration at(String expression) throws ConstrettoException {
         ConfigurationNode currentConfigurationNode = findElementOrThrowException(expression);
+        ConfigurationNode.createRootElementOf(currentConfigurationNode);
         return new DefaultConstrettoConfiguration(currentConfigurationNode, currentTags);
     }
 
@@ -135,7 +130,6 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         ConfigurationNode node = findElementOrNull(expression);
         return null != node;
     }
-
 
     //
     // Helper methods
@@ -149,6 +143,11 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         return resolvedNode;
     }
 
+    private <T> T processAndConvert(Class<T> clazz, String expression) throws ConstrettoException {
+        String parsedValue = processVariablesInProperty(expression, new ArrayList<String>());
+        return ValueConverterRegistry.convert(clazz, parsedValue);
+    }
+
     private ConfigurationNode findElementOrNull(String expression) {
         List<ConfigurationNode> node = configuration.findAllBy(expression);
         return resolveMatch(node);
@@ -158,7 +157,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         ConfigurationNode bestMatch = null;
         for (ConfigurationNode configurationNode : node) {
             if (ConfigurationNode.DEFAULT_TAG.equals(configurationNode.getTag())) {
-                if (bestMatch == null) {
+                if (bestMatch == null || bestMatch.getTag().equals(ConfigurationNode.DEFAULT_TAG)) {
                     bestMatch = configurationNode;
                 }
             } else if (currentTags.contains(configurationNode.getTag())) {
@@ -214,7 +213,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
                         }
                     }
                     ConfigurationNode node = findElementOrThrowException(name);
-                    resolvedArguments[i] = convert(parameterTargetClass, node.getValue());
+                    resolvedArguments[i] = processAndConvert(parameterTargetClass, node.getExpression());
                     i++;
                 }
                 try {
@@ -238,12 +237,64 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
                 Class<?> fieldType = field.getType();
                 ConfigurationNode node = findElementOrThrowException(name);
                 try {
-                    field.set(objectToConfigure, convert(fieldType, node.getValue()));
+                    field.set(objectToConfigure, processAndConvert(fieldType, node.getExpression()));
                 } catch (Exception e) {
                     throw new ConstrettoException("Cold not inject configuration into field ["
                             + field.getName() + "] annotated with @Configuration,", e);
                 }
             }
+        }
+    }
+
+    private String processVariablesInProperty(final String expression, final Collection<String> visitedPlaceholders) {
+        visitedPlaceholders.add(expression);
+        ConfigurationNode currentNode = findElementOrThrowException(expression);
+        String value = currentNode.getValue();
+        if (valueNeedsVariableResolving(value)) {
+            value = substituteVariablesinValue(value, visitedPlaceholders);
+        }
+        return value;
+    }
+
+    private String substituteVariablesinValue(String value, final Collection<String> visitedPlaceholders) {
+        while (valueNeedsVariableResolving(value)) {
+            ConfigurationVariable expresionToLookup = extractConfigurationVariable(value);
+            if (visitedPlaceholders.contains(expresionToLookup.expression)) {
+                throw new ConstrettoException(
+                        "A cyclic dependency found in a property");
+            }
+            value = value.substring(0, expresionToLookup.startIndex)
+                    + processVariablesInProperty(expresionToLookup.expression, visitedPlaceholders)
+                    + value.subSequence(expresionToLookup.endIndex + 1, value.length());
+        }
+        return value;
+    }
+
+    private ConfigurationVariable extractConfigurationVariable(String expression) {
+        int startIndex = expression.indexOf(VARIABLE_PREFIX);
+        int endindex = expression.indexOf(VARIABLE_SUFFIX, startIndex);
+        String parsedExpression = expression.substring(startIndex + 2, endindex);
+        return new ConfigurationVariable(startIndex, endindex, parsedExpression);
+    }
+
+    private boolean valueNeedsVariableResolving(String value) {
+        return null != value && value.contains(VARIABLE_PREFIX) && value.contains(VARIABLE_SUFFIX);
+    }
+
+    private class ConfigurationVariable {
+        private final int startIndex;
+        private final int endIndex;
+        private final String expression;
+
+        public ConfigurationVariable(int startIndex, int endIndex, String expression) {
+            this.startIndex = startIndex;
+            this.endIndex = endIndex;
+            this.expression = expression;
+        }
+
+        @Override
+        public String toString() {
+            return expression + ", at: " + startIndex + " to: " + endIndex;
         }
     }
 }

@@ -59,6 +59,7 @@ public class IniFileConfigurationStore implements ConfigurationStore {
 
                 for (String key : keysPerNode) {
                     String value = node.get(key, null);
+                    System.out.println(key + " = " + value);
                     properties.put(key, value);
                 }
                 if (tag.equals(DEFAULT_TAG)) {

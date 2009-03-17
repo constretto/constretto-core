@@ -15,19 +15,17 @@
  */
 package org.constretto.internal.provider;
 
-import org.constretto.ConstrettoBuilder;
 import org.constretto.ConstrettoConfiguration;
 import org.constretto.exception.ConstrettoException;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
-import org.springframework.core.io.ClassPathResource;
 
 /**
  * @author <a href="mailto:kristoffer.moum@arktekk.no">Kristoffer Moum</a>
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
-public class ConfigurationProviderLookupTest {
+public abstract class AbstractConfigurationProviderLookupTest {
 
     @After
     public void cleanup() {
@@ -54,7 +52,6 @@ public class ConfigurationProviderLookupTest {
         System.setProperty("key1", "key1-value-in-system-properties");
         config = prepareTests();
         assertEquals("key1-value-in-system-properties", config.evaluateToString("key1"));
-
     }
 
     @Test(expected = ConstrettoException.class)
@@ -112,33 +109,38 @@ public class ConfigurationProviderLookupTest {
         assertEquals("http://webservice", constrettoConfiguration.evaluateToString("webservices-base-url"));
     }
 
+    @Test
     public void simpleLookupForKeyContainingReferencesToOtherKeys() {
+        ConstrettoConfiguration constrettoConfiguration = prepareTests();
+        assertEquals("used at the beginning it works", constrettoConfiguration.evaluateToString("at-start"));
+        assertEquals("when used in the middle, it also works", constrettoConfiguration.evaluateToString("in-the-middle"));
+        assertEquals("it works when its at the end", constrettoConfiguration.evaluateToString("at-end"));
     }
 
-    public void simpleLookupForKeyContainingDirectCircularReferencesToOtherKeys() {
+    @Test(expected = ConstrettoException.class)
+    public void simpleLookupForKeyContainingDirectCircularReferencesToItSelf() {
+        ConstrettoConfiguration constrettoConfiguration = prepareTests();
+        constrettoConfiguration.evaluateToString("circular");
     }
 
+    @Test(expected = ConstrettoException.class)
     public void simpleLookupForKeyContainingTransitiveCircularReferencesToOtherKeys() {
+        ConstrettoConfiguration constrettoConfiguration = prepareTests();
+        constrettoConfiguration.evaluateToString("transitive");
     }
 
-    public void simpleTaggedLookupForKeyContainingReferencesToOtherKeys() {
+    @Test
+    public void taggedLookupForKeyContainingReferencesToOtherKeys() {
+        ConstrettoConfiguration constrettoConfiguration = prepareTests();
+        assertEquals("http://webservice/customer", constrettoConfiguration.evaluateToString("webservice.customer"));
+        constrettoConfiguration = prepareTests("development");
+        assertEquals("http://development.webservice/customer", constrettoConfiguration.evaluateToString("webservice.customer"));
+        constrettoConfiguration = prepareTests("development", "production");
+        assertEquals("http://development.webservice/customer", constrettoConfiguration.evaluateToString("webservice.customer"));
+        constrettoConfiguration = prepareTests("production", "development");
+        assertEquals("http://production.webservice/customer", constrettoConfiguration.evaluateToString("webservice.customer"));
     }
 
-    public void multiTaggedLookupForKeyContainingReferencesToOtherKeys() {
-    }
-
-    public ConstrettoConfiguration prepareTests(String... tags) {
-        ConstrettoBuilder constrettoBuilder = new ConstrettoBuilder();
-        constrettoBuilder
-                .createPropertiesStore()
-                .addResource(new ClassPathResource(("org/constretto/internal/provider/helper/provider-test.properties")))
-                .addResource(new ClassPathResource(("org/constretto/internal/provider/helper/provider-test-overloaded.properties")))
-                .done()
-                .createSystemPropertiesStore();
-        for (String tag : tags) {
-            constrettoBuilder.addCurrentTag(tag);
-        }
-        return constrettoBuilder.getConfiguration();
-    }
+    public abstract ConstrettoConfiguration prepareTests(String... tags);
 
 }

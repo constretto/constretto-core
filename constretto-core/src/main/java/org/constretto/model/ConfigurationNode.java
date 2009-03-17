@@ -25,6 +25,7 @@ import java.util.List;
 public class ConfigurationNode {
     public static final String DEFAULT_TAG = "[default-tag]";
     public static final String ALL_TAG = "[all-tag]";
+    private static final String ROOT_ELEMENT_NAME = "root-element";
     private final String name;
     private final String tag;
     private final List<ConfigurationNode> children = new ArrayList<ConfigurationNode>();
@@ -36,8 +37,15 @@ public class ConfigurationNode {
         return new ConfigurationNode();
     }
 
+    public static void createRootElementOf(ConfigurationNode currentConfigurationNode) {
+        ConfigurationNode newRoot = new ConfigurationNode();
+        for (ConfigurationNode childNode : currentConfigurationNode.children) {
+            newRoot.addChild(childNode);
+        }
+    }
+
     private ConfigurationNode() {
-        this.name = "root-element";
+        this.name = ROOT_ELEMENT_NAME;
         this.tag = DEFAULT_TAG;
     }
 
@@ -56,8 +64,27 @@ public class ConfigurationNode {
         return value;
     }
 
+    public void updateValue(String value) {
+        this.value = value;
+    }
+
     public String getTag() {
         return tag;
+    }
+
+
+    public String getName() {
+        return name;
+    }
+
+    public String getExpression() {
+        String expression;
+        if (parent != null && !parent.name.equals(ROOT_ELEMENT_NAME)) {
+            expression = parent.getExpression() + "." + name;
+        } else {
+            expression = name;
+        }
+        return expression;
     }
 
     public void update(String expression, String value, String tag) {
@@ -102,7 +129,6 @@ public class ConfigurationNode {
         return null;
     }
 
-
     private List<ConfigurationNode> getAllMatchingChildren(String name) {
         List<ConfigurationNode> matches = new ArrayList<ConfigurationNode>();
         for (ConfigurationNode currentNode : children) {
@@ -112,6 +138,7 @@ public class ConfigurationNode {
         }
         return matches;
     }
+
 
     private ConfigurationNode findOrCreateParent(String expression) {
         ConfigurationNode currentNode = this;
