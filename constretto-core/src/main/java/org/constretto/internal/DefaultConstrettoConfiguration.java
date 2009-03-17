@@ -15,6 +15,7 @@
  */
 package org.constretto.internal;
 
+import org.constretto.ConfigurationDefaultValueFactory;
 import org.constretto.ConstrettoConfiguration;
 import org.constretto.annotation.Configuration;
 import org.constretto.annotation.Configure;
@@ -186,64 +187,106 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     private <T> void injectMethods(T objectToConfigure) {
         Method[] methods = objectToConfigure.getClass().getMethods();
         for (Method method : methods) {
-            if (method.isAnnotationPresent(Configure.class)) {
-                Annotation[][] methodAnnotations = method.getParameterAnnotations();
-                String[] parameterNames = nameDiscoverer.getParameterNames(method);
-                Object[] resolvedArguments = new Object[methodAnnotations.length];
-                int i = 0;
-                for (Annotation[] parameterAnnotations : methodAnnotations) {
-                    String name = "";
-                    Class<?> parameterTargetClass = method.getParameterTypes()[i];
-                    if (parameterAnnotations.length != 0) {
-                        for (Annotation parameterAnnotation : parameterAnnotations) {
-                            if (parameterAnnotation.annotationType() == Configuration.class) {
-                                Configuration configuration = (Configuration) parameterAnnotation;
-                                name = configuration.expression();
+            try {
+                if (method.isAnnotationPresent(Configure.class)) {
+                    Annotation[][] methodAnnotations = method.getParameterAnnotations();
+                    String[] parameterNames = nameDiscoverer.getParameterNames(method);
+                    Object[] resolvedArguments = new Object[methodAnnotations.length];
+                    int i = 0;
+                    Object defaultValue = null;
+                    for (Annotation[] parameterAnnotations : methodAnnotations) {
+                        String expression = "";
+                        Class<?> parameterTargetClass = method.getParameterTypes()[i];
+                        if (parameterAnnotations.length != 0) {
+                            for (Annotation parameterAnnotation : parameterAnnotations) {
+                                if (parameterAnnotation.annotationType() == Configuration.class) {
+                                    Configuration configurationAnnotation = (Configuration) parameterAnnotation;
+                                    expression = configurationAnnotation.expression();
+                                    if (hasAnnotationDefaults(configurationAnnotation)) {
+                                        if (configurationAnnotation.defaultValueFactory().equals(Configuration.EmptyValueFactory.class)) {
+                                            defaultValue = ValueConverterRegistry.convert(parameterTargetClass, configurationAnnotation.defaultValue());
+
+                                        } else {
+                                            ConfigurationDefaultValueFactory valueFactory = configurationAnnotation.defaultValueFactory().newInstance();
+                                            defaultValue = valueFactory.getDefaultValue();
+                                        }
+                                    }
+                                }
                             }
                         }
-                    }
-                    if (name.equals("")) {
-                        if (parameterNames == null) {
-                            throw new ConstrettoException("Could not resolve the expression of the property to look up. " +
-                                    "The cause of this could be that the class is compiled without debug enabled. " +
-                                    "when a class is compiled without debug, the @Configuration with a expression attribute is required " +
-                                    "to correctly resolve the property expression.");
-                        } else {
-                            name = parameterNames[i];
+                        if (expression.equals("")) {
+                            if (parameterNames == null) {
+                                throw new ConstrettoException("Could not resolve the expression of the property to look up. " +
+                                        "The cause of this could be that the class is compiled without debug enabled. " +
+                                        "when a class is compiled without debug, the @Configuration with a expression attribute is required " +
+                                        "to correctly resolve the property expression.");
+                            } else {
+                                expression = parameterNames[i];
+                            }
                         }
+                        if (hasValue(expression)) {
+                            ConfigurationNode node = findElementOrThrowException(expression);
+                            resolvedArguments[i] = processAndConvert(parameterTargetClass, node.getExpression());
+                        } else {
+                            if (defaultValue != null) {
+                                resolvedArguments[i] = defaultValue;
+                            } else {
+                                throw new ConstrettoException("Error when trying to inject field...bla bla bla");
+                            }
+                        }
+
+                        i++;
                     }
-                    ConfigurationNode node = findElementOrThrowException(name);
-                    resolvedArguments[i] = processAndConvert(parameterTargetClass, node.getExpression());
-                    i++;
-                }
-                try {
+
                     method.setAccessible(true);
                     method.invoke(objectToConfigure, resolvedArguments);
-                } catch (Exception e) {
-                    throw new ConstrettoException("Cold not invoke method ["
-                            + method.getName() + "] annotated with @Configured,", e);
+
                 }
+            } catch (Exception e) {
+                throw new ConstrettoException("Cold not invoke method ["
+                        + method.getName() + "] annotated with @Configured,", e);
             }
         }
     }
 
     private <T> void injectFields(T objectToConfigure) {
+
         Field[] fields = objectToConfigure.getClass().getDeclaredFields();
         for (Field field : fields) {
-            if (field.isAnnotationPresent(Configuration.class)) {
-                Configuration configurationAnnotation = field.getAnnotation(Configuration.class);
-                String name = "".equals(configurationAnnotation.expression()) ? field.getName() : configurationAnnotation.expression();
-                field.setAccessible(true);
-                Class<?> fieldType = field.getType();
-                ConfigurationNode node = findElementOrThrowException(name);
-                try {
-                    field.set(objectToConfigure, processAndConvert(fieldType, node.getExpression()));
-                } catch (Exception e) {
-                    throw new ConstrettoException("Cold not inject configuration into field ["
-                            + field.getName() + "] annotated with @Configuration,", e);
+            try {
+                if (field.isAnnotationPresent(Configuration.class)) {
+                    Configuration configurationAnnotation = field.getAnnotation(Configuration.class);
+                    String expression = "".equals(configurationAnnotation.expression()) ? field.getName() : configurationAnnotation.expression();
+                    field.setAccessible(true);
+                    Class<?> fieldType = field.getType();
+                    if (hasValue(expression)) {
+                        ConfigurationNode node = findElementOrThrowException(expression);
+                        field.set(objectToConfigure, processAndConvert(fieldType, node.getExpression()));
+                    } else {
+                        if (hasAnnotationDefaults(configurationAnnotation)) {
+                            if (configurationAnnotation.defaultValueFactory().equals(Configuration.EmptyValueFactory.class)) {
+                                field.set(objectToConfigure, ValueConverterRegistry.convert(fieldType, configurationAnnotation.defaultValue()));
+                            } else {
+                                ConfigurationDefaultValueFactory valueFactory = configurationAnnotation.defaultValueFactory().newInstance();
+                                field.set(objectToConfigure, valueFactory.getDefaultValue());
+                            }
+                        } else {
+                            throw new ConstrettoException("Error when trying to inject field...bla bla bla");
+                        }
+                    }
                 }
+            } catch (Exception e) {
+                throw new ConstrettoException("Cold not inject configuration into field ["
+                        + field.getName() + "] annotated with @Configuration,", e);
             }
         }
+
+    }
+
+
+    private boolean hasAnnotationDefaults(Configuration configurationAnnotation) {
+        return !("".equals(configurationAnnotation.defaultValue()) &&
+                configurationAnnotation.defaultValueFactory().equals(Configuration.EmptyValueFactory.class));
     }
 
     private String processVariablesInProperty(final String expression, final Collection<String> visitedPlaceholders) {
