@@ -15,12 +15,12 @@
  */
 package org.constretto.internal.provider;
 
-import org.constretto.ConfigurationContextResolver;
 import org.constretto.ConfigurationStore;
 import org.constretto.ConstrettoConfiguration;
 import org.constretto.internal.DefaultConstrettoConfiguration;
 import org.constretto.model.ConfigurationNode;
 import org.constretto.model.TaggedPropertySet;
+import org.constretto.resolver.ConfigurationContextResolver;
 
 import java.util.ArrayList;
 import static java.util.Arrays.asList;

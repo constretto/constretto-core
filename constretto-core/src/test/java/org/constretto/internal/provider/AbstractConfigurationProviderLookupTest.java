@@ -69,7 +69,7 @@ public abstract class AbstractConfigurationProviderLookupTest {
 
     @Test(expected = ConstrettoException.class)
     public void simpleTaggedLookupForKeyNotInCurrentTagAndNotInDefaultTag() {
-        ConstrettoConfiguration constrettoConfiguration = prepareTests("production");
+        ConstrettoConfiguration constrettoConfiguration = prepareTests("development");
         assertEquals("I only exist in development", constrettoConfiguration.evaluateToString("ionlyexistindevelopment"));
         constrettoConfiguration = prepareTests("production");
         constrettoConfiguration.evaluateToString("ionlyexistindevelopment");

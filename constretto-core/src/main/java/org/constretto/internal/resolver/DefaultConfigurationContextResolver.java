@@ -15,10 +15,11 @@
  */
 package org.constretto.internal.resolver;
 
-import org.constretto.ConfigurationContextResolver;
+import org.constretto.resolver.ConfigurationContextResolver;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -31,11 +32,16 @@ public class DefaultConfigurationContextResolver implements ConfigurationContext
     private static final String TAGS = "CONSTRETTO_TAGS";
 
     public List<String> getTags() {
-        return new ArrayList<String>() {
-            {
-                addAll(Arrays.asList(getFromSystemPropertyOrSystemEnv().split(",")));
-            }
-        };
+        String tags = getFromSystemPropertyOrSystemEnv();
+        if (tags != null) {
+            return new ArrayList<String>() {
+                {
+                    addAll(Arrays.asList(getFromSystemPropertyOrSystemEnv().split(",")));
+                }
+            };
+        } else {
+            return Collections.emptyList();
+        }
     }
 
     private String getFromSystemPropertyOrSystemEnv() {

@@ -13,15 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.constretto;
+package org.constretto.internal.converter;
 
-import java.util.List;
+import org.constretto.exception.ConstrettoConversionException;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
 
 /**
- * @author <a href="mailto:kristoffer.moum@arktekk.no">Kristoffer Moum</a>
+ * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
-public interface ConfigurationContextResolver {
+public class SpringResourceValueConverter implements ValueConverter<Resource> {
 
-    List<String> getTags();
-
+    public Resource fromString(String value) throws ConstrettoConversionException {
+        return new DefaultResourceLoader().getResource(value);
+    }
 }

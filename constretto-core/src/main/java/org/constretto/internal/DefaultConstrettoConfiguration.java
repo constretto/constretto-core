@@ -194,6 +194,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
                     Object[] resolvedArguments = new Object[methodAnnotations.length];
                     int i = 0;
                     Object defaultValue = null;
+                    boolean required = true;
                     for (Annotation[] parameterAnnotations : methodAnnotations) {
                         String expression = "";
                         Class<?> parameterTargetClass = method.getParameterTypes()[i];
@@ -202,10 +203,10 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
                                 if (parameterAnnotation.annotationType() == Configuration.class) {
                                     Configuration configurationAnnotation = (Configuration) parameterAnnotation;
                                     expression = configurationAnnotation.expression();
+                                    required = configurationAnnotation.required();
                                     if (hasAnnotationDefaults(configurationAnnotation)) {
                                         if (configurationAnnotation.defaultValueFactory().equals(Configuration.EmptyValueFactory.class)) {
                                             defaultValue = ValueConverterRegistry.convert(parameterTargetClass, configurationAnnotation.defaultValue());
-
                                         } else {
                                             ConfigurationDefaultValueFactory valueFactory = configurationAnnotation.defaultValueFactory().newInstance();
                                             defaultValue = valueFactory.getDefaultValue();
@@ -228,7 +229,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
                             ConfigurationNode node = findElementOrThrowException(expression);
                             resolvedArguments[i] = processAndConvert(parameterTargetClass, node.getExpression());
                         } else {
-                            if (defaultValue != null) {
+                            if (defaultValue != null || (defaultValue == null && !required)) {
                                 resolvedArguments[i] = defaultValue;
                             } else {
                                 throw new ConstrettoException("Error when trying to inject field...bla bla bla");
@@ -270,7 +271,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
                                 ConfigurationDefaultValueFactory valueFactory = configurationAnnotation.defaultValueFactory().newInstance();
                                 field.set(objectToConfigure, valueFactory.getDefaultValue());
                             }
-                        } else {
+                        } else if (configurationAnnotation.required()) {
                             throw new ConstrettoException("Error when trying to inject field...bla bla bla");
                         }
                     }
@@ -284,7 +285,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     }
 
     private boolean hasAnnotationDefaults(Configuration configurationAnnotation) {
-        return !("".equals(configurationAnnotation.defaultValue()) && configurationAnnotation.defaultValueFactory().equals(Configuration.EmptyValueFactory.class));
+        return !("N/A".equals(configurationAnnotation.defaultValue()) && configurationAnnotation.defaultValueFactory().equals(Configuration.EmptyValueFactory.class));
     }
 
     private String processVariablesInProperty(final String expression, final Collection<String> visitedPlaceholders) {

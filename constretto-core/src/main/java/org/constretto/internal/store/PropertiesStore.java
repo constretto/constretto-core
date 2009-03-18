@@ -47,13 +47,14 @@ public class PropertiesStore implements ConfigurationStore {
         this.tagPrefix = DEFAULT_TAG_PREFIX;
     }
 
+    public PropertiesStore(Resource... resources) {
+        this();
+        addResourcesAsProperties(resources);
+    }
+
     public PropertiesStore addResource(Resource resource) {
         addResourcesAsProperties(resource);
         return this;
-    }
-
-    public PropertiesStore(Resource... resources) {
-        addResourcesAsProperties(resources);
     }
 
     public List<TaggedPropertySet> parseConfiguration() {

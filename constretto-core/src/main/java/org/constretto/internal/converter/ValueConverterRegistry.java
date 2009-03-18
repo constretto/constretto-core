@@ -15,9 +15,10 @@
  */
 package org.constretto.internal.converter;
 
-import org.constretto.exception.ConstrettoConversionException;
 import org.constretto.exception.ConstrettoException;
+import org.springframework.core.io.Resource;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,6 +36,8 @@ public class ValueConverterRegistry {
             put(Byte.class, new ByteValueConverter());
             put(Short.class, new ShortValueConverter());
             put(String.class, new StringValueConverter());
+            put(Resource.class, new SpringResourceValueConverter());
+            put(File.class, new FileValueConverter());
         }
     };
 
@@ -43,7 +46,7 @@ public class ValueConverterRegistry {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> T convert(Class<T> clazz, String value) throws ConstrettoException, ConstrettoConversionException {
+    public static <T> T convert(Class<T> clazz, String value) throws ConstrettoException {
         if (!converters.containsKey(clazz)) {
             throw new ConstrettoException("No converter found for class: " + clazz.getName());
         }
