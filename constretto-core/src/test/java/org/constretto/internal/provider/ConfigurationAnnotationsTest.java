@@ -20,6 +20,7 @@ import org.constretto.ConstrettoBuilder;
 import org.constretto.ConstrettoConfiguration;
 import org.constretto.internal.provider.helper.ConfiguredUsingDefaults;
 import org.constretto.internal.provider.helper.DataSourceConfiguration;
+import org.constretto.internal.provider.helper.DataSourceConfigurationWithNatives;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -63,6 +64,14 @@ public class ConfigurationAnnotationsTest {
         assertEquals("jdbc://url", customerDataSource.getUrl());
         assertEquals("password", customerDataSource.getPassword());
         assertEquals(new Integer(10), customerDataSource.getVersion());
+    }
+
+    @Test
+    public void applyConfigrationToAnnotatedConfigurationObjectUsingNativeTypes() {
+        DataSourceConfigurationWithNatives customerDataSource = new DataSourceConfigurationWithNatives();
+        configuration.at("datasources").from("customer").on(customerDataSource);
+        assertEquals(10, customerDataSource.getVersion());
+        assertEquals(10, customerDataSource.getOtherVersion());
     }
 
     @Test

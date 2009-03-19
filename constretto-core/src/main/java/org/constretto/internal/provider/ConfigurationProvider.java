@@ -23,7 +23,6 @@ import org.constretto.model.TaggedPropertySet;
 import org.constretto.resolver.ConfigurationContextResolver;
 
 import java.util.ArrayList;
-import static java.util.Arrays.asList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -39,22 +38,9 @@ public class ConfigurationProvider {
     public ConfigurationProvider() {
     }
 
-    private ConfigurationProvider(ConfigurationStore... configurationStores) {
-        this.configurationStores = asList(configurationStores);
-    }
-
-    public ConfigurationProvider(ConfigurationContextResolver configurationContextResolver) {
-        this.tags = configurationContextResolver.getTags();
-    }
-
-    public ConfigurationProvider(List<String> tags, List<ConfigurationStore> configurationStores) {
-        this(configurationStores.toArray(new ConfigurationStore[configurationStores.size()]));
-        this.tags = tags;
-    }
-
     public ConfigurationProvider(ConfigurationContextResolver resolver, List<ConfigurationStore> configurationStores) {
-        this(configurationStores.toArray(new ConfigurationStore[configurationStores.size()]));
-        this.tags.addAll(resolver.getTags());
+        this.configurationStores = configurationStores;
+        setConfigurationContextResolver(resolver);
     }
 
     public ConfigurationProvider addTag(String tag) {
@@ -62,9 +48,8 @@ public class ConfigurationProvider {
         return this;
     }
 
-    public ConfigurationProvider setConfigurationContextResolver(ConfigurationContextResolver configurationContextResolver) {
+    public void setConfigurationContextResolver(ConfigurationContextResolver configurationContextResolver) {
         this.tags.addAll(configurationContextResolver.getTags());
-        return this;
     }
 
     public ConfigurationProvider addConfigurationStore(ConfigurationStore configurationStore) {

@@ -25,6 +25,7 @@ import org.springframework.beans.BeanInstantiationException;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessorAdapter;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
@@ -46,7 +47,7 @@ import java.lang.reflect.Modifier;
  * @see Configuration
  * @see Environment
  */
-public class ConfigurationAnnotationBeanPostProcessor implements BeanPostProcessor {
+public class ConfigurationAnnotationBeanPostProcessor extends InstantiationAwareBeanPostProcessorAdapter {
     private ConstrettoConfiguration configuration;
     private AssemblyContextResolver assemblyContextResolver;
 
@@ -65,10 +66,11 @@ public class ConfigurationAnnotationBeanPostProcessor implements BeanPostProcess
     }
 
 
-    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+    @Override
+    public boolean postProcessAfterInstantiation(Object bean, String beanName) throws BeansException {
         injectConfiguration(bean);
         autowireEnvironment(bean);
-        return bean;
+        return true;
     }
 
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
@@ -103,7 +105,7 @@ public class ConfigurationAnnotationBeanPostProcessor implements BeanPostProcess
         if (field.getType().isEnum()) {
             Object[] enumConstants = field.getType().getEnumConstants();
             for (Object enumConstant : enumConstants) {
-                if (enumConstant.toString().equals(newValue)){
+                if (enumConstant.toString().equals(newValue)) {
                     convertedValue = enumConstant;
                 }
             }
@@ -113,7 +115,4 @@ public class ConfigurationAnnotationBeanPostProcessor implements BeanPostProcess
         field.set(beanInstance, convertedValue);
     }
 
-
-
-    
 }

@@ -11,12 +11,11 @@
 package org.constretto.spring.configuration;
 
 import static junit.framework.Assert.assertEquals;
-import static org.constretto.spring.configuration.EnvironmentAnnotatedFieldTest.MyEnvironments.development;
-
 import org.constretto.annotation.Environment;
+import org.constretto.internal.provider.ConfigurationProvider;
 import org.constretto.spring.ConfigurationAnnotationBeanPostProcessor;
 import org.constretto.spring.assembly.helper.AlwaysDevelopmentEnvironmentResolver;
-import org.constretto.internal.provider.ConfigurationProvider;
+import static org.constretto.spring.configuration.EnvironmentAnnotatedFieldTest.MyEnvironments.development;
 import org.junit.Test;
 
 /**
@@ -28,8 +27,8 @@ public class EnvironmentAnnotatedFieldTest {
     public void givenClassWithEnvironmentAnnotatedPropertyThenInjectEnvironment() throws Exception {
         TestClazz testClazz = new TestClazz();
         ConfigurationAnnotationBeanPostProcessor annotationBeanPostProcessor = new ConfigurationAnnotationBeanPostProcessor(
-                new ConfigurationProvider().getConfiguration(),new AlwaysDevelopmentEnvironmentResolver());
-        annotationBeanPostProcessor.postProcessBeforeInitialization(testClazz, "testBean");
+                new ConfigurationProvider().getConfiguration(), new AlwaysDevelopmentEnvironmentResolver());
+        annotationBeanPostProcessor.postProcessAfterInstantiation(testClazz, "testBean");
         assertEquals(development, testClazz.getEnvironment());
         assertEquals("development", testClazz.getEnvironmentAsString());
     }
@@ -50,7 +49,7 @@ public class EnvironmentAnnotatedFieldTest {
     }
 
     public enum MyEnvironments {
-        development, test;
+        development, test
     }
 
 }

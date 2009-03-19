@@ -76,10 +76,12 @@ public class PropertiesStore implements ConfigurationStore {
     private void addResourcesAsProperties(Resource... resources) {
         for (Resource r : resources) {
             try {
-                InputStream is = r.getInputStream();
-                Properties props = new Properties();
-                props.load(is);
-                addPropertiesToMap(props);
+                if (r.exists()) {
+                    InputStream is = r.getInputStream();
+                    Properties props = new Properties();
+                    props.load(is);
+                    addPropertiesToMap(props);
+                }
             } catch (IOException e) {
                 throw new ConstrettoException(e);
             }

@@ -19,6 +19,8 @@ import org.constretto.ConfigurationStore;
 import org.constretto.ConstrettoConfiguration;
 import org.constretto.internal.provider.ConfigurationProvider;
 import org.constretto.internal.resolver.DefaultConfigurationContextResolver;
+import org.constretto.internal.store.SystemPropertiesStore;
+import org.constretto.resolver.ConfigurationContextResolver;
 import org.springframework.beans.factory.FactoryBean;
 
 import java.util.List;
@@ -28,14 +30,20 @@ import java.util.List;
  */
 
 public class ConstrettoConfigurationFactoryBean implements FactoryBean {
-    private List<ConfigurationStore> stores;
+    private final List<ConfigurationStore> stores;
+    private ConfigurationContextResolver configurationContextResolver;
+    private boolean systemPropertiesOverrides = true;
 
     public ConstrettoConfigurationFactoryBean(List<ConfigurationStore> stores) {
         this.stores = stores;
     }
 
     public Object getObject() throws Exception {
-        ConfigurationProvider configurationProvider = new ConfigurationProvider(new DefaultConfigurationContextResolver(), stores);
+        ConfigurationContextResolver contextResolver = configurationContextResolver == null ? new DefaultConfigurationContextResolver() : configurationContextResolver;
+        if (systemPropertiesOverrides) {
+            stores.add(new SystemPropertiesStore());
+        }
+        ConfigurationProvider configurationProvider = new ConfigurationProvider(contextResolver, stores);
         return configurationProvider.getConfiguration();
     }
 
@@ -45,5 +53,13 @@ public class ConstrettoConfigurationFactoryBean implements FactoryBean {
 
     public boolean isSingleton() {
         return true;
+    }
+
+    public void setConfigurationContextResolver(ConfigurationContextResolver configurationContextResolver) {
+        this.configurationContextResolver = configurationContextResolver;
+    }
+
+    public void setSystemPropertiesOverrides(boolean systemPropertiesOverrides) {
+        this.systemPropertiesOverrides = systemPropertiesOverrides;
     }
 }

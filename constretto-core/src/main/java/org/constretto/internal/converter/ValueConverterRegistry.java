@@ -29,12 +29,19 @@ public class ValueConverterRegistry {
     private static final Map<Class<?>, ValueConverter<?>> converters = new HashMap<Class<?>, ValueConverter<?>>() {
         {
             put(Boolean.class, new BooleanValueConverter());
+            put(boolean.class, new BooleanValueConverter());
             put(Float.class, new FloatValueConverter());
+            put(float.class, new FloatValueConverter());
             put(Double.class, new DoubleValueConverter());
+            put(double.class, new DoubleValueConverter());
             put(Long.class, new LongValueConverter());
+            put(long.class, new LongValueConverter());
             put(Integer.class, new IntegerValueConverter());
+            put(int.class, new IntegerValueConverter());
             put(Byte.class, new ByteValueConverter());
+            put(byte.class, new ByteValueConverter());
             put(Short.class, new ShortValueConverter());
+            put(short.class, new ShortValueConverter());
             put(String.class, new StringValueConverter());
             put(Resource.class, new SpringResourceValueConverter());
             put(File.class, new FileValueConverter());
@@ -47,6 +54,7 @@ public class ValueConverterRegistry {
 
     @SuppressWarnings("unchecked")
     public static <T> T convert(Class<T> clazz, String value) throws ConstrettoException {
+
         if (!converters.containsKey(clazz)) {
             throw new ConstrettoException("No converter found for class: " + clazz.getName());
         }
