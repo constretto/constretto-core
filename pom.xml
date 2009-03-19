@@ -27,8 +27,8 @@
         <module>constretto-spring</module>
     </modules>
     <scm>
-        <connection>scm:svn:http://svn.constretto.org</connection>
-        <developerConnection>scm:svn:http://svn.constretto.org</developerConnection>
+        <connection>scm:svn:http://svn.constretto.org/</connection>
+        <developerConnection>scm:svn:http://svn.constretto.org/</developerConnection>
         <url>http://constretto.org/repositories/show/constretto</url>
     </scm>
     <issueManagement>
