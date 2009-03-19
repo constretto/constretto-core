@@ -186,13 +186,6 @@
                 </configuration>
             </plugin>
         </plugins>
-        <extensions>
-            <extension>
-                <groupId>org.apache.maven.wagon</groupId>
-                <artifactId>wagon-webdav</artifactId>
-                <version>1.0-beta-2</version>
-            </extension>
-        </extensions>
     </build>
     <repositories>
         <repository>
@@ -221,12 +214,12 @@
         <repository>
             <id>constretto.org</id>
             <name>Constretto release repository</name>
-            <url>dav:http://repo.constretto.org/webdav/releases</url>
+            <url>http://repo.constretto.org/content/repositories/releases</url>
         </repository>
         <snapshotRepository>
             <id>constretto.org</id>
             <name>Constretto snapshot repository</name>
-            <url>dav:http://repo.constretto.org/webdav/snapshots</url>
+            <url>http://repo.constretto.org/content/repositories/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
 </project>
