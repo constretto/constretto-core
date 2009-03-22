@@ -26,9 +26,7 @@
         <module>constretto-spring</module>
     </modules>
     <scm>
-        <connection>scm:svn:http://svn.constretto.org/trunk</connection>
         <developerConnection>scm:svn:http://svn.constretto.org/trunk</developerConnection>
-        <url>scm:svn:http://svn.constretto.org/trunk</url>
     </scm>
     <issueManagement>
         <system>redmine</system>
