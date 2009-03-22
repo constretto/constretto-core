@@ -179,6 +179,12 @@
                     </links>
                 </configuration>
             </plugin>
+            <plugin>
+                <artifactId>maven-release-plugin</artifactId>
+                <configuration>
+                    <tagBase>http://svn.constretto.org/tags</tagBase>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
     <repositories>
