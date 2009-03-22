@@ -7,8 +7,7 @@
   either express or implied. See the License for the specific language governing permissions and limitations under the
   License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.constretto</groupId>
     <artifactId>constretto</artifactId>
@@ -27,9 +26,9 @@
         <module>constretto-spring</module>
     </modules>
     <scm>
-        <connection>scm:svn:http://svn.constretto.org/trunk</connection>
-        <developerConnection>scm:svn:http://svn.constretto.org/trunk</developerConnection>
-        <url>http://constretto.org/repositories/show/constretto</url>
+        <connection>scm:svn:http://svn.constretto.org/constretto-1.0-beta-2</connection>
+        <developerConnection>scm:svn:http://svn.constretto.org/constretto-1.0-beta-2</developerConnection>
+        <url>scm:svn:http://svn.constretto.org/constretto-1.0-beta-2</url>
     </scm>
     <issueManagement>
         <system>redmine</system>
@@ -178,13 +177,6 @@
                         <link>http://java.sun.com/j2ee/sdk_1.3/techdocs/api/</link>
                         <link>http://static.springframework.org/spring/docs/2.5.x/api/</link>
                     </links>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <configuration>
-                    <tagBase>http://svn.constretto.org</tagBase>
                 </configuration>
             </plugin>
         </plugins>
