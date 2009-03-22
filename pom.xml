@@ -11,7 +11,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.constretto</groupId>
     <artifactId>constretto</artifactId>
-    <version>1.0-beta-2-SNAPSHOT</version>
+    <version>1.0-beta-2</version>
     <name>Constretto :: Parent - ${project.version}</name>
     <inceptionYear>2008</inceptionYear>
     <url>http://constretto.org</url>
@@ -26,9 +26,9 @@
         <module>constretto-spring</module>
     </modules>
     <scm>
-        <connection>scm:svn:http://svn.constretto.org/constretto-1.0-beta-2</connection>
-        <developerConnection>scm:svn:http://svn.constretto.org/constretto-1.0-beta-2</developerConnection>
-        <url>scm:svn:http://svn.constretto.org/constretto-1.0-beta-2</url>
+        <connection>scm:svn:http://svn.constretto.org/tags/constretto-1.0-beta-2</connection>
+        <developerConnection>scm:svn:http://svn.constretto.org/tags/constretto-1.0-beta-2</developerConnection>
+        <url>scm:svn:http://svn.constretto.org/tags/constretto-1.0-beta-2</url>
     </scm>
     <issueManagement>
         <system>redmine</system>
