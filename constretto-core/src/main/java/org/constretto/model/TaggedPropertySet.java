@@ -16,6 +16,7 @@
 package org.constretto.model;
 
 import static org.apache.commons.lang.builder.ToStringBuilder.reflectionToString;
+import org.constretto.ConfigurationStore;
 
 import java.util.Map;
 
@@ -23,20 +24,23 @@ import java.util.Map;
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class TaggedPropertySet {
+    private final Class<? extends ConfigurationStore> storeClass;
     private final String tag;
     private final Map<String, String> properties;
 
-    public TaggedPropertySet(Map<String, String> properties) {
+    public TaggedPropertySet(Map<String, String> properties, Class<? extends ConfigurationStore> storeClass) {
         this.tag = ConfigurationNode.DEFAULT_TAG;
         this.properties = properties;
+        this.storeClass = storeClass;
     }
 
-    public TaggedPropertySet(String tag, Map<String, String> properties) {
+    public TaggedPropertySet(String tag, Map<String, String> properties, Class<? extends ConfigurationStore> storeClass) {
         if (tag == null) {
             throw new IllegalArgumentException("A tagged property set cannot have \"null\" as tag");
         }
         this.tag = tag;
         this.properties = properties;
+        this.storeClass = storeClass;
     }
 
     public Map<String, String> getProperties() {
@@ -45,6 +49,10 @@ public class TaggedPropertySet {
 
     public String getTag() {
         return tag;
+    }
+
+    public Class<? extends ConfigurationStore> getStoreClass() {
+        return storeClass;
     }
 
     @Override

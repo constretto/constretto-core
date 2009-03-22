@@ -19,12 +19,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.constretto.annotation.Environment;
 import org.constretto.exception.ConstrettoException;
-import org.constretto.internal.resolver.DefaultAssemblyContextResolver;
 import org.constretto.resolver.AssemblyContextResolver;
 import org.constretto.spring.internal.ConstrettoAutowireCandidateResolver;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -45,17 +43,12 @@ import java.util.List;
  *
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
-public class EnvironmentAnnotationContextConfigurer implements BeanFactoryPostProcessor {
+public class EnvironmentAnnotationConfigurer implements BeanFactoryPostProcessor {
     private final Log logger = LogFactory.getLog(getClass());
     private final AssemblyContextResolver assemblyContextResolver;
     public static final String INCLUDE_IN_COLLECTIONS = "includeInCollections";
 
-    public EnvironmentAnnotationContextConfigurer() {
-        assemblyContextResolver = new DefaultAssemblyContextResolver();
-    }
-
-    @Autowired
-    public EnvironmentAnnotationContextConfigurer(AssemblyContextResolver assemblyContextResolver) {
+    public EnvironmentAnnotationConfigurer(AssemblyContextResolver assemblyContextResolver) {
         this.assemblyContextResolver = assemblyContextResolver;
     }
 
@@ -65,7 +58,7 @@ public class EnvironmentAnnotationContextConfigurer implements BeanFactoryPostPr
 
         if (!(configurableListableBeanFactory instanceof DefaultListableBeanFactory)) {
             throw new IllegalStateException(
-                    "EnvironmentAnnotationContextConfigurer needs to operate on a DefaultListableBeanFactory");
+                    "EnvironmentAnnotationConfigurer needs to operate on a DefaultListableBeanFactory");
         }
         DefaultListableBeanFactory defaultListableBeanFactory = (DefaultListableBeanFactory) configurableListableBeanFactory;
         defaultListableBeanFactory.setAutowireCandidateResolver(new ConstrettoAutowireCandidateResolver());
@@ -114,7 +107,7 @@ public class EnvironmentAnnotationContextConfigurer implements BeanFactoryPostPr
 
     private boolean decideIfAutowireCandiate(String beanName, Environment environmentAnnotation) {
         String environment = environmentAnnotation.value();
-        String[] environmentList = environmentAnnotation.list();
+        String[] environmentList = environmentAnnotation.tags();
         validateAnnotationValues(beanName, environment, environmentList);
         List<String> targetEnvironments = new ArrayList<String>();
         targetEnvironments.add(environment);
@@ -135,12 +128,12 @@ public class EnvironmentAnnotationContextConfigurer implements BeanFactoryPostPr
     private void validateAnnotationValues(String beanName, String beanEnvironment, String[] beanEnvironments) {
         if (!"".equals(beanEnvironment) && beanEnvironments.length > 0) {
             throw new ConstrettoException(
-                    "You may not have both the value attribute and list attribute specified on the @Environment annotation at the same time. offending bean: "
+                    "You may not have both the value attribute and tags attribute specified on the @Environment annotation at the same time. offending bean: "
                             + beanName);
         }
         if ("".equals(beanEnvironment) && beanEnvironments.length == 0) {
             throw new ConstrettoException(
-                    "You must specify eigther the value attribute or the list attribute specified on the @Environment. offending bean: "
+                    "You must specify eigther the value attribute or the tags attribute specified on the @Environment. offending bean: "
                             + beanName);
         }
     }

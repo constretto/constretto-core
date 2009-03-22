@@ -15,31 +15,30 @@
  */
 package org.constretto.spring;
 
-import java.util.Map;
-
-import org.constretto.resolver.AssemblyContextResolver;
 import org.constretto.internal.resolver.DefaultAssemblyContextResolver;
+import org.constretto.resolver.AssemblyContextResolver;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Map;
+
 /**
- * 
  * A factory bean used to instantiate spring beans depending on the environment you are running in. This factory bean
  * use the {@link org.constretto.resolver.AssemblyContextResolver} to lookup the running environment. the value of this property is used to
  * lookup in the map of beans.
- * 
+ * <p/>
  * <h2>Usage :</h2>
- * 
+ * <p/>
  * <pre>
  * &lt;bean id=&quot;productionBean&quot; class=&quot;com..ProductionTestBean&quot;&gt;
  *      &lt;property name=&quot;value&quot; value=&quot;production value&quot; /&gt;
  *  &lt;/bean&gt;
- *  
+ * <p/>
  *  &lt;bean id=&quot;developmentBean&quot; class=&quot;com..DevelopmentTestBean&quot;&gt;
  *      &lt;property name=&quot;value&quot; value=&quot;development value&quot; /&gt;
  *  &lt;/bean&gt;
- *  
+ * <p/>
  *  &lt;bean id=&quot;myBean&quot; class=&quot;org.constretto.spring.ConstrettoSingletonFactoryBean&quot;&gt;
  *      &lt;constructor-arg&gt;
  *          &lt;map&gt;
@@ -48,19 +47,19 @@ import org.springframework.beans.factory.annotation.Autowired;
  *          &lt;/map&gt;
  *      &lt;/constructor-arg&gt;
  *  &lt;/bean&gt;
- *  
+ * <p/>
  *  &lt;bean id=&quot;myBeanOverriddenDefaultPrefix&quot; class=&quot;org.constretto.spring.propertyplaceholder.factory.ConstrettoSingletonFactoryBean&quot;&gt;
  *    &lt;constructor-arg&gt;
  *          &lt;map&gt;
  *              &lt;entry key=&quot;production&quot; value-ref=&quot;productionBean&quot; /&gt;
  *              &lt;entry key=&quot;development&quot; value-ref=&quot;developmentBean&quot; /&gt;
  *          &lt;/map&gt;
- *      &lt;/constructor-arg&gt; 
+ *      &lt;/constructor-arg&gt;
  *      &lt;constructor-arg ref=&quot;developmentBean&quot; /&gt;
  *  &lt;/bean&gt;
- * 
+ * <p/>
  * </pre>
- * 
+ *
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class ConstrettoSingletonFactoryBean implements FactoryBean {
@@ -72,28 +71,24 @@ public class ConstrettoSingletonFactoryBean implements FactoryBean {
         assemblyContextResolver = new DefaultAssemblyContextResolver();
     }
 
-    @Autowired(required = false)
     public ConstrettoSingletonFactoryBean(Map<String, Object> beans, Object defaultBean) {
         this();
         this.beans = beans;
         this.defaultBean = defaultBean;
     }
 
-    @Autowired(required = false)
     public ConstrettoSingletonFactoryBean(Map<String, Object> beans) {
         this();
         this.beans = beans;
     }
 
-    @Autowired(required = false)
     public ConstrettoSingletonFactoryBean(Map<String, Object> beans, AssemblyContextResolver assemblyContextResolver) {
         this.assemblyContextResolver = assemblyContextResolver;
         this.beans = beans;
     }
 
-    @Autowired(required = false)
     public ConstrettoSingletonFactoryBean(Map<String, Object> beans, Object defaultBean,
-            AssemblyContextResolver assemblyContextResolver) {
+                                          AssemblyContextResolver assemblyContextResolver) {
         this.assemblyContextResolver = assemblyContextResolver;
         this.beans = beans;
         this.defaultBean = defaultBean;
@@ -107,11 +102,10 @@ public class ConstrettoSingletonFactoryBean implements FactoryBean {
         if (null == beans && null == defaultBean) {
             throw new BeanInitializationException("At least one implementation of the service is mandatory");
         }
-        Object bean = getResolvedBean();
-        return bean;
+        return getResolvedBean();
     }
 
-    @Autowired(required = false)
+    @Autowired
     public void setAssemblyContextResolver(AssemblyContextResolver assemblyContextResolver) {
         this.assemblyContextResolver = assemblyContextResolver;
     }
@@ -121,7 +115,7 @@ public class ConstrettoSingletonFactoryBean implements FactoryBean {
     }
 
     private Object getResolvedBean() {
-        Object bean = null;
+        Object bean;
         String currentEnvironment = assemblyContextResolver.isAssemblyContextDefined() ? assemblyContextResolver
                 .getAssemblyContext() : "[not defined]";
         if (assemblyContextResolver.isAssemblyContextDefined()) {

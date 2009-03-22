@@ -15,20 +15,16 @@
  */
 package org.constretto.annotation;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * Indicated for what environment the annotated class should be a candidate for autowiring.
- * 
+ * <p/>
  * When used on fields if will instruct the Spring container to inject the current environment into the annotated field.
- * 
+ *
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
-@Target( { ElementType.TYPE, ElementType.FIELD })
+@Target({ElementType.TYPE, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 public @interface Environment {
@@ -36,10 +32,7 @@ public @interface Environment {
     public static final String TEST = "test";
     public static final String PRODUCTION = "production";
 
-    /**
-     * Indicated which environment this annotated class is a candiate for autowiring.
-     */
     String value() default "";
 
-    String[] list() default {};
+    String[] tags() default {};
 }

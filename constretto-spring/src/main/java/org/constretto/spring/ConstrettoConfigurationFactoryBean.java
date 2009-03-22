@@ -15,36 +15,21 @@
  */
 package org.constretto.spring;
 
-import org.constretto.ConfigurationStore;
 import org.constretto.ConstrettoConfiguration;
-import org.constretto.internal.provider.ConfigurationProvider;
-import org.constretto.internal.resolver.DefaultConfigurationContextResolver;
-import org.constretto.internal.store.SystemPropertiesStore;
-import org.constretto.resolver.ConfigurationContextResolver;
 import org.springframework.beans.factory.FactoryBean;
-
-import java.util.List;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
-
 public class ConstrettoConfigurationFactoryBean implements FactoryBean {
-    private final List<ConfigurationStore> stores;
-    private ConfigurationContextResolver configurationContextResolver;
-    private boolean systemPropertiesOverrides = true;
+    private ConstrettoConfiguration configuration;
 
-    public ConstrettoConfigurationFactoryBean(List<ConfigurationStore> stores) {
-        this.stores = stores;
+    public ConstrettoConfigurationFactoryBean(ConstrettoConfiguration configuration) {
+        this.configuration = configuration;
     }
 
     public Object getObject() throws Exception {
-        ConfigurationContextResolver contextResolver = configurationContextResolver == null ? new DefaultConfigurationContextResolver() : configurationContextResolver;
-        if (systemPropertiesOverrides) {
-            stores.add(new SystemPropertiesStore());
-        }
-        ConfigurationProvider configurationProvider = new ConfigurationProvider(contextResolver, stores);
-        return configurationProvider.getConfiguration();
+        return configuration;
     }
 
     public Class getObjectType() {
@@ -53,13 +38,5 @@ public class ConstrettoConfigurationFactoryBean implements FactoryBean {
 
     public boolean isSingleton() {
         return true;
-    }
-
-    public void setConfigurationContextResolver(ConfigurationContextResolver configurationContextResolver) {
-        this.configurationContextResolver = configurationContextResolver;
-    }
-
-    public void setSystemPropertiesOverrides(boolean systemPropertiesOverrides) {
-        this.systemPropertiesOverrides = systemPropertiesOverrides;
     }
 }

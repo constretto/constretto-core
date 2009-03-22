@@ -29,7 +29,7 @@ import java.util.List;
  */
 public class DefaultConfigurationContextResolver implements ConfigurationContextResolver {
 
-    private static final String TAGS = "CONSTRETTO_TAGS";
+    public static final String TAGS = "CONSTRETTO_TAGS";
 
     public List<String> getTags() {
         String tags = getFromSystemPropertyOrSystemEnv();

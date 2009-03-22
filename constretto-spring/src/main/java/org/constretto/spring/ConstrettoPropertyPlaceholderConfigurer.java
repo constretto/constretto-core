@@ -21,39 +21,32 @@ import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.BeanNameAware;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.config.BeanDefinitionVisitor;
-import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
+import org.springframework.beans.factory.config.*;
 import org.springframework.util.StringUtils;
 import org.springframework.util.StringValueResolver;
 
 /**
  * An adaption of the spring framework {@link PropertyPlaceholderConfigurer} class, using an implementation of the
  * {@link ConstrettoConfiguration} interface to resolve keys
- * 
+ * <p/>
  * <h2>Example :</h2>
- * 
+ * <p/>
  * <pre>
  * &lt;bean class=&quot;org.constretto.spring.ConstrettoPropertyPlaceholderConfigurer&quot;&gt;
  *   &lt;constructor-arg ref=&quot;someProvider&quot; /&gt;
  * &lt;/bean&gt;
- * 
+ * <p/>
  * &lt;bean id=&quot;myBean&quot; class=&quot;com.example.MyClass&quot;&gt;
  *   &lt;property name=&quot;myProperty&quot; value=&quot;${propertyKey}&quot; /&gt;
  * &lt;/bean&gt;
  * </pre>
- * 
+ * <p/>
  * Note : The provider property of the placeholder configurer are marked as &#064;Autowired, and can be autowired in a
  * annotation config application context.
- * 
+ *
+ * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  * @see ConstrettoConfiguration
  * @see PropertyPlaceholderConfigurer
- * 
- * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
- * 
  */
 public class ConstrettoPropertyPlaceholderConfigurer implements BeanFactoryPostProcessor, BeanNameAware,
         BeanFactoryAware {
@@ -68,7 +61,6 @@ public class ConstrettoPropertyPlaceholderConfigurer implements BeanFactoryPostP
     private String placeholderPrefix = DEFAULT_PLACEHOLDER_PREFIX;
     private String placeholderSuffix = DEFAULT_PLACEHOLDER_SUFFIX;
 
-    @Autowired
     public ConstrettoPropertyPlaceholderConfigurer(ConstrettoConfiguration configuration) {
         this.configuration = configuration;
     }
@@ -150,7 +142,7 @@ public class ConstrettoPropertyPlaceholderConfigurer implements BeanFactoryPostP
     }
 
     private String resolvePlaceholder(String key) {
-        String value = configuration.evaluateTo(key,"");
+        String value = configuration.evaluateTo(key, "");
         return null != value ? value : null;
     }
 

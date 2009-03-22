@@ -20,7 +20,6 @@ import org.constretto.ConstrettoConfiguration;
 import org.constretto.internal.DefaultConstrettoConfiguration;
 import org.constretto.model.ConfigurationNode;
 import org.constretto.model.TaggedPropertySet;
-import org.constretto.resolver.ConfigurationContextResolver;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,18 +37,9 @@ public class ConfigurationProvider {
     public ConfigurationProvider() {
     }
 
-    public ConfigurationProvider(ConfigurationContextResolver resolver, List<ConfigurationStore> configurationStores) {
-        this.configurationStores = configurationStores;
-        setConfigurationContextResolver(resolver);
-    }
-
     public ConfigurationProvider addTag(String tag) {
         tags.add(tag);
         return this;
-    }
-
-    public void setConfigurationContextResolver(ConfigurationContextResolver configurationContextResolver) {
-        this.tags.addAll(configurationContextResolver.getTags());
     }
 
     public ConfigurationProvider addConfigurationStore(ConfigurationStore configurationStore) {
@@ -84,5 +74,4 @@ public class ConfigurationProvider {
         }
         return taggedPropertySets;
     }
-
 }

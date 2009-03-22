@@ -49,22 +49,24 @@ public class IniFileConfigurationStore implements ConfigurationStore {
     public List<TaggedPropertySet> parseConfiguration() {
         List<TaggedPropertySet> taggedPropertySets = new ArrayList<TaggedPropertySet>();
         for (Resource r : resources) {
-            Preferences prefs = load(r);
-            List<String> tags = getChildren(prefs);
-            for (String tag : tags) {
-                Preferences node = prefs.node(tag);
-                List<String> keysPerNode = getKeys(node);
-                Map<String, String> properties = new HashMap<String, String>();
+            if (r.exists()) {
+                Preferences prefs = load(r);
+                List<String> tags = getChildren(prefs);
+                for (String tag : tags) {
+                    Preferences node = prefs.node(tag);
+                    List<String> keysPerNode = getKeys(node);
+                    Map<String, String> properties = new HashMap<String, String>();
 
-                for (String key : keysPerNode) {
-                    String value = node.get(key, null);
-                    properties.put(key, value);
+                    for (String key : keysPerNode) {
+                        String value = node.get(key, null);
+                        properties.put(key, value);
+                    }
+                    if (tag.equals(DEFAULT_TAG)) {
+                        tag = ConfigurationNode.DEFAULT_TAG;
+                    }
+                    TaggedPropertySet taggedPropertySet = new TaggedPropertySet(tag, properties, getClass());
+                    taggedPropertySets.add(taggedPropertySet);
                 }
-                if (tag.equals(DEFAULT_TAG)) {
-                    tag = ConfigurationNode.DEFAULT_TAG;
-                }
-                TaggedPropertySet taggedPropertySet = new TaggedPropertySet(tag, properties);
-                taggedPropertySets.add(taggedPropertySet);
             }
         }
         return taggedPropertySets;

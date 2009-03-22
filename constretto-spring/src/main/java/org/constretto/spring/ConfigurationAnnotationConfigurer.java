@@ -19,11 +19,9 @@ import org.constretto.ConstrettoConfiguration;
 import org.constretto.annotation.Configuration;
 import org.constretto.annotation.Environment;
 import org.constretto.internal.converter.ValueConverterRegistry;
-import org.constretto.internal.resolver.DefaultAssemblyContextResolver;
 import org.constretto.resolver.AssemblyContextResolver;
 import org.springframework.beans.BeanInstantiationException;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessorAdapter;
 import org.springframework.util.ReflectionUtils;
@@ -47,29 +45,20 @@ import java.lang.reflect.Modifier;
  * @see Configuration
  * @see Environment
  */
-public class ConfigurationAnnotationBeanPostProcessor extends InstantiationAwareBeanPostProcessorAdapter {
+public class ConfigurationAnnotationConfigurer extends InstantiationAwareBeanPostProcessorAdapter {
     private ConstrettoConfiguration configuration;
     private AssemblyContextResolver assemblyContextResolver;
 
-    @Autowired(required = false)
-    public ConfigurationAnnotationBeanPostProcessor(ConstrettoConfiguration configuration) {
-        this.configuration = configuration;
-        assemblyContextResolver = new DefaultAssemblyContextResolver();
-    }
-
-
-    @Autowired(required = false)
-    public ConfigurationAnnotationBeanPostProcessor(ConstrettoConfiguration configuration,
-                                                    AssemblyContextResolver assemblyContextResolver) {
+    public ConfigurationAnnotationConfigurer(ConstrettoConfiguration configuration,
+                                             AssemblyContextResolver assemblyContextResolver) {
         this.configuration = configuration;
         this.assemblyContextResolver = assemblyContextResolver;
     }
 
-
     @Override
     public boolean postProcessAfterInstantiation(Object bean, String beanName) throws BeansException {
         injectConfiguration(bean);
-        autowireEnvironment(bean);
+        injectEnvironment(bean);
         return true;
     }
 
@@ -77,7 +66,7 @@ public class ConfigurationAnnotationBeanPostProcessor extends InstantiationAware
         return bean;
     }
 
-    private void autowireEnvironment(final Object bean) {
+    private void injectEnvironment(final Object bean) {
         ReflectionUtils.doWithFields(bean.getClass(), new ReflectionUtils.FieldCallback() {
             public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
                 Environment annotation = field.getAnnotation(Environment.class);
@@ -114,5 +103,4 @@ public class ConfigurationAnnotationBeanPostProcessor extends InstantiationAware
         }
         field.set(beanInstance, convertedValue);
     }
-
 }

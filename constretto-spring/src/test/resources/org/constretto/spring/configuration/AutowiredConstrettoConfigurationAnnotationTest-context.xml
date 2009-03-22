@@ -7,33 +7,27 @@
   either express or implied. See the License for the specific language governing permissions and limitations under the
   License.
 -->
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:constretto="http://constretto.org/schema/constretto"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
            http://www.springframework.org/schema/context
-           http://www.springframework.org/schema/context/spring-context-2.5.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+           http://www.springframework.org/schema/context/spring-context-2.5.xsd
+           http://www.springframework.org/schema/util
+           http://www.springframework.org/schema/util/spring-util-2.5.xsd
+           http://constretto.org/schema/constretto
+           http://constretto.org/schema/constretto/constretto.xsd">
 
-    <context:annotation-config/>
-
-    <bean id="propStore" class="org.constretto.internal.store.PropertiesStore">
-        <constructor-arg>
-            <util:list>
-                <value>classpath:properties/test1.properties</value>
-            </util:list>
-        </constructor-arg>
-    </bean>
-
-    <bean id="configurationProvider" class="org.constretto.spring.ConstrettoConfigurationFactoryBean">
-        <constructor-arg>
-            <util:list>
-                <ref bean="propStore"/>
-            </util:list>
-        </constructor-arg>
-    </bean>
-
-    <bean class="org.constretto.spring.ConfigurationAnnotationBeanPostProcessor"/>
+    <constretto:configuration>
+        <constretto:stores>
+            <constretto:properties-store>
+                <constretto:resource location="classpath:properties/test1.properties"/>
+            </constretto:properties-store>
+        </constretto:stores>
+    </constretto:configuration>
 
     <bean class="org.constretto.spring.configuration.helper.ValidBeanThatAllowsNull"/>
     <bean class="org.constretto.spring.configuration.helper.ValidBeanWithComplexDefault"/>

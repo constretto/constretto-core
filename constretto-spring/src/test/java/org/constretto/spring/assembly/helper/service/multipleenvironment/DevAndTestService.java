@@ -20,11 +20,10 @@ import org.constretto.spring.assembly.helper.service.EnvironmentService;
 import org.springframework.stereotype.Service;
 
 /**
- * 
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 @Service
-@Environment(list = { Environment.DEVELOPMENT, Environment.TEST })
+@Environment(tags = {Environment.DEVELOPMENT, Environment.TEST})
 public class DevAndTestService implements EnvironmentService {
 
     public String getEnvironment() {

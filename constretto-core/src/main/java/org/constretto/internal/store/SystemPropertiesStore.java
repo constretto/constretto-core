@@ -38,7 +38,7 @@ public class SystemPropertiesStore implements ConfigurationStore {
 
         return new ArrayList<TaggedPropertySet>() {
             {
-                add(new TaggedPropertySet(ConfigurationNode.ALL_TAG, properties));
+                add(new TaggedPropertySet(ConfigurationNode.ALL_TAG, properties, SystemPropertiesStore.class));
             }
         };
     }

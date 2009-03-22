@@ -47,11 +47,6 @@ public class PropertiesStore implements ConfigurationStore {
         this.tagPrefix = DEFAULT_TAG_PREFIX;
     }
 
-    public PropertiesStore(Resource... resources) {
-        this();
-        addResourcesAsProperties(resources);
-    }
-
     public PropertiesStore addResource(Resource resource) {
         addResourcesAsProperties(resource);
         return this;
@@ -99,11 +94,11 @@ public class PropertiesStore implements ConfigurationStore {
         List<TaggedPropertySet> taggedPropertySets = new ArrayList<TaggedPropertySet>();
         Set<String> tags = getTags(this.properties);
         for (String tag : tags) {
-            taggedPropertySets.add(new TaggedPropertySet(tag, getPropertiesByTag(tag, this.properties)));
+            taggedPropertySets.add(new TaggedPropertySet(tag, getPropertiesByTag(tag, this.properties), getClass()));
         }
         Map<String, String> unTaggedProperties = getUnTaggedProperties(this.properties);
         if (!unTaggedProperties.isEmpty()) {
-            taggedPropertySets.add(new TaggedPropertySet(getUnTaggedProperties(this.properties)));
+            taggedPropertySets.add(new TaggedPropertySet(getUnTaggedProperties(this.properties), getClass()));
         }
         return taggedPropertySets;
     }

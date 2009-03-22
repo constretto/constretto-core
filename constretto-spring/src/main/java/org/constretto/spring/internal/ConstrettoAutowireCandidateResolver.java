@@ -10,9 +10,7 @@
  */
 package org.constretto.spring.internal;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.constretto.spring.EnvironmentAnnotationContextConfigurer;
+import org.constretto.spring.EnvironmentAnnotationConfigurer;
 import org.springframework.beans.factory.annotation.QualifierAnnotationAutowireCandidateResolver;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.config.DependencyDescriptor;
@@ -25,8 +23,6 @@ import org.springframework.beans.factory.support.AutowireCandidateResolver;
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class ConstrettoAutowireCandidateResolver implements AutowireCandidateResolver {
-
-    private final Log logger = LogFactory.getLog(getClass());
     private QualifierAnnotationAutowireCandidateResolver annotationAutowireCandidateResolver = new QualifierAnnotationAutowireCandidateResolver();
 
     public ConstrettoAutowireCandidateResolver() {
@@ -34,8 +30,8 @@ public class ConstrettoAutowireCandidateResolver implements AutowireCandidateRes
 
     @SuppressWarnings("unchecked")
     public boolean isAutowireCandidate(BeanDefinitionHolder bdHolder, DependencyDescriptor descriptor) {
-        if (bdHolder.getBeanDefinition().getAttribute(EnvironmentAnnotationContextConfigurer.INCLUDE_IN_COLLECTIONS) != null && descriptor.getCollectionType() != null) {
-            Class[] interfaces = (Class[]) bdHolder.getBeanDefinition().getAttribute(EnvironmentAnnotationContextConfigurer.INCLUDE_IN_COLLECTIONS);
+        if (bdHolder.getBeanDefinition().getAttribute(EnvironmentAnnotationConfigurer.INCLUDE_IN_COLLECTIONS) != null && descriptor.getCollectionType() != null) {
+            Class[] interfaces = (Class[]) bdHolder.getBeanDefinition().getAttribute(EnvironmentAnnotationConfigurer.INCLUDE_IN_COLLECTIONS);
             for (Class anInterface : interfaces) {
                 if (descriptor.getCollectionType().isAssignableFrom(anInterface)) {
                     return true;

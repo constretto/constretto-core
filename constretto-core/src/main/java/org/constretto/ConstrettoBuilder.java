@@ -112,6 +112,7 @@ public class ConstrettoBuilder {
         }
 
         public ConstrettoBuilder done() {
+            configurationProvider.addConfigurationStore(store);
             return builder;
         }
     }

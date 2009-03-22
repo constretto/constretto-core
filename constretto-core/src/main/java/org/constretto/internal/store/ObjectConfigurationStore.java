@@ -84,6 +84,6 @@ public class ObjectConfigurationStore implements ConfigurationStore {
 
         }
 
-        return new TaggedPropertySet(tag, properties);
+        return new TaggedPropertySet(tag, properties, getClass());
     }
 }
