@@ -15,7 +15,7 @@
  */
 package org.constretto.model;
 
-import static org.apache.commons.lang.builder.ToStringBuilder.reflectionToString;
+import org.apache.commons.lang.Validate;
 import org.constretto.ConfigurationStore;
 
 import java.util.Map;
@@ -35,9 +35,7 @@ public class TaggedPropertySet {
     }
 
     public TaggedPropertySet(String tag, Map<String, String> properties, Class<? extends ConfigurationStore> storeClass) {
-        if (tag == null) {
-            throw new IllegalArgumentException("A tagged property set cannot have \"null\" as tag");
-        }
+        Validate.notNull(tag);
         this.tag = tag;
         this.properties = properties;
         this.storeClass = storeClass;
@@ -53,10 +51,5 @@ public class TaggedPropertySet {
 
     public Class<? extends ConfigurationStore> getStoreClass() {
         return storeClass;
-    }
-
-    @Override
-    public String toString() {
-        return reflectionToString(this);
     }
 }

@@ -95,9 +95,4 @@ public class IniFileConfigurationStore implements ConfigurationStore {
             throw new ConstrettoException(e);
         }
     }
-
-    @Override
-    public String toString() {
-        return "Ini file store " + resources + ".";
-    }
 }

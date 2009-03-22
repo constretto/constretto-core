@@ -232,7 +232,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
                             if (defaultValue != null || (defaultValue == null && !required)) {
                                 resolvedArguments[i] = defaultValue;
                             } else {
-                                throw new ConstrettoException("Error when trying to inject field...bla bla bla");
+                                throw new ConstrettoException("Error when trying to inject field.");
                             }
                         }
 
@@ -272,7 +272,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
                                 field.set(objectToConfigure, valueFactory.getDefaultValue());
                             }
                         } else if (configurationAnnotation.required()) {
-                            throw new ConstrettoException("Error when trying to inject field...bla bla bla");
+                            throw new ConstrettoException("Error when trying to inject field.");
                         }
                     }
                 }
