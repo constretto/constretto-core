@@ -20,23 +20,28 @@
         This project aims to help java application developers to manage
         their configuration issues.
     </description>
+
     <modules>
         <module>constretto-api</module>
         <module>constretto-core</module>
         <module>constretto-spring</module>
     </modules>
+
     <scm>
         <developerConnection>scm:git:http://git.constretto.org/</developerConnection>
         <url>http://constretto.org/repositories/show/constretto</url>
     </scm>
+
     <issueManagement>
         <system>redmine</system>
         <url>http://constretto.org/projects/constretto/issues</url>
     </issueManagement>
+
     <ciManagement>
         <system>bamboo</system>
         <url>http://ci.constretto.org</url>
     </ciManagement>
+
     <developers>
         <developer>
             <id>kaare</id>
@@ -61,6 +66,7 @@
             <timezone>+1</timezone>
         </developer>
     </developers>
+
     <licenses>
         <license>
             <name>ASF v2 License</name>
@@ -72,7 +78,6 @@
     <properties>
         <spring.version>2.5.6</spring.version>
     </properties>
-
 
     <dependencyManagement>
         <dependencies>
@@ -184,6 +189,7 @@
             </plugin>
         </plugins>
     </build>
+
     <repositories>
         <repository>
             <id>constretto.org</id>
@@ -196,6 +202,7 @@
             <url>http://repo.constretto.org/thirdparty</url>
         </repository>
     </repositories>
+
     <pluginRepositories>
         <pluginRepository>
             <id>snapshots.repository.codehaus.org</id>
@@ -212,6 +219,7 @@
             <url>https://repository.apache.org/content/groups/snapshots</url>
         </pluginRepository>
     </pluginRepositories>
+
     <distributionManagement>
         <repository>
             <id>constretto.org</id>
