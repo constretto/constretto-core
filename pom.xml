@@ -28,6 +28,7 @@
     </modules>
     <scm>
         <developerConnection>scm:git:http://svn.constretto.org/</developerConnection>
+        <url>http://constretto.org/repositories/show/constretto</url>
     </scm>
     <issueManagement>
         <system>redmine</system>
