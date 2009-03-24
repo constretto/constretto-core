@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>Constretto - Reference Manual ver. 1.0</title>
+    <link rel="stylesheet" href="constretto.css"/>
+</head>
+<body>
+<div class="header"/>
+<p class="title">Constretto - Reference Manual ver. 1.0</p>
+
+<div class="toc">
+    <p class="title">Table of Contents</p>
+    <ul>
+        <li class="section"><a href="#concepts">Introduction</a></li>
+        <li class="subsection"><a href="#configurationStore">Configuration Store</a></li>
+        <li class="subsection"><a href="#tags">Tags</a></li>
+        <li class="subsection"><a href="#configurationContext">Configuration Context</a></li>
+        <li class="subsection"><a href="#variableReplacement">Variable Replacement</a></li>
+        <li class="subsection"><a href="#propertyOverriding">Property Overriding</a></li>
+        <li class="subsection"><a href="#configurationInjection">Configuration Injection</a></li>
+        <li class="section"><a href="#supportedConfigurationFormats">Supported Configuration Formats</a></li>
+        <li class="subsection"><a href="#iniFIles">Ini files</a></li>
+        <li class="subsection"><a href="#propertyFiles">Property files</a></li>
+        <li class="subsection"><a href="#javaBeans">JavaBeans</a></li>
+        <li class="section"><a href="#constrettoJavaAPI">Constretto Java API</a></li>
+        <li class="subsection"><a href="#configurationBuilder">Constretto Configuration Builder</a></li>
+        <li class="subsection"><a href="#clientAPI">ConstrettoConfiguration Client API</a></li>
+        <li class="section"><a href="#springIntegration">Spring Integration</a></li>
+        <li class="subsection"><a href="#xmlNamespace">Constretto Namespace</a></li>
+        <li class="subsection"><a href="#assemblyContext">Assembly Context</a></li>
+        <li class="subsection"><a href="#propertyPlaceHolder">Property Placeholder Configure</a></li>
+        <li class="section"><a href="#bestPractices">Best Practices</a></li>
+    </ul>
+</div>
+
+<div class="section">
+    <p class="title"><a name="concepts">Concepts</a></p>
+
+    <p class="subtitle"><a name="configurationStore">Configuration Store</a></p>
+
+    <p class="subtitle"><a name="tags">Tags</a></p>
+
+    <p class="subtitle"><a name="configurationContext">Configuration Context</a></p>
+
+    <p class="subtitle"><a name="variableReplacement">Variable Replacement</a></p>
+
+    <p class="subtitle"><a name="propertyOverriding">Property Overriding</a></p>
+
+    <p class="subtitle"><a name="configurationInjection">Configuration Injection</a></p>
+</div>
+
+<div class="section">
+    <p class="title"><a name="supportedConfigurationFormats">Supported Configuration Formats</a></p>
+
+    <p class="subtitle"><a name="iniFIles">Ini files</a></p>
+
+    <p class="example">Example ini file:</p>
+    <blockquote class="code">
+        <p class="reserved">[default]</p>
+        <p><span class="reserved ident">key1</span>=<span class="value">a value</span></p>
+        <p><span class="reserved ident">key2</span>=<span class="value">a value</span></p>
+        <br></br>
+        <p class="reserved">[some tag]</p>
+        <p><span class="reserved ident">key1</span>=<span class="value">other value</span></p>
+        <p><span class="reserved ident">key2</span>=<span class="value">other value</span></p>
+    </blockquote>
+
+    <p class="subtitle"><a name="propertyFiles">Property files</a></p>
+
+    <p class="example">Example property file:</p>
+    <blockquote class="code">
+
+        <p><span class="reserved ident">key1</span>=<span class="value">a value</span></p>
+        <p><span class="reserved ident">key2</span>=<span class="value">a value</span></p>
+        <br></br>
+        <p><span class="reserved ident">@some tag.key1</span>=<span class="value">other value</span></p>
+        <p><span class="reserved ident">@some tag.key2</span>=<span class="value">other value</span></p>
+    </blockquote>
+
+    <p class="subtitle"><a name="javaBeans">JavaBeans</a></p>
+
+    <p class="example">Example JavaBean:</p>
+    <blockquote class="code java">
+        <p><span class="annotation">@ConfigurationSource</span>(basePath = <span class="value">"datasources.customer"</span>, tag = <span class="value">"development"</span>)</p>
+        <p><span class="reserved">public class</span> DevelopmentCustomerDataSourceConfigurer {</p>
+        <br></br>
+        <p><span class="reserved ident">public</span> String getUrl() {</p>
+        <p><span class="reserved ident-2">return</span> <span class="value">"development-url"</span>;</p>
+        <p><span class="ident">}</span></p>
+        <br></br>
+        <p><span class="reserved ident">public</span> String getUsername() {</p>
+        <p><span class="reserved ident-2">return</span> <span class="value">"development-username"</span>;</p>
+        <p><span class="ident">}</span></p>
+        <br></br>
+        <p><span class="reserved ident">public</span> String getPassword() {</p>
+        <p><span class="reserved ident-2">return</span> <span class="value">"development-password"</span>;</p>
+        <p><span class="ident">}</span></p>
+        <p>}</p>
+    </blockquote>
+</div>
+
+<div class="section">
+    <p class="title"><a name="constrettoJavaAPI">Constretto Java API</a></p>
+
+    <p class="subtitle"><a name="configurationBuilder">Constretto Configuration Builder</a></p>
+
+    <p class="subtitle"><a name="clientAPI">ConstrettoConfiguration Client API</a></p>
+</div>
+
+<div class="section">
+    <p class="title"><a name="springIntegration">Spring Integration</a></p>
+
+    <p class="subtitle"><a name="xmlNamespace">Constretto Namespace</a></p>
+
+    <p class="subtitle"><a name="assemblyContext">Assembly Context</a></p>
+
+    <p class="subtitle"><a name="propertyPlaceHolder">Property Placeholder Configurer</a></p>
+</div>
+
+
+<div class="section">
+    <p class="title"><a name="bestPractices">Best Practices</a></p>
+</div>
+
+</body>
+</html>

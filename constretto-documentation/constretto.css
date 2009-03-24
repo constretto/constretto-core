@@ -1,0 +1,95 @@
+html, body {
+    height: 100%;
+    font-family: Helvetica, sans-serif;
+    font-size: 12px;
+}
+
+.header {
+    background-image: url("header.jpg");
+    width: 1024px;
+    height: 40px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.title {
+    font-weight: bold;
+    font-size: 28px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 550px;
+}
+
+.toc .title{
+    font-weight: bold;
+    font-size: 18px;
+    width: auto;
+}
+
+.toc .section{
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.toc .subsection{
+    font-weight: bold;
+    font-size: 12px;
+    margin-left:15px;
+}
+
+.toc li {
+    list-style:none;
+}
+
+.section .title {
+    font-weight: bold;
+    font-size: 18px;
+    width: auto;
+}
+
+.section .subtitle {
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.code {
+    margin-top: 10px;
+    font-style: normal;
+}
+
+.code .reserved {
+    color: darkblue;
+}
+
+.code .annotation {
+    color:rgb(128,128,0) 
+}
+
+.java .reserved {
+    font-weight: bold;
+}
+
+.ident {
+    margin-left: 15px;
+}
+
+.ident-2 {
+    margin-left: 30px;
+}
+
+.section .example {
+    font-style: italic;
+    margin-left: 15px;
+}
+
+.code .value {
+    color: darkgreen;
+}
+
+.code .variable {
+    color: purple;
+}
+
+.code p {
+    margin: auto;
+}
