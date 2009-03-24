@@ -33,6 +33,10 @@
         <system>redmine</system>
         <url>http://constretto.org/projects/constretto/issues</url>
     </issueManagement>
+    <ciManagement>
+        <system>bamboo</system>
+        <url>http://ci.constretto.org</url>
+    </ciManagement>
     <developers>
         <developer>
             <id>kaare</id>
