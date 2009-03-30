@@ -5,7 +5,7 @@ html, body {
 }
 
 .header {
-    background-image: url("header.jpg");
+    background-image: url("../img/header.jpg");
     width: 1024px;
     height: 40px;
     margin-left: auto;
@@ -41,15 +41,20 @@ html, body {
     list-style:none;
 }
 
-.section .title {
+.section h1 {
     font-weight: bold;
     font-size: 18px;
     width: auto;
 }
 
-.section .subtitle {
+.section h2 {
     font-weight: bold;
     font-size: 12px;
+}
+
+.section .example {
+    font-style: italic;
+    margin-left: 15px;
 }
 
 .code {
@@ -62,7 +67,7 @@ html, body {
 }
 
 .code .annotation {
-    color:rgb(128,128,0) 
+    color:rgb(128,128,0)
 }
 
 .java .reserved {
@@ -75,11 +80,6 @@ html, body {
 
 .ident-2 {
     margin-left: 30px;
-}
-
-.section .example {
-    font-style: italic;
-    margin-left: 15px;
 }
 
 .code .value {
