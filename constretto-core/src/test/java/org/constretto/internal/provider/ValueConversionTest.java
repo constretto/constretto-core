@@ -26,6 +26,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static java.lang.System.setProperty;
+import java.util.Locale;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
@@ -46,6 +47,8 @@ public class ValueConversionTest {
         setProperty("short.valid", "-32768");
         setProperty("byte.valid", "-128");
         setProperty("custom.data", "Some data");
+        setProperty("locale.valid", "en_US");
+        setProperty("locale.invalid", "no_PO");
         configuration = new ConstrettoBuilder().createSystemPropertiesStore().getConfiguration();
     }
 
@@ -163,6 +166,17 @@ public class ValueConversionTest {
         });
     }
 
+    @Test
+    public void evaluateLocale() {
+        Locale locale = Locale.US;
+        assertEquals(locale, configuration.evaluateTo(Locale.class,"locale.valid"));
+        assertException(ConstrettoConversionException.class, new Guard() {
+            public void operation() {
+                configuration.evaluateTo(Locale.class,"locale.invalid");
+            }
+        });
+    }
+
     @Test(expected = ConstrettoException.class)
     public void evaluateWithMissingConverter() {
         configuration.evaluateTo(ValueConversionTest.class, "nan");
@@ -176,7 +190,7 @@ public class ValueConversionTest {
 
     }
 
-
+    //
     // Helper methods
     //
     private void assertException(Class<? extends Throwable> expectedException, Guard guard) {

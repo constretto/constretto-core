@@ -323,9 +323,6 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         return null != value && value.contains(VARIABLE_PREFIX) && value.contains(VARIABLE_SUFFIX);
     }
 
-    /**
-     * Comment
-     */
     private class ConfigurationVariable {
         private final int startIndex;
         private final int endIndex;

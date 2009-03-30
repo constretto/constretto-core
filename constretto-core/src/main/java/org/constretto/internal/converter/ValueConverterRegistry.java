@@ -21,6 +21,7 @@ import org.springframework.core.io.Resource;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Locale;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
@@ -45,6 +46,7 @@ public class ValueConverterRegistry {
             put(String.class, new StringValueConverter());
             put(Resource.class, new SpringResourceValueConverter());
             put(File.class, new FileValueConverter());
+            put(Locale.class, new LocaleValueConverter());
         }
     };
 
