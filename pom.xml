@@ -7,229 +7,214 @@
   either express or implied. See the License for the specific language governing permissions and limitations under the
   License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>org.constretto</groupId>
-    <artifactId>constretto</artifactId>
-    <version>1.0-rc-3-SNAPSHOT</version>
-    <name>Constretto :: Parent - ${project.version}</name>
-    <inceptionYear>2008</inceptionYear>
-    <url>http://constretto.org</url>
-    <packaging>pom</packaging>
-    <description>
-        This project aims to help java application developers to manage
-        their configuration issues.
-    </description>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.constretto</groupId>
+  <artifactId>constretto</artifactId>
+  <version>1.0-rc-3-SNAPSHOT</version>
+  <name>Constretto :: Parent - ${project.version}</name>
+  <inceptionYear>2008</inceptionYear>
+  <url>http://constretto.org</url>
+  <packaging>pom</packaging>
+  <description>
+    This project aims to help java application developers to manage
+    their configuration issues.
+  </description>
 
-    <modules>
-        <module>constretto-api</module>
-        <module>constretto-core</module>
-        <module>constretto-spring</module>
-    </modules>
+  <modules>
+    <module>constretto-api</module>
+    <module>constretto-core</module>
+    <module>constretto-spring</module>
+  </modules>
 
-    <scm>
-        <developerConnection>scm:git:http://git.constretto.org/</developerConnection>
-        <url>http://constretto.org/repositories/show/constretto</url>
-    </scm>
+  <scm>
+    <developerConnection>scm:git:http://git.constretto.org/</developerConnection>
+    <url>http://constretto.org/repositories/show/constretto</url>
+  </scm>
 
-    <issueManagement>
-        <system>redmine</system>
-        <url>http://constretto.org/projects/constretto/issues</url>
-    </issueManagement>
+  <issueManagement>
+    <system>redmine</system>
+    <url>http://constretto.org/projects/constretto/issues</url>
+  </issueManagement>
 
-    <ciManagement>
-        <system>bamboo</system>
-        <url>http://ci.constretto.org</url>
-    </ciManagement>
+  <ciManagement>
+    <system>bamboo</system>
+    <url>http://ci.constretto.org</url>
+  </ciManagement>
 
-    <developers>
-        <developer>
-            <id>kaare</id>
-            <name>Kaare Nilsen</name>
-            <email>kaare.nilsen@gmail.com</email>
-            <organization>Arktekk AS</organization>
-            <organizationUrl>http://arktekk.no</organizationUrl>
-            <roles>
-                <role>Java Developer</role>
-            </roles>
-            <timezone>+1</timezone>
-        </developer>
-        <developer>
-            <id>kristoffer</id>
-            <name>Kristoffer Moum</name>
-            <email>kristoffer.moum@arktekk.no</email>
-            <organization>Arktekk AS</organization>
-            <organizationUrl>http://arktekk.no</organizationUrl>
-            <roles>
-                <role>Java Developer</role>
-            </roles>
-            <timezone>+1</timezone>
-        </developer>
-    </developers>
+  <developers>
+    <developer>
+      <id>kaare</id>
+      <name>Kaare Nilsen</name>
+      <email>kaare.nilsen@gmail.com</email>
+      <organization>Arktekk AS</organization>
+      <organizationUrl>http://arktekk.no</organizationUrl>
+      <roles>
+        <role>Java Developer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+    <developer>
+      <id>kristoffer</id>
+      <name>Kristoffer Moum</name>
+      <email>kristoffer.moum@arktekk.no</email>
+      <organization>Arktekk AS</organization>
+      <organizationUrl>http://arktekk.no</organizationUrl>
+      <roles>
+        <role>Java Developer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+  </developers>
 
-    <licenses>
-        <license>
-            <name>ASF v2 License</name>
-            <url>LICENSE.txt</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
+  <licenses>
+    <license>
+      <name>ASF v2 License</name>
+      <url>LICENSE.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
 
-    <properties>
-        <spring.version>2.5.6</spring.version>
-    </properties>
+  <properties>
+    <spring.version>2.5.6</spring.version>
+  </properties>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.constretto</groupId>
-                <artifactId>constretto-api</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.constretto</groupId>
-                <artifactId>constretto-core</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.4</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-beans</artifactId>
-                <version>${spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-core</artifactId>
-                <version>${spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-beans</artifactId>
-                <version>${spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-web</artifactId>
-                <version>${spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-context</artifactId>
-                <version>${spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-test</artifactId>
-                <version>${spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-aop</artifactId>
-                <version>${spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.ini4j</groupId>
-                <artifactId>ini4j</artifactId>
-                <version>0.3.2</version>
-            </dependency>
-            <dependency>
-                <groupId>commons-lang</groupId>
-                <artifactId>commons-lang</artifactId>
-                <version>2.4</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.constretto</groupId>
+        <artifactId>constretto-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.constretto</groupId>
+        <artifactId>constretto-core</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.4</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-beans</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-core</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-beans</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-web</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-test</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-aop</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.ini4j</groupId>
+        <artifactId>ini4j</artifactId>
+        <version>0.5.1</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-lang</groupId>
+        <artifactId>commons-lang</artifactId>
+        <version>2.4</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>com.atlassian.maven.plugins</groupId>
-                <artifactId>maven-clover2-plugin</artifactId>
-                <configuration>
-                    <licenseLocation>/local/systems/licenses/clover.license</licenseLocation>
-                    <generateXml>true</generateXml>
-                    <generateHtml>true</generateHtml>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.5</version>
-                <executions>
-                    <execution>
-                        <id>javadoc:aggregate</id>
-                        <phase>site</phase>
-                        <goals>
-                            <goal>aggregate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <links>
-                        <link>http://java.sun.com/j2se/1.5.0/docs/api/</link>
-                        <link>http://java.sun.com/j2se/1.4.2/docs/api/</link>
-                        <link>http://java.sun.com/j2se/1.3/docs/api/</link>
-                        <link>http://java.sun.com/j2ee/1.4/docs/api/</link>
-                        <link>http://java.sun.com/j2ee/sdk_1.3/techdocs/api/</link>
-                        <link>http://static.springframework.org/spring/docs/2.5.x/api/</link>
-                    </links>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.atlassian.maven.plugins</groupId>
+        <artifactId>maven-clover2-plugin</artifactId>
+        <configuration>
+          <licenseLocation>/local/systems/licenses/clover.license</licenseLocation>
+          <generateXml>true</generateXml>
+          <generateHtml>true</generateHtml>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.5</source>
+          <target>1.5</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.5</version>
+        <executions>
+          <execution>
+            <id>javadoc:aggregate</id>
+            <phase>site</phase>
+            <goals>
+              <goal>aggregate</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <links>
+            <link>http://java.sun.com/j2se/1.5.0/docs/api/</link>
+            <link>http://java.sun.com/j2se/1.4.2/docs/api/</link>
+            <link>http://java.sun.com/j2se/1.3/docs/api/</link>
+            <link>http://java.sun.com/j2ee/1.4/docs/api/</link>
+            <link>http://java.sun.com/j2ee/sdk_1.3/techdocs/api/</link>
+            <link>http://static.springframework.org/spring/docs/2.5.x/api/</link>
+          </links>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
-    <repositories>
-        <repository>
-            <id>constretto.org</id>
-            <name>Constretto public maven repository</name>
-            <url>http://repo.constretto.org/releases</url>
-        </repository>
-        <repository>
-            <id>thirdparty.constretto.org</id>
-            <name>Constretto thirdparty dependencies</name>
-            <url>http://repo.constretto.org/thirdparty</url>
-        </repository>
-    </repositories>
+  <repositories>
+    <repository>
+      <id>constretto.org</id>
+      <name>Constretto public maven repository</name>
+      <url>http://repo.constretto.org/releases</url>
+    </repository>
+    <repository>
+      <id>thirdparty.constretto.org</id>
+      <name>Constretto thirdparty dependencies</name>
+      <url>http://repo.constretto.org/thirdparty</url>
+    </repository>
+  </repositories>
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>snapshots.repository.codehaus.org</id>
-            <url>http://snapshots.repository.codehaus.org</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>constretto.org</id>
-            <name>Constretto public maven repository</name>
-            <url>http://repo.constretto.org/releases</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>maven-snapshots</id>
-            <name>Maven Snapshot repo</name>
-            <url>https://repository.apache.org/content/groups/snapshots</url>
-        </pluginRepository>
-    </pluginRepositories>
-
-    <distributionManagement>
-        <repository>
-            <id>constretto.org</id>
-            <name>Constretto release repository</name>
-            <url>http://repo.constretto.org/content/repositories/releases</url>
-        </repository>
-        <snapshotRepository>
-            <id>constretto.org</id>
-            <name>Constretto snapshot repository</name>
-            <url>http://repo.constretto.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
+  <distributionManagement>
+    <repository>
+      <id>constretto.org</id>
+      <name>Constretto release repository</name>
+      <url>http://repo.constretto.org/content/repositories/releases</url>
+    </repository>
+    <snapshotRepository>
+      <id>constretto.org</id>
+      <name>Constretto snapshot repository</name>
+      <url>http://repo.constretto.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
 </project>

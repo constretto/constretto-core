@@ -19,7 +19,8 @@ import org.constretto.ConfigurationStore;
 import org.constretto.exception.ConstrettoException;
 import org.constretto.model.ConfigurationNode;
 import org.constretto.model.TaggedPropertySet;
-import org.ini4j.IniFile;
+import org.ini4j.IniPreferences;
+import org.ini4j.Ini;
 import org.springframework.core.io.Resource;
 
 import java.util.*;
@@ -90,7 +91,7 @@ public class IniFileConfigurationStore implements ConfigurationStore {
 
     private Preferences load(Resource resource) {
         try {
-            return new IniFile(resource.getFile());
+            return new IniPreferences(new Ini(resource.getFile()));
         } catch (Exception e) {
             throw new ConstrettoException(e);
         }
