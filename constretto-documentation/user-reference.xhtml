@@ -3,455 +3,70 @@
         PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Constretto - Reference Manual ver. 1.0</title>
-    <script type="text/javascript" src="js/sh_main.js"/>
-    <script type="text/javascript" src="js/sh_java.js"/>
-    <script type="text/javascript" src="js/sh_properties.js"/>
-    <script type="text/javascript" src="js/sh_xml.js"/>
-    <script type="text/javascript" src="js/jquery-1.2.6.js"/>
-  	<script type="text/javascript" src="js/document-builder.js"/>
+    <script type="text/javascript" src="js/sh_main.js"></script>
+    <script type="text/javascript" src="js/sh_java.js"></script>
+    <script type="text/javascript" src="js/sh_properties.js"></script>
+    <script type="text/javascript" src="js/sh_xml.js"></script>
+    <script type="text/javascript" src="js/jquery-1.2.6.js"></script>
+    <script type="text/javascript" src="js/document-builder.js"></script>
     <link rel="stylesheet" href="css/constretto.css"/>
     <link rel="stylesheet" href="css/sh_ide-idea.css"/>
 </head>
+
 <body>
+
 <div class="header"/>
+
 <p class="title">Constretto - Reference Manual ver. 1.0</p>
 
 <div class="toc"/>
 
+<div class="section" id="introduction" title="Introduction">
 
-<pre class="sh_java">
-/*
- * Copyright 2008 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package org.constretto.internal;
+    Constretto is a configuration and assembly management framework for Java applications. bla bla
 
-import org.constretto.ConfigurationDefaultValueFactory;
-import org.constretto.ConstrettoConfiguration;
-import org.constretto.annotation.Configuration;
-import org.constretto.annotation.Configure;
-import org.constretto.exception.ConstrettoConversionException;
-import org.constretto.exception.ConstrettoException;
-import org.constretto.exception.ConstrettoExpressionException;
-import org.constretto.internal.converter.ValueConverterRegistry;
-import org.constretto.model.ConfigurationNode;
-import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
+</div>
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-/**
- * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
- */
-public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
-    private final String VARIABLE_PREFIX = "#{";
-    private final String VARIABLE_SUFFIX = "}";
-    private List&lt;String&gt; currentTags;
-    private final ConfigurationNode configuration;
-    private LocalVariableTableParameterNameDiscoverer nameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
-
-    public DefaultConstrettoConfiguration(ConfigurationNode configuration, List&lt;String&gt; currentTags) {
-        this.configuration = configuration;
-        this.currentTags = currentTags;
-    }
-
-    @SuppressWarnings("unchecked")
-    public &lt;K&gt; K evaluateTo(String expression, K defaultValue) {
-        if (!hasValue(expression)) {
-            return defaultValue;
-        }
-        K value;
-        try {
-            value = (K) processAndConvert(defaultValue.getClass(), expression);
-        } catch (ConstrettoConversionException e) {
-            value = null;
-        }
-        return null != value ? value : defaultValue;
-    }
-
-    public &lt;K&gt; K evaluateTo(Class&lt;K&gt; targetClass, String expression) throws ConstrettoExpressionException {
-        return processAndConvert(targetClass, expression);
-    }
-
-    public String evaluateToString(String expression) throws ConstrettoExpressionException {
-        return processAndConvert(String.class, expression);
-    }
-
-    public Boolean evaluateToBoolean(String expression) throws ConstrettoExpressionException {
-        return processAndConvert(Boolean.class, expression);
-    }
-
-    public Double evaluateToDouble(String expression) throws ConstrettoExpressionException {
-        return processAndConvert(Double.class, expression);
-    }
-
-    public Long evaluateToLong(String expression) throws ConstrettoExpressionException {
-        return processAndConvert(Long.class, expression);
-    }
-
-    public Float evaluateToFloat(String expression) throws ConstrettoExpressionException {
-        return processAndConvert(Float.class, expression);
-    }
-
-    public Integer evaluateToInt(String expression) throws ConstrettoExpressionException {
-        return processAndConvert(Integer.class, expression);
-    }
-
-    public Short evaluateToShort(String expression) throws ConstrettoExpressionException {
-        return processAndConvert(Short.class, expression);
-    }
-
-    public Byte evaluateToByte(String expression) throws ConstrettoExpressionException {
-        return processAndConvert(Byte.class, expression);
-    }
-
-    public &lt;T&gt; T as(Class&lt;T&gt; configurationClass) throws ConstrettoException {
-        T objectToConfigure;
-        try {
-            objectToConfigure = configurationClass.newInstance();
-        } catch (Exception e) {
-            throw new ConstrettoException("Could not instansiate class of type: " + configurationClass.getName()
-                    + " when trying to inject it with configuration, It may be missing a default constructor", e);
-        }
-
-        injectConfiguration(objectToConfigure);
-
-        return objectToConfigure;
-    }
-
-    public &lt;T&gt; T on(T objectToConfigure) throws ConstrettoException {
-        injectConfiguration(objectToConfigure);
-        return objectToConfigure;
-    }
-
-    public ConstrettoConfiguration at(String expression) throws ConstrettoException {
-        ConfigurationNode currentConfigurationNode = findElementOrThrowException(expression);
-        ConfigurationNode.createRootElementOf(currentConfigurationNode);
-        return new DefaultConstrettoConfiguration(currentConfigurationNode, currentTags);
-    }
-
-    public ConstrettoConfiguration from(String expression) throws ConstrettoException {
-        return at(expression);
-    }
-
-    public boolean hasValue(String expression) {
-        ConfigurationNode node = findElementOrNull(expression);
-        return null != node;
-    }
-
-    //
-    // Helper methods
-    //
-    private ConfigurationNode findElementOrThrowException(String expression) {
-        List&lt;ConfigurationNode&gt; node = configuration.findAllBy(expression);
-        ConfigurationNode resolvedNode = resolveMatch(node);
-        if (resolvedNode == null) {
-            throw new ConstrettoExpressionException(expression, currentTags, "not found in configuration");
-        }
-        return resolvedNode;
-    }
-
-    private &lt;T&gt; T processAndConvert(Class&lt;T&gt; clazz, String expression) throws ConstrettoException {
-        String parsedValue = processVariablesInProperty(expression, new ArrayList&lt;String&gt;());
-        return ValueConverterRegistry.convert(clazz, parsedValue);
-    }
-
-    private ConfigurationNode findElementOrNull(String expression) {
-        List&lt;ConfigurationNode&gt; node = configuration.findAllBy(expression);
-        return resolveMatch(node);
-    }
-
-    private ConfigurationNode resolveMatch(List&lt;ConfigurationNode&gt; node) {
-        ConfigurationNode bestMatch = null;
-        for (ConfigurationNode configurationNode : node) {
-            if (ConfigurationNode.DEFAULT_TAG.equals(configurationNode.getTag())) {
-                if (bestMatch == null || bestMatch.getTag().equals(ConfigurationNode.DEFAULT_TAG)) {
-                    bestMatch = configurationNode;
-                }
-            } else if (currentTags.contains(configurationNode.getTag())) {
-                if (bestMatch == null) {
-                    bestMatch = configurationNode;
-                } else {
-                    int previousFoundPriority =
-                            ConfigurationNode.DEFAULT_TAG.equals(bestMatch.getTag()) ?
-                                    Integer.MAX_VALUE : currentTags.indexOf(bestMatch.getTag());
-                    if (currentTags.indexOf(configurationNode.getTag()) &lt;= previousFoundPriority) {
-                        bestMatch = configurationNode;
-                    }
-                }
-            } else if (ConfigurationNode.ALL_TAG.equals(configurationNode.getTag())) {
-                bestMatch = configurationNode;
-            }
-        }
-        return bestMatch;
-    }
-
-    private &lt;T&gt; void injectConfiguration(T objectToConfigure) {
-        injectFields(objectToConfigure);
-        injectMethods(objectToConfigure);
-    }
-
-    private &lt;T&gt; void injectMethods(T objectToConfigure) {
-        Method[] methods = objectToConfigure.getClass().getMethods();
-        for (Method method : methods) {
-            try {
-                if (method.isAnnotationPresent(Configure.class)) {
-                    Annotation[][] methodAnnotations = method.getParameterAnnotations();
-                    String[] parameterNames = nameDiscoverer.getParameterNames(method);
-                    Object[] resolvedArguments = new Object[methodAnnotations.length];
-                    int i = 0;
-                    Object defaultValue = null;
-                    boolean required = true;
-                    for (Annotation[] parameterAnnotations : methodAnnotations) {
-                        String expression = "";
-                        Class&lt;?&gt; parameterTargetClass = method.getParameterTypes()[i];
-                        if (parameterAnnotations.length != 0) {
-                            for (Annotation parameterAnnotation : parameterAnnotations) {
-                                if (parameterAnnotation.annotationType() == Configuration.class) {
-                                    Configuration configurationAnnotation = (Configuration) parameterAnnotation;
-                                    expression = configurationAnnotation.expression();
-                                    required = configurationAnnotation.required();
-                                    if (hasAnnotationDefaults(configurationAnnotation)) {
-                                        if (configurationAnnotation.defaultValueFactory().equals(Configuration.EmptyValueFactory.class)) {
-                                            defaultValue = ValueConverterRegistry.convert(parameterTargetClass, configurationAnnotation.defaultValue());
-                                        } else {
-                                            ConfigurationDefaultValueFactory valueFactory = configurationAnnotation.defaultValueFactory().newInstance();
-                                            defaultValue = valueFactory.getDefaultValue();
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        if (expression.equals("")) {
-                            if (parameterNames == null) {
-                                throw new ConstrettoException("Could not resolve the expression of the property to look up. " +
-                                        "The cause of this could be that the class is compiled without debug enabled. " +
-                                        "when a class is compiled without debug, the @Configuration with a expression attribute is required " +
-                                        "to correctly resolve the property expression.");
-                            } else {
-                                expression = parameterNames[i];
-                            }
-                        }
-                        if (hasValue(expression)) {
-                            ConfigurationNode node = findElementOrThrowException(expression);
-                            resolvedArguments[i] = processAndConvert(parameterTargetClass, node.getExpression());
-                        } else {
-                            if (defaultValue != null || (defaultValue == null &amp;&amp; !required)) {
-                                resolvedArguments[i] = defaultValue;
-                            } else {
-                                throw new ConstrettoException("Error when trying to inject field.");
-                            }
-                        }
-
-                        i++;
-                    }
-
-                    method.setAccessible(true);
-                    method.invoke(objectToConfigure, resolvedArguments);
-
-                }
-            } catch (Exception e) {
-                throw new ConstrettoException("Cold not invoke method ["
-                        + method.getName() + "] annotated with @Configured,", e);
-            }
-        }
-    }
-
-    private &lt;T&gt; void injectFields(T objectToConfigure) {
-
-        Field[] fields = objectToConfigure.getClass().getDeclaredFields();
-        for (Field field : fields) {
-            try {
-                if (field.isAnnotationPresent(Configuration.class)) {
-                    Configuration configurationAnnotation = field.getAnnotation(Configuration.class);
-                    String expression = "".equals(configurationAnnotation.expression()) ? field.getName() : configurationAnnotation.expression();
-                    field.setAccessible(true);
-                    Class&lt;?&gt; fieldType = field.getType();
-                    if (hasValue(expression)) {
-                        ConfigurationNode node = findElementOrThrowException(expression);
-                        field.set(objectToConfigure, processAndConvert(fieldType, node.getExpression()));
-                    } else {
-                        if (hasAnnotationDefaults(configurationAnnotation)) {
-                            if (configurationAnnotation.defaultValueFactory().equals(Configuration.EmptyValueFactory.class)) {
-                                field.set(objectToConfigure, ValueConverterRegistry.convert(fieldType, configurationAnnotation.defaultValue()));
-                            } else {
-                                ConfigurationDefaultValueFactory valueFactory = configurationAnnotation.defaultValueFactory().newInstance();
-                                field.set(objectToConfigure, valueFactory.getDefaultValue());
-                            }
-                        } else if (configurationAnnotation.required()) {
-                            throw new ConstrettoException("Error when trying to inject field.");
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                throw new ConstrettoException("Cold not inject configuration into field ["
-                        + field.getName() + "] annotated with @Configuration,", e);
-            }
-        }
-
-    }
-
-    private boolean hasAnnotationDefaults(Configuration configurationAnnotation) {
-        return !("N/A".equals(configurationAnnotation.defaultValue()) &amp;&amp; configurationAnnotation.defaultValueFactory().equals(Configuration.EmptyValueFactory.class));
-    }
-
-    private String processVariablesInProperty(final String expression, final Collection&lt;String&gt; visitedPlaceholders) {
-        visitedPlaceholders.add(expression);
-        ConfigurationNode currentNode = findElementOrThrowException(expression);
-        String value = currentNode.getValue();
-        if (valueNeedsVariableResolving(value)) {
-            value = substituteVariablesinValue(value, visitedPlaceholders);
-        }
-        return value;
-    }
-
-    private String substituteVariablesinValue(String value, final Collection&lt;String&gt; visitedPlaceholders) {
-        while (valueNeedsVariableResolving(value)) {
-            ConfigurationVariable expresionToLookup = extractConfigurationVariable(value);
-            if (visitedPlaceholders.contains(expresionToLookup.expression)) {
-                throw new ConstrettoException(
-                        "A cyclic dependency found in a property");
-            }
-            value = value.substring(0, expresionToLookup.startIndex)
-                    + processVariablesInProperty(expresionToLookup.expression, visitedPlaceholders)
-                    + value.subSequence(expresionToLookup.endIndex + 1, value.length());
-        }
-        return value;
-    }
-
-    private ConfigurationVariable extractConfigurationVariable(String expression) {
-        int startIndex = expression.indexOf(VARIABLE_PREFIX);
-        int endindex = expression.indexOf(VARIABLE_SUFFIX, startIndex);
-        String parsedExpression = expression.substring(startIndex + 2, endindex);
-        return new ConfigurationVariable(startIndex, endindex, parsedExpression);
-    }
-
-    private boolean valueNeedsVariableResolving(String value) {
-        return null != value &amp;&amp; value.contains(VARIABLE_PREFIX) &amp;&amp; value.contains(VARIABLE_SUFFIX);
-    }
-
-    /**
-     * Comment
-     */
-    private class ConfigurationVariable {
-        private final int startIndex;
-        private final int endIndex;
-        private final String expression;
-
-        public ConfigurationVariable(int startIndex, int endIndex, String expression) {
-            this.startIndex = startIndex;
-            this.endIndex = endIndex;
-            this.expression = expression;
-        }
-
-        @Override
-        public String toString() {
-            return expression + ", at: " + startIndex + " to: " + endIndex;
-        }
-    }
-}
-</pre>
-
-<pre class="sh_properties">
-#
-# Copyright 2008 the original author or authors.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#    
-key1 = a value
-key2 = a value
-
-@some tag.key1 = other value
-@some tag.key2 = other value
-</pre>
-
- <pre class="sh_properties">
-[default]
-    key1 = a value
-    key2 = a value
-
-[some tag]
-    key1 = other value
-    key2 = other value
-</pre>
-
-<pre class="sh_xml">
-&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;!--
-  Copyright 2008 the original author or authors. Licensed under the Apache License, Version 2.0 (the "License"); you
-  may not use this file except in compliance with the License. You may obtain a copy of the License at
-  http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
-  either express or implied. See the License for the specific language governing permissions and limitations under the
-  License.
---&gt;
-&lt;beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:util="http://www.springframework.org/schema/util"
-       xmlns:constretto="http://constretto.org/schema/constretto"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
-           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-           http://www.springframework.org/schema/context
-           http://www.springframework.org/schema/context/spring-context-2.5.xsd
-           http://www.springframework.org/schema/util
-           http://www.springframework.org/schema/util/spring-util-2.5.xsd
-           http://constretto.org/schema/constretto
-           http://constretto.org/schema/constretto/constretto.xsd"&gt;
-
-    &lt;constretto:configuration&gt;
-        &lt;constretto:stores&gt;
-            &lt;constretto:properties-store&gt;
-                &lt;constretto:resource location="classpath:properties/test1.properties"/&gt;
-            &lt;/constretto:properties-store&gt;
-        &lt;/constretto:stores&gt;
-    &lt;/constretto:configuration&gt;
-
-    &lt;bean class="org.constretto.spring.configuration.helper.ValidBeanThatAllowsNull"/&gt;
-    &lt;bean class="org.constretto.spring.configuration.helper.ValidBeanWithComplexDefault"/&gt;
-    &lt;bean class="org.constretto.spring.configuration.helper.ValidBeanWithNoDefault"/&gt;
-    &lt;bean class="org.constretto.spring.configuration.helper.ValidBeanWithSimpleDefault"/&gt;
-    &lt;bean class="org.constretto.spring.configuration.helper.ValidBeanUsingPropertyEditors"/&gt;
-
-
-&lt;/beans&gt;
-</pre>
-
-
-<!--
 
 <div class="section" id="concepts" title="Concepts">
-    <div class="subsection" id="configurationStore" title="Configuration Store"></div>
-    <div class="subsection" id="tags" title="Tags"></div>
-    <div class="subsection" id="configurationContext" title="Configuration Context"></div>
+
+    <div class="subsection" id="configurationStore" title="Configuration Store">
+        Configuration Store acts as Constrettos bridge between different sources of configuration. There are 4
+        configuration stores delivered as a part of Constretto, and you may also implement your own store by
+        implementing the ConfigurationStore interface.
+    </div>
+
+    <div class="subsection" id="expressions" title="Expressions">
+
+    </div>
+
+    <div class="subsection" id="tags" title="Tags">
+        <p>
+            In Constretto all configuration expressions may be tagged in much the same way as we see in web 2.0 tagging
+            of content. These tag is later used to set up a full set of configuration for your application. Each
+            expression may have multiple tags. When starting a Constretto enabled application, you spesify a list of
+            tags that are valid for the given session, in Constretto is called configuration context, and all
+            expressions that are not in that list will be discarded. If an expression has values in more than one of the
+            tags allowed for the current session, the value of the expression found first in the allowed tags will be
+            used.
+        </p>
+    </div>
+    <div class="subsection" id="configurationContext" title="Configuration Context">
+        <pre class="sh_sh">
+            java -jar myapp.jar MyMain -DCONSTRETTO_TAGS=development,linux,mock
+        </pre>
+
+        <pre class="sh_sh">
+            export CONSTRETTO_TAGS=development.linux,mock
+            java -jar myapp.jar MyMain
+        </pre>
+
+        
+    </div>
     <div class="subsection" id="variableReplacement" title="Variable Replacement"></div>
     <div class="subsection" id="propertyOverriding" title="Property Overriding"></div>
     <div class="subsection" id="configurationInjection" title="Configuration Injection"></div>
@@ -488,19 +103,30 @@ key2 = a value
         <blockquote class="code java">
             <p><span class="annotation">@ConfigurationSource</span>(basePath = <span
                     class="value">"datasources.customer"</span>, tag = <span class="value">"development"</span>)</p>
+
             <p><span class="reserved">public class</span> DevelopmentCustomerDataSourceConfigurer {</p>
             <br></br>
+
             <p><span class="reserved ident">public</span> String getUrl() {</p>
+
             <p><span class="reserved ident ident-2">return</span> <span class="value">"development-url"</span>;</p>
+
             <p><span class="ident">}</span></p>
             <br></br>
+
             <p><span class="reserved ident">public</span> String getUsername() {</p>
+
             <p><span class="reserved ident-2">return</span> <span class="value">"development-username"</span>;</p>
+
             <p><span class="ident">}</span></p>
             <br></br>
+
             <p><span class="reserved ident">public</span> String getPassword() {</p>
+
             <p><span class="reserved ident-2">return</span> <span class="value">"development-password"</span>;</p>
+
             <p><span class="ident">}</span></p>
+
             <p>}</p>
         </blockquote>
     </div>
@@ -515,8 +141,8 @@ public void simpleLookupForExistingKeyUsingDefaultValue() {
 <div class="section" id="constrettoJavaAPI" title="Constretto Java API">
     <div class="subsection" id="configurationBuilder" title="Constretto Configuration Builder">
 
-    <p class="example">Example builder:</p>
-       
+        <p class="example">Example builder:</p>
+
 
     </div>
     <div class="subsection" id="clientAPI" title="ConstrettoConfiguration Client API"></div>
@@ -530,6 +156,6 @@ public void simpleLookupForExistingKeyUsingDefaultValue() {
 
 
 <div class="section" id="bestPractices" title="Best Practices"></div>
-         -->
+
 </body>
 </html>
