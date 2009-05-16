@@ -234,7 +234,7 @@ Example:
 h3. Java Objects used as configuration sources
 
 Constretto are able to use Java objects as configuration sources, and then annotations are used to indicate which tags are used.
-Also the ConfigurationSource annotation can use an optional basePath attribute, that are prepended to the JavaBean property names found in the class resulting in somedb.username in the example below.
+Also the ConfigurationSource annotation can use an optional basePath attribute, that are prepended to the JavaBean property names found in the class resulting in "somedb.username" in the example below.
 
 Example:
 <pre>
