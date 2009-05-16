@@ -29,7 +29,7 @@ Constretto is build with maven, so if you are using maven, you can simply add Co
 If you would like to use the Spring support add:
 <pre>
 	<dependency>
-		<<groupId>org.constretto</groupId>
+		<groupId>org.constretto</groupId>
 		<artifactId>constretto-spring</artifactId>
 		<version>1.0-rc-2</version>
 		<scope>runtime</scope>
@@ -189,9 +189,9 @@ To tell spring to use Constretto:
 	           http://constretto.org/schema/constretto
 	           http://constretto.org/schema/constretto/constretto.xsd">
 
-	    <constretto:configuration>
+	    <constretto:configuration annotation-config="true" property-placeholder="true">
 	        <constretto:stores>
-	            <constretto:configuration annotation-config="true" property-placeholder="true">
+	            <constretto:properties-store>
 	                <constretto:resource location="classpath:properties/test1.properties"/>
 	            </constretto:properties-store>
 	        </constretto:stores>
@@ -201,7 +201,7 @@ To tell spring to use Constretto:
 
 h2. Configuration Formats.
 
-Constretto currently supports 4 Configuration sources, and the following sections shows how these are used, and how you may tag 
+Constretto currently supports four Configuration sources, and the following sections shows how these are used, and how you may tag 
 your configuration values.
 
 h3. Java Property Files
@@ -234,6 +234,7 @@ Example:
 h3. Java Objects used as configuration sources
 
 Constretto are able to use Java objects as configuration sources, and then annotations are used to indicate which tags are used.
+Also the ConfigurationSource annotation can use an optional basePath attribute, that are prepended to the JavaBean property names found in the class resulting in somedb.username in the example below.
 
 Example:
 <pre>
