@@ -131,9 +131,9 @@ Java class to be injected with configuration:
 	    @Configuration(expression = "username")
 	    private String myUsername;
 
-
+		// Considered best practice. Field injections will reduce your ability to test code. 
 	    @Configure
-	    public void configureMe(String url, @Configuration(expression = "password") String secret) {
+	    public void configure(String url, @Configuration(expression = "password") String secret) {
 	        this.myUrl = url;
 	        this.myPassword = secret;
 	    }

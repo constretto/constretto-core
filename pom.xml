@@ -26,6 +26,7 @@
     <module>constretto-api</module>
     <module>constretto-core</module>
     <module>constretto-spring</module>
+    <module>constretto-test</module>
   </modules>
 
   <scm>
@@ -90,6 +91,11 @@
       <dependency>
         <groupId>org.constretto</groupId>
         <artifactId>constretto-core</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.constretto</groupId>
+        <artifactId>constretto-spring</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>

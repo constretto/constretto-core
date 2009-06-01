@@ -16,10 +16,12 @@
 package org.constretto;
 
 import org.constretto.internal.provider.ConfigurationProvider;
+import org.constretto.internal.resolver.DefaultConfigurationContextResolver;
 import org.constretto.internal.store.IniFileConfigurationStore;
 import org.constretto.internal.store.ObjectConfigurationStore;
 import org.constretto.internal.store.PropertiesStore;
 import org.constretto.internal.store.SystemPropertiesStore;
+import org.constretto.resolver.ConfigurationContextResolver;
 import org.springframework.core.io.Resource;
 
 /**
@@ -33,7 +35,14 @@ public class ConstrettoBuilder {
     private final ConstrettoBuilder builder;
 
     public ConstrettoBuilder() {
+        this(new DefaultConfigurationContextResolver());
+    }
+
+    public ConstrettoBuilder(ConfigurationContextResolver configurationContextResolver) {
         this.builder = this;
+        for (String tag : configurationContextResolver.getTags()) {
+            addCurrentTag(tag);
+        }
     }
 
     public ConstrettoConfiguration getConfiguration() {

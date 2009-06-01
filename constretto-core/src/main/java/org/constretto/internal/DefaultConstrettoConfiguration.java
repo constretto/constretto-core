@@ -15,23 +15,24 @@
  */
 package org.constretto.internal;
 
-import org.constretto.ConfigurationDefaultValueFactory;
-import org.constretto.ConstrettoConfiguration;
-import org.constretto.annotation.Configuration;
-import org.constretto.annotation.Configure;
-import org.constretto.exception.ConstrettoConversionException;
-import org.constretto.exception.ConstrettoException;
-import org.constretto.exception.ConstrettoExpressionException;
-import org.constretto.internal.converter.ValueConverterRegistry;
-import org.constretto.model.ConfigurationNode;
-import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import org.constretto.ConfigurationDefaultValueFactory;
+import org.constretto.ConstrettoConfiguration;
+import org.constretto.annotation.Configuration;
+import org.constretto.annotation.Configure;
+import org.constretto.annotation.Tags;
+import org.constretto.exception.ConstrettoConversionException;
+import org.constretto.exception.ConstrettoException;
+import org.constretto.exception.ConstrettoExpressionException;
+import org.constretto.internal.converter.ValueConverterRegistry;
+import org.constretto.model.ConfigurationNode;
+import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
@@ -275,6 +276,9 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
                             throw new ConstrettoException("Error when trying to inject field.");
                         }
                     }
+                } else if (field.isAnnotationPresent(Tags.class)) {
+                    field.setAccessible(true);
+                    field.set(objectToConfigure, currentTags.toArray(new String[currentTags.size()]));
                 }
             } catch (Exception e) {
                 throw new ConstrettoException("Cold not inject configuration into field ["

@@ -75,7 +75,7 @@ public class ConstrettoNamespaceHandler extends NamespaceHandlerSupport {
 
         @SuppressWarnings("unchecked")
         private ConstrettoConfiguration buildConfig(Element element, ConfigurationContextResolver configurationContextResolver) {
-            ConstrettoBuilder builder = new ConstrettoBuilder();
+            ConstrettoBuilder builder = new ConstrettoBuilder(configurationContextResolver);
             Element storeElement = DomUtils.getChildElementByTagName(element, "stores");
             if (storeElement != null) {
                 List<Element> stores = getAllChildElements(storeElement);
@@ -113,11 +113,6 @@ public class ConstrettoNamespaceHandler extends NamespaceHandlerSupport {
                         objectBuilder.done();
                     }
                 }
-            }
-
-            List<String> tags = configurationContextResolver.getTags();
-            for (String tag : tags) {
-                builder.addCurrentTag(tag);
             }
 
             return builder.getConfiguration();
