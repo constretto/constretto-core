@@ -16,12 +16,12 @@ Constretto is built with maven, so if you are using maven, you can simply add Co
 		<dependency>
 			<groupId>org.constretto</groupId>
 			<artifactId>constretto-api</artifactId>
-			<version>1.0-rc-2</version>
+			<version>1.0-rc-3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.constretto</groupId>
 			<artifactId>constretto-core</artifactId>
-			<version>1.0-rc-2</version>
+			<version>1.0-rc-3</version>
 			<scope>runtime</scope>
 		</dependency>
 </pre>
@@ -31,7 +31,7 @@ If you would like to use the Spring support add:
 	<dependency>
 		<groupId>org.constretto</groupId>
 		<artifactId>constretto-spring</artifactId>
-		<version>1.0-rc-2</version>
+		<version>1.0-rc-3</version>
 		<scope>runtime</scope>
 	</dependency>
 </pre>
