@@ -47,7 +47,9 @@ These artifacts are currently not published to the main maven repository, so in 
 	  </repositories>		
 </pre>	
 
-h2. How to use the Constretto Java API
+h2. How to configure Constretto?
+
+h3. Using Java API
 
 Constretto provides a fluent API to be used in any Java application. Its main interface is ConstrettoConfiguration, that supplies methods to query for values in your configuration.
 To initialize the ConstrettoConfiguration interface, use the supplied ConstrettoBuilder as shown in the example below:
@@ -68,7 +70,37 @@ To initialize the ConstrettoConfiguration interface, use the supplied Constretto
 	                        .getConfiguration();
 </pre>
 
-Now you can query your configuration using the methods in the ConstrettoConfiguration interface like in the examples below:
+h3. Using Spring framework
+
+Constretto works very well in a Spring environment, It provides a namespace for Spring xml configuration files, to build a ConstrettoConfiguration object,
+ and also provides a ProperyPlaceHolder to allow values in Spring xml files to be resolved from Constretto, and also a BeanPostProcessor that 
+enables ConfigurationInjection.
+
+To tell spring to use Constretto:
+<pre>
+	<beans xmlns="http://www.springframework.org/schema/beans"
+	       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	       xmlns:constretto="http://constretto.org/schema/constretto"
+	       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	           http://constretto.org/schema/constretto
+	           http://constretto.org/schema/constretto/constretto.xsd">
+
+	    <constretto:configuration annotation-config="true" property-placeholder="true">
+	        <constretto:stores>
+	            <constretto:properties-store>
+	                <constretto:resource location="classpath:properties/test1.properties"/>
+	            </constretto:properties-store>
+	        </constretto:stores>
+	    </constretto:configuration>
+	</beans>
+</pre>
+
+h2. How to use Constretto in your application?
+
+h3. Using Java API
+
+Now that you've configured Constretto, by Java API or Spring, you may query your configuration using the methods in the ConstrettoConfiguration interface like in the examples below:
 <pre>
 	// Simple lookup
 	String aDataSourceUrl = configuration.evaluateToString("datasources.customer.url");
@@ -79,9 +111,9 @@ Now you can query your configuration using the methods in the ConstrettoConfigur
 	
 </pre>
 
-h2. Configuration Injection
+h3. Configuration Injection - Annotation Based
 
-Im much the same way as dependency injection work in e.g. Spring and Guice, Constretto allows you to inject configuration into your classes.
+In much the same way as dependency injection work in e.g. Spring and Guice, Constretto allows you to inject configuration into your classes.
 It supports injection in fields, and methods as seen in the example below:
 
 Java class to be injected with configuration:
@@ -92,6 +124,7 @@ Java class to be injected with configuration:
 	    private String myPassword;
 	    private Integer version;
 
+		// When no expression is explicitly given Constretto will use field name as key
 	    @Configuration
 	    private String vendor;
 
@@ -173,32 +206,6 @@ A test that shows this feature used with the Java API:
 	}
 </pre>
 
-h2. Use with the Spring framework
-
-Constretto works very well in a Spring environment, It provides a namespace for Spring xml configuration files, to build a ConstrettoConfiguration object,
- and also provides a ProperyPlaceHolder to allow values in Spring xml files to be resolved from Constretto, and also a BeanPostProcessor that 
-enables ConfigurationInjection.
-
-To tell spring to use Constretto:
-<pre>
-	<beans xmlns="http://www.springframework.org/schema/beans"
-	       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	       xmlns:constretto="http://constretto.org/schema/constretto"
-	       xsi:schemaLocation="http://www.springframework.org/schema/beans
-	           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-	           http://constretto.org/schema/constretto
-	           http://constretto.org/schema/constretto/constretto.xsd">
-
-	    <constretto:configuration annotation-config="true" property-placeholder="true">
-	        <constretto:stores>
-	            <constretto:properties-store>
-	                <constretto:resource location="classpath:properties/test1.properties"/>
-	            </constretto:properties-store>
-	        </constretto:stores>
-	    </constretto:configuration>
-	</beans>
-</pre>
-
 h2. Configuration Formats.
 
 Constretto currently supports four Configuration sources, and the following sections shows how these are used, and how you may tag 
@@ -273,7 +280,9 @@ Or
 	$java Myapp
 </pre>
 
+h2. How to report errors or request features?
 
+Please go to "http://constretto.lighthouseapp.com/":http://constretto.lighthouseapp.com/
 
 h2. For further information and documentation
 
