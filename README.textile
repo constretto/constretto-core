@@ -8,7 +8,7 @@ supported.
 
 h2. How to Install?
 
-Constretto is build with maven, so if you are using maven, you can simply add Constretto as dependencies in your pom:
+Constretto is built with maven, so if you are using maven, you can simply add Constretto as dependencies in your pom:
 
 <pre>
 	<dependencies>
@@ -19,7 +19,7 @@ Constretto is build with maven, so if you are using maven, you can simply add Co
 			<version>1.0-rc-2</version>
 		</dependency>
 		<dependency>
-			<<groupId>org.constretto</groupId>
+			<groupId>org.constretto</groupId>
 			<artifactId>constretto-core</artifactId>
 			<version>1.0-rc-2</version>
 			<scope>runtime</scope>
@@ -42,7 +42,7 @@ These artifacts are currently not published to the main maven repository, so in 
 	    <repository>
 	      <id>constretto.org</id>
 	      <name>Constretto public maven repository</name>
-	      <url>http://repo.constretto.org/releases</url>
+	      <url>http://repo.constretto.org/content/repositories/releases</url>
 	    </repository>
 	  </repositories>		
 </pre>	
