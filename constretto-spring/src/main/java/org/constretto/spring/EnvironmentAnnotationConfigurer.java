@@ -17,9 +17,9 @@ package org.constretto.spring;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.constretto.annotation.Environment;
+import org.constretto.spring.annotation.Environment;
 import org.constretto.exception.ConstrettoException;
-import org.constretto.resolver.AssemblyContextResolver;
+import org.constretto.spring.resolver.AssemblyContextResolver;
 import org.constretto.spring.internal.ConstrettoAutowireCandidateResolver;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;

@@ -17,9 +17,9 @@ package org.constretto.spring.internal;
 
 import org.constretto.ConstrettoBuilder;
 import org.constretto.ConstrettoConfiguration;
-import org.constretto.internal.resolver.DefaultAssemblyContextResolver;
+import org.constretto.spring.internal.resolver.DefaultAssemblyContextResolver;
 import org.constretto.internal.resolver.DefaultConfigurationContextResolver;
-import org.constretto.resolver.AssemblyContextResolver;
+import org.constretto.spring.resolver.AssemblyContextResolver;
 import org.constretto.resolver.ConfigurationContextResolver;
 import org.constretto.spring.ConfigurationAnnotationConfigurer;
 import org.constretto.spring.ConstrettoConfigurationFactoryBean;

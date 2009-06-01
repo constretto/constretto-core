@@ -10,14 +10,13 @@
  */
 package org.constretto.spring.factorybean;
 
-import static org.constretto.annotation.Environment.DEVELOPMENT;
-import static org.constretto.annotation.Environment.TEST;
-import static org.constretto.internal.resolver.DefaultAssemblyContextResolver.ASSEMBLY_KEY;
+import static org.constretto.spring.annotation.Environment.DEVELOPMENT;
+import static org.constretto.spring.annotation.Environment.TEST;
+import static org.constretto.spring.internal.resolver.DefaultAssemblyContextResolver.ASSEMBLY_KEY;
 import static org.junit.Assert.assertEquals;
 
 import org.constretto.spring.factorybean.helper.DevelopmentTestBean;
 import org.constretto.spring.factorybean.helper.EnvironmentService;
-import org.constretto.spring.factorybean.helper.ProductionTestBean;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;

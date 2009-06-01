@@ -17,9 +17,9 @@ package org.constretto.spring;
 
 import org.constretto.ConstrettoConfiguration;
 import org.constretto.annotation.Configuration;
-import org.constretto.annotation.Environment;
+import org.constretto.spring.annotation.Environment;
+import org.constretto.spring.resolver.AssemblyContextResolver;
 import org.constretto.internal.converter.ValueConverterRegistry;
-import org.constretto.resolver.AssemblyContextResolver;
 import org.springframework.beans.BeanInstantiationException;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -43,7 +43,7 @@ import java.lang.reflect.Modifier;
  *
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  * @see Configuration
- * @see Environment
+ * @see org.constretto.spring.annotation.Environment
  */
 public class ConfigurationAnnotationConfigurer extends InstantiationAwareBeanPostProcessorAdapter {
     private ConstrettoConfiguration configuration;

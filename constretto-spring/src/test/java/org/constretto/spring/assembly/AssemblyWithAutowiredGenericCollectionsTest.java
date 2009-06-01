@@ -11,8 +11,8 @@
 package org.constretto.spring.assembly;
 
 import static junit.framework.Assert.assertEquals;
-import static org.constretto.annotation.Environment.DEVELOPMENT;
-import static org.constretto.internal.resolver.DefaultAssemblyContextResolver.ASSEMBLY_KEY;
+import static org.constretto.spring.annotation.Environment.DEVELOPMENT;
+import static org.constretto.spring.internal.resolver.DefaultAssemblyContextResolver.ASSEMBLY_KEY;
 
 import org.constretto.spring.assembly.helper.service.genericcollections.ProductService;
 import org.junit.Before;

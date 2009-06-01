@@ -15,7 +15,7 @@
  */
 package org.constretto.spring.assembly.helper.service.multipleenvironment;
 
-import org.constretto.annotation.Environment;
+import org.constretto.spring.annotation.Environment;
 import org.constretto.spring.assembly.helper.service.EnvironmentService;
 import org.springframework.stereotype.Service;
 

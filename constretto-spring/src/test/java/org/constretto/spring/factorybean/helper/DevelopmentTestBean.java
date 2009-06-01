@@ -10,7 +10,7 @@
  */
 package org.constretto.spring.factorybean.helper;
 
-import org.constretto.annotation.Environment;
+import org.constretto.spring.annotation.Environment;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>

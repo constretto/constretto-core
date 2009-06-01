@@ -10,8 +10,8 @@
  */
 package org.constretto.spring.assembly;
 
-import static org.constretto.annotation.Environment.DEVELOPMENT;
-import static org.constretto.internal.resolver.DefaultAssemblyContextResolver.ASSEMBLY_KEY;
+import static org.constretto.spring.annotation.Environment.DEVELOPMENT;
+import static org.constretto.spring.internal.resolver.DefaultAssemblyContextResolver.ASSEMBLY_KEY;
 import static org.junit.Assert.assertEquals;
 
 import org.constretto.spring.assembly.helper.ConfigurationService;

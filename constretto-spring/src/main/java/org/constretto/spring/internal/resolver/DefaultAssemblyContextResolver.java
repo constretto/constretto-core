@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.constretto.internal.resolver;
+package org.constretto.spring.internal.resolver;
 
-import org.constretto.annotation.Environment;
-import org.constretto.resolver.AssemblyContextResolver;
+import org.constretto.spring.resolver.AssemblyContextResolver;
+import org.constretto.spring.annotation.Environment;
 
 /**
  * Provides the default assembly environment resolving strategy which is used if no other implementation found in the

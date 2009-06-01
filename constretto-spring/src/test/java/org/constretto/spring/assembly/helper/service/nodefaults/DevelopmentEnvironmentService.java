@@ -15,9 +15,9 @@
  */
 package org.constretto.spring.assembly.helper.service.nodefaults;
 
-import static org.constretto.annotation.Environment.DEVELOPMENT;
+import static org.constretto.spring.annotation.Environment.DEVELOPMENT;
 
-import org.constretto.annotation.Environment;
+import org.constretto.spring.annotation.Environment;
 import org.constretto.spring.assembly.helper.service.EnvironmentService;
 import org.springframework.stereotype.Service;
 

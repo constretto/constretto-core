@@ -15,8 +15,8 @@
  */
 package org.constretto.spring;
 
-import org.constretto.internal.resolver.DefaultAssemblyContextResolver;
-import org.constretto.resolver.AssemblyContextResolver;
+import org.constretto.spring.internal.resolver.DefaultAssemblyContextResolver;
+import org.constretto.spring.resolver.AssemblyContextResolver;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ import java.util.Map;
 
 /**
  * A factory bean used to instantiate spring beans depending on the environment you are running in. This factory bean
- * use the {@link org.constretto.resolver.AssemblyContextResolver} to lookup the running environment. the value of this property is used to
+ * use the {@link org.constretto.spring.resolver.AssemblyContextResolver} to lookup the running environment. the value of this property is used to
  * lookup in the map of beans.
  * <p/>
  * <h2>Usage :</h2>

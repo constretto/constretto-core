@@ -15,9 +15,8 @@
  */
 package org.constretto.spring.assembly.helper;
 
-import static org.constretto.annotation.Environment.DEVELOPMENT;
-
-import org.constretto.resolver.AssemblyContextResolver;
+import static org.constretto.spring.annotation.Environment.DEVELOPMENT;
+import org.constretto.spring.resolver.AssemblyContextResolver;
 
 /**
  * 
