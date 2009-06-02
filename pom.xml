@@ -221,6 +221,7 @@
             <link>http://java.sun.com/j2ee/sdk_1.3/techdocs/api/</link>
             <link>http://static.springframework.org/spring/docs/2.5.x/api/</link>
           </links>
+          <encoding>UTF-8</encoding>
         </configuration>
       </plugin>
       <plugin>
