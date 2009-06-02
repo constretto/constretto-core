@@ -10,6 +10,8 @@
     <xsd:complexType name="Configuration">
         <xsd:all>
             <xsd:element type="Stores" name="stores" minOccurs="0" maxOccurs="1"/>
+            <xsd:element type="PlaceHolderConfigurer" name="property-placeholder-configurer" maxOccurs="1"
+                         minOccurs="0"/>
             <xsd:element type="ContextResolver" name="assembly-context-resolver" maxOccurs="1"
                          minOccurs="0"/>
             <xsd:element type="ContextResolver" name="configuration-context-resolver" maxOccurs="1"
@@ -17,6 +19,12 @@
         </xsd:all>
         <xsd:attribute type="xsd:boolean" name="annotation-config" use="optional" default="true"/>
         <xsd:attribute type="xsd:boolean" name="property-placeholder" use="optional" default="true"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="PlaceHolderConfigurer">
+      <xsd:attribute type="xsd:boolean" name="ignore-unresolved-placeholders" use="optional" default="false"/>
+      <xsd:attribute type="xsd:string" name="prefix" use="optional" default="${"/>
+      <xsd:attribute type="xsd:string" name="suffix" use="optional" default="}"/>
     </xsd:complexType>
 
     <xsd:complexType name="Stores">

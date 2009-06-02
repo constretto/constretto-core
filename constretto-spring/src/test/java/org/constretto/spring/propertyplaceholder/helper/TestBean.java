@@ -16,12 +16,12 @@
 package org.constretto.spring.propertyplaceholder.helper;
 
 /**
- * 
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class TestBean {
     private String url;
     private String serviceUrl;
+    private String mayBeNull;
 
     public TestBean(String serviceUrl) {
         this.serviceUrl = serviceUrl;
@@ -39,4 +39,11 @@ public class TestBean {
         this.url = url;
     }
 
+    public void setMayBeNull(String mayBeNull) {
+        this.mayBeNull = mayBeNull;
+    }
+
+    public String getMayBeNull() {
+        return mayBeNull;
+    }
 }

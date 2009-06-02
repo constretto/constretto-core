@@ -60,6 +60,7 @@ public class ConstrettoPropertyPlaceholderConfigurer implements BeanFactoryPostP
     private BeanFactory beanFactory;
     private String placeholderPrefix = DEFAULT_PLACEHOLDER_PREFIX;
     private String placeholderSuffix = DEFAULT_PLACEHOLDER_SUFFIX;
+    private boolean ignoreUnresolvedPlaceHolders = false;
 
     public ConstrettoPropertyPlaceholderConfigurer(ConstrettoConfiguration configuration) {
         this.configuration = configuration;
@@ -99,6 +100,10 @@ public class ConstrettoPropertyPlaceholderConfigurer implements BeanFactoryPostP
         this.placeholderSuffix = placeholderSuffix;
     }
 
+    public void setIgnoreUnresolvedPlaceHolders(boolean ignoreUnresolvedPlaceHolders) {
+        this.ignoreUnresolvedPlaceHolders = ignoreUnresolvedPlaceHolders;
+    }
+
     private String parseStringValue(String strVal) throws BeanDefinitionStoreException {
         StringBuffer buf = new StringBuffer(strVal);
 
@@ -108,9 +113,6 @@ public class ConstrettoPropertyPlaceholderConfigurer implements BeanFactoryPostP
             if (endIndex != -1) {
                 String placeholder = buf.substring(startIndex + this.placeholderPrefix.length(), endIndex);
                 String propVal = resolvePlaceholder(placeholder);
-                if (propVal == null) {
-                    throw new BeanDefinitionStoreException("Could not resolve placeholder '" + placeholder + "'");
-                }
                 buf.replace(startIndex, endIndex + this.placeholderSuffix.length(), propVal);
                 startIndex = buf.indexOf(this.placeholderPrefix, startIndex + propVal.length());
             } else {
@@ -142,7 +144,12 @@ public class ConstrettoPropertyPlaceholderConfigurer implements BeanFactoryPostP
     }
 
     private String resolvePlaceholder(String key) {
-        String value = configuration.evaluateTo(key, "");
+        String value = null;
+        if (ignoreUnresolvedPlaceHolders){
+            value = configuration.evaluateTo(key, "");
+        } else {
+            value = configuration.evaluateTo(String.class,key);
+        }
         return null != value ? value : null;
     }
 

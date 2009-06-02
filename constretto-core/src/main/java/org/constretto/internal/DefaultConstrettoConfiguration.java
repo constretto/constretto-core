@@ -15,13 +15,6 @@
  */
 package org.constretto.internal;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import org.constretto.ConfigurationDefaultValueFactory;
 import org.constretto.ConstrettoConfiguration;
 import org.constretto.annotation.Configuration;
@@ -33,6 +26,14 @@ import org.constretto.exception.ConstrettoExpressionException;
 import org.constretto.internal.converter.ValueConverterRegistry;
 import org.constretto.model.ConfigurationNode;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
@@ -140,7 +141,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         List<ConfigurationNode> node = configuration.findAllBy(expression);
         ConfigurationNode resolvedNode = resolveMatch(node);
         if (resolvedNode == null) {
-            throw new ConstrettoExpressionException(expression, currentTags, "not found in configuration");
+            throw new ConstrettoExpressionException(expression, currentTags);
         }
         return resolvedNode;
     }
@@ -233,7 +234,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
                             if (defaultValue != null || (defaultValue == null && !required)) {
                                 resolvedArguments[i] = defaultValue;
                             } else {
-                                throw new ConstrettoException("Error when trying to inject field.");
+                                throw new ConstrettoException("Missing value or default value for expression [" + expression + "], in method [" + method.getName() + "], in class [" + objectToConfigure.getClass().getName() + "], with tags " + currentTags + ".");
                             }
                         }
 
@@ -244,7 +245,13 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
                     method.invoke(objectToConfigure, resolvedArguments);
 
                 }
-            } catch (Exception e) {
+            } catch (IllegalAccessException e) {
+                throw new ConstrettoException("Cold not invoke method ["
+                        + method.getName() + "] annotated with @Configured,", e);
+            } catch (InvocationTargetException e) {
+                throw new ConstrettoException("Cold not invoke method ["
+                        + method.getName() + "] annotated with @Configured,", e);
+            } catch (InstantiationException e) {
                 throw new ConstrettoException("Cold not invoke method ["
                         + method.getName() + "] annotated with @Configured,", e);
             }
@@ -273,16 +280,19 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
                                 field.set(objectToConfigure, valueFactory.getDefaultValue());
                             }
                         } else if (configurationAnnotation.required()) {
-                            throw new ConstrettoException("Error when trying to inject field.");
+                            throw new ConstrettoException("Missing value or default value for expression [" + expression + "] for field [" + field.getName() + "], in class [" + objectToConfigure.getClass().getName() + "] with tags " + currentTags + ".");
                         }
                     }
                 } else if (field.isAnnotationPresent(Tags.class)) {
                     field.setAccessible(true);
                     field.set(objectToConfigure, currentTags.toArray(new String[currentTags.size()]));
                 }
-            } catch (Exception e) {
+            } catch (IllegalAccessException e) {
                 throw new ConstrettoException("Cold not inject configuration into field ["
-                        + field.getName() + "] annotated with @Configuration,", e);
+                        + field.getName() + "] annotated with @Configuration, in class [" + objectToConfigure.getClass().getName() + "] with tags " + currentTags, e);
+            } catch (InstantiationException e) {
+                throw new ConstrettoException("Cold not inject configuration into field ["
+                        + field.getName() + "] annotated with @Configuration, in class [" + objectToConfigure.getClass().getName() + "] with tags " + currentTags, e);
             }
         }
 

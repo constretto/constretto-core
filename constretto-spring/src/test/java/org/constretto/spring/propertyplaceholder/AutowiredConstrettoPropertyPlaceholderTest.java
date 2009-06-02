@@ -36,8 +36,11 @@ public class AutowiredConstrettoPropertyPlaceholderTest {
     TestBean testBean;
 
     @Test
-    public void givenPlaceholderOnPropertyThenPlaceholderResolved() throws Exception {
+    public void givenPlaceholderOnPropertyThenPlaceholderResolvedIfPresent() throws Exception {
         assertEquals("http://arktekk.no", testBean.getUrl());
+        assertEquals("http://arktekk.no/coolService", testBean.getServiceUrl());
+        assertEquals("",testBean.getMayBeNull());
+
     }
 
     @Test

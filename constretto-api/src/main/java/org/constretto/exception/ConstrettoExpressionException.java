@@ -26,9 +26,14 @@ public class ConstrettoExpressionException extends ConstrettoException {
     private final String expression;
     private List<String> currentTags;
 
-    public ConstrettoExpressionException(String expression, List<String> currentTags, String message) {
-        super(message);
+    public ConstrettoExpressionException(String expression, List<String> currentTags) {
+        super("");
         this.expression = expression;
         this.currentTags = currentTags;
+    }
+
+    @Override
+    public String toString() {
+        return "Expression [" + expression + "] not found in Configuration using tags " + currentTags;
     }
 }
