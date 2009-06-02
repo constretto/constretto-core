@@ -19,7 +19,7 @@
            http://www.springframework.org/schema/util
            http://www.springframework.org/schema/util/spring-util-2.5.xsd
            http://constretto.org/schema/constretto
-           http://constretto.org/schema/constretto/constretto.xsd">
+           http://constretto.org/schema/constretto/constretto-1.0.xsd">
 
     <constretto:configuration>
         <constretto:stores>

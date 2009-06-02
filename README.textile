@@ -95,7 +95,7 @@ To tell spring to use Constretto:
 	       xsi:schemaLocation="http://www.springframework.org/schema/beans
 	           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
 	           http://constretto.org/schema/constretto
-	           http://constretto.org/schema/constretto/constretto.xsd">
+	           http://constretto.org/schema/constretto/constretto-1.0.xsd">
 
 	    <constretto:configuration annotation-config="true" property-placeholder="true">
 	        <constretto:stores>
