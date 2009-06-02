@@ -15,13 +15,12 @@
  */
 package org.constretto.spring.configuration.helper;
 
-import java.io.File;
-
 import org.constretto.annotation.Configuration;
 import org.springframework.core.io.Resource;
 
+import java.io.File;
+
 /**
- * 
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class ValidBeanUsingPropertyEditors {

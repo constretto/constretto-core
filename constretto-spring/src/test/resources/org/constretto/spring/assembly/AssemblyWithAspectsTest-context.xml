@@ -18,13 +18,13 @@
         http://www.springframework.org/schema/aop
         http://www.springframework.org/schema/aop/spring-aop-2.5.xsd http://constretto.org/schema/constretto http://constretto.org/schema/constretto/constretto-1.0.xsd">
 
-    <aop:aspectj-autoproxy/>
+  <aop:aspectj-autoproxy/>
 
-    <constretto:configuration/>
+  <constretto:configuration/>
 
-    <context:component-scan base-package="org.constretto.spring.assembly.helper.service.withdefaults"/>
+  <context:component-scan base-package="org.constretto.spring.assembly.helper.service.withdefaults"/>
 
-    <bean id="configurationService" class="org.constretto.spring.assembly.helper.ConfigurationService"/>
+  <bean id="configurationService" class="org.constretto.spring.assembly.helper.ConfigurationService"/>
 
-    <bean id="testAspect" class="org.constretto.spring.assembly.helper.aspect.TestAspect"/>
+  <bean id="testAspect" class="org.constretto.spring.assembly.helper.aspect.TestAspect"/>
 </beans>

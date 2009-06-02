@@ -20,7 +20,6 @@ import org.constretto.spring.assembly.helper.service.genericcollections.product.
 import org.springframework.stereotype.Component;
 
 /**
- * 
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 @Component

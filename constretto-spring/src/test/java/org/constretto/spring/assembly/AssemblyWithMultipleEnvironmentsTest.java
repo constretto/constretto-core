@@ -10,13 +10,10 @@
  */
 package org.constretto.spring.assembly;
 
-import static org.constretto.spring.annotation.Environment.DEVELOPMENT;
-import static org.constretto.spring.annotation.Environment.PRODUCTION;
-import static org.constretto.spring.annotation.Environment.TEST;
+import static org.constretto.spring.annotation.Environment.*;
+import org.constretto.spring.assembly.helper.ConfigurationService;
 import static org.constretto.spring.internal.resolver.DefaultAssemblyContextResolver.ASSEMBLY_KEY;
 import static org.junit.Assert.assertEquals;
-
-import org.constretto.spring.assembly.helper.ConfigurationService;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.BeanCreationException;

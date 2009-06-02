@@ -16,7 +16,6 @@
 package org.constretto.spring.assembly.helper.service.genericcollections.product;
 
 /**
- * 
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class Product {
@@ -26,6 +25,6 @@ public class Product {
         super();
         this.id = id;
     }
-    
+
 
 }

@@ -12,12 +12,11 @@ package org.constretto.spring.factorybean;
 
 import static org.constretto.spring.annotation.Environment.DEVELOPMENT;
 import static org.constretto.spring.annotation.Environment.TEST;
-import static org.constretto.spring.internal.resolver.DefaultAssemblyContextResolver.ASSEMBLY_KEY;
-import static org.junit.Assert.assertEquals;
-
 import org.constretto.spring.factorybean.helper.DevelopmentTestBean;
 import org.constretto.spring.factorybean.helper.EnvironmentService;
+import static org.constretto.spring.internal.resolver.DefaultAssemblyContextResolver.ASSEMBLY_KEY;
 import org.junit.After;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.BeanCreationException;

@@ -15,15 +15,13 @@
  */
 package org.constretto.spring.assembly.helper.service.scoped;
 
-import static org.constretto.spring.annotation.Environment.DEVELOPMENT;
-
 import org.constretto.spring.annotation.Environment;
+import static org.constretto.spring.annotation.Environment.DEVELOPMENT;
 import org.constretto.spring.assembly.helper.service.EnvironmentService;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 /**
- * 
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 @Service

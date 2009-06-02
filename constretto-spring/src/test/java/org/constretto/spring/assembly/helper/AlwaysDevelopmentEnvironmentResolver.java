@@ -19,7 +19,6 @@ import static org.constretto.spring.annotation.Environment.DEVELOPMENT;
 import org.constretto.spring.resolver.AssemblyContextResolver;
 
 /**
- * 
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class AlwaysDevelopmentEnvironmentResolver implements AssemblyContextResolver {

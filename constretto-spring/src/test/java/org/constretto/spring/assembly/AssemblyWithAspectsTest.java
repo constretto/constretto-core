@@ -11,10 +11,9 @@
 package org.constretto.spring.assembly;
 
 import static org.constretto.spring.annotation.Environment.DEVELOPMENT;
+import org.constretto.spring.assembly.helper.ConfigurationService;
 import static org.constretto.spring.internal.resolver.DefaultAssemblyContextResolver.ASSEMBLY_KEY;
 import static org.junit.Assert.assertEquals;
-
-import org.constretto.spring.assembly.helper.ConfigurationService;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -29,7 +28,7 @@ public class AssemblyWithAspectsTest {
     public void removeAssemblyKey() {
         System.clearProperty(ASSEMBLY_KEY);
     }
-    
+
     @Test
     public void givenRecognizedStageWhithAspectsPresentThenChooseStagedImplementation() {
         System.setProperty(ASSEMBLY_KEY, DEVELOPMENT);

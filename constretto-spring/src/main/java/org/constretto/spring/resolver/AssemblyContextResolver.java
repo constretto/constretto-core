@@ -17,12 +17,12 @@ package org.constretto.spring.resolver;
 
 /**
  * The interface used to resolve the environment the application is running in.
- * 
+ * <p/>
  * <p/>
  * To customize the default behavour, create an implementation of this interface and register your implementation as a
  * bean in your spring context. Any implementation registered will be picked up and used instead of the default. If two
  * or more implementations found an error is raised.
- * 
+ *
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public interface AssemblyContextResolver {

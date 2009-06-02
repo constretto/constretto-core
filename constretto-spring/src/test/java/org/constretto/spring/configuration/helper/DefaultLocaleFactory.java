@@ -21,7 +21,6 @@ import java.util.Locale;
 
 
 /**
- * 
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class DefaultLocaleFactory implements ConfigurationDefaultValueFactory<Locale> {

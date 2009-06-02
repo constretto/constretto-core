@@ -15,25 +15,19 @@
  */
 package org.constretto.spring.configuration;
 
-import static java.util.Locale.ITALY;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
+import org.constretto.spring.configuration.helper.*;
 import static org.junit.Assert.assertNotNull;
-
-import javax.annotation.Resource;
-
-import org.constretto.spring.configuration.helper.ValidBeanThatAllowsNull;
-import org.constretto.spring.configuration.helper.ValidBeanUsingPropertyEditors;
-import org.constretto.spring.configuration.helper.ValidBeanWithComplexDefault;
-import org.constretto.spring.configuration.helper.ValidBeanWithNoDefault;
-import org.constretto.spring.configuration.helper.ValidBeanWithSimpleDefault;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.annotation.Resource;
+import static java.util.Locale.ITALY;
+
 /**
- * 
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 @RunWith(SpringJUnit4ClassRunner.class)

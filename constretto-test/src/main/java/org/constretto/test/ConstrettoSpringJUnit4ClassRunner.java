@@ -40,7 +40,7 @@ public class ConstrettoSpringJUnit4ClassRunner extends SpringJUnit4ClassRunner {
         }
         return System.getProperty(DefaultConfigurationContextResolver.TAGS);
     }
-    
+
     @Override
     public void run(RunNotifier notifier) {
         String originalValue = changeTagsSystemProperty();

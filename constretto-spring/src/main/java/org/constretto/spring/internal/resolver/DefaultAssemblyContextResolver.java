@@ -15,20 +15,20 @@
  */
 package org.constretto.spring.internal.resolver;
 
-import org.constretto.spring.resolver.AssemblyContextResolver;
 import org.constretto.spring.annotation.Environment;
+import org.constretto.spring.resolver.AssemblyContextResolver;
 
 /**
  * Provides the default assembly environment resolving strategy which is used if no other implementation found in the
  * current sprint context.
- * 
+ * <p/>
  * <p/>
  * It looks for a system property called ASSEMBLY_ENV, and if that is not found tries to find the variable in the system
  * environment.
- * 
+ * <p/>
  * <p/>
  * If no system property or system environment variable found, it default to Enviroment.DEVELOPMENT.
- * 
+ *
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class DefaultAssemblyContextResolver implements AssemblyContextResolver {

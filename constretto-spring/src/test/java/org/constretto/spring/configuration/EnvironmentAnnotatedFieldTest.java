@@ -11,9 +11,9 @@
 package org.constretto.spring.configuration;
 
 import static junit.framework.Assert.assertEquals;
-import org.constretto.spring.annotation.Environment;
 import org.constretto.internal.provider.ConfigurationProvider;
 import org.constretto.spring.ConfigurationAnnotationConfigurer;
+import org.constretto.spring.annotation.Environment;
 import org.constretto.spring.assembly.helper.AlwaysDevelopmentEnvironmentResolver;
 import static org.constretto.spring.configuration.EnvironmentAnnotatedFieldTest.MyEnvironments.development;
 import org.junit.Test;

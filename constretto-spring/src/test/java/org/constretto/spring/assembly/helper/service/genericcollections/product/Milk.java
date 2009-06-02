@@ -16,15 +16,14 @@
 package org.constretto.spring.assembly.helper.service.genericcollections.product;
 
 /**
- * 
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
-public class Milk extends Product{
+public class Milk extends Product {
 
     public Milk(long id) {
         super(id);
     }
-    
+
     @Override
     public String toString() {
         return "I am white";

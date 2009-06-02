@@ -15,8 +15,8 @@
  */
 package org.constretto.internal.converter;
 
-import org.constretto.exception.ConstrettoConversionException;
 import org.apache.commons.lang.LocaleUtils;
+import org.constretto.exception.ConstrettoConversionException;
 
 import java.util.Locale;
 
@@ -26,9 +26,9 @@ import java.util.Locale;
 public class LocaleValueConverter implements ValueConverter<Locale> {
 
     public Locale fromString(String value) throws ConstrettoConversionException {
-        try{
+        try {
             return LocaleUtils.toLocale(value);
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             throw new ConstrettoConversionException(value, Locale.class, e);
         }
     }

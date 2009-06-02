@@ -169,10 +169,10 @@ public class ValueConversionTest {
     @Test
     public void evaluateLocale() {
         Locale locale = Locale.US;
-        assertEquals(locale, configuration.evaluateTo(Locale.class,"locale.valid"));
+        assertEquals(locale, configuration.evaluateTo(Locale.class, "locale.valid"));
         assertException(ConstrettoConversionException.class, new Guard() {
             public void operation() {
-                configuration.evaluateTo(Locale.class,"locale.invalid");
+                configuration.evaluateTo(Locale.class, "locale.invalid");
             }
         });
     }

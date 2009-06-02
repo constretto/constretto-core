@@ -4,14 +4,14 @@
     <title>Sponsors</title>
   </properties>
   <body>
-    <img src="http://arktekk.no/arktekklogo.jpg" />
+    <img src="http://arktekk.no/arktekklogo.jpg"/>
     <p></p>
     Arktekk supports this project by funding development.
     <br></br>
     website:
     <a href="http://arktekk.no">Arktekk AS</a>
     <p></p>
-    <img src="http://www.storebrand.no/site/stb.nsf/logo.storebrand.172x21.gif" />
+    <img src="http://www.storebrand.no/site/stb.nsf/logo.storebrand.172x21.gif"/>
     <p></p>
     Storebrand ASA was kind enough to open source the StagedPropery and StagedPropertyPlaceHolderConfigured, initially
     developed by Kaare Nilsen when working as a consultant for them.

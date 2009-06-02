@@ -17,14 +17,14 @@ package org.constretto.spring.internal;
 
 import org.constretto.ConstrettoBuilder;
 import org.constretto.ConstrettoConfiguration;
-import org.constretto.spring.internal.resolver.DefaultAssemblyContextResolver;
 import org.constretto.internal.resolver.DefaultConfigurationContextResolver;
-import org.constretto.spring.resolver.AssemblyContextResolver;
 import org.constretto.resolver.ConfigurationContextResolver;
 import org.constretto.spring.ConfigurationAnnotationConfigurer;
 import org.constretto.spring.ConstrettoConfigurationFactoryBean;
 import org.constretto.spring.ConstrettoPropertyPlaceholderConfigurer;
 import org.constretto.spring.EnvironmentAnnotationConfigurer;
+import org.constretto.spring.internal.resolver.DefaultAssemblyContextResolver;
+import org.constretto.spring.resolver.AssemblyContextResolver;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
@@ -125,13 +125,13 @@ public class ConstrettoNamespaceHandler extends NamespaceHandlerSupport {
             if (enabled) {
                 BeanDefinitionBuilder placeHolderBean = BeanDefinitionBuilder.rootBeanDefinition(ConstrettoPropertyPlaceholderConfigurer.class);
                 placeHolderBean.addConstructorArgValue(configuration);
-                if (propertyPlaceholderElement != null){
+                if (propertyPlaceholderElement != null) {
                     boolean ignoreUnresolved = propertyPlaceholderElement.getAttribute("ignore-unresolved-placeholders") != null ? Boolean.valueOf(propertyPlaceholderElement.getAttribute("ignore-unresolved-placeholders")) : false;
                     String prefix = propertyPlaceholderElement.getAttribute("prefix") != null ? propertyPlaceholderElement.getAttribute("prefix") : "${";
                     String suffix = propertyPlaceholderElement.getAttribute("suffix") != null ? propertyPlaceholderElement.getAttribute("suffix") : "}";
-                    placeHolderBean.addPropertyValue("placeholderPrefix",prefix);
-                    placeHolderBean.addPropertyValue("placeholderSuffix",suffix);
-                    placeHolderBean.addPropertyValue("ignoreUnresolvedPlaceHolders",ignoreUnresolved);
+                    placeHolderBean.addPropertyValue("placeholderPrefix", prefix);
+                    placeHolderBean.addPropertyValue("placeholderSuffix", suffix);
+                    placeHolderBean.addPropertyValue("ignoreUnresolvedPlaceHolders", ignoreUnresolved);
 
                 }
                 parserContext.getRegistry().registerBeanDefinition(CONSTRETTO_PLACEHOLDER_BEAN_NAME, placeHolderBean.getBeanDefinition());

@@ -1,0 +1,93 @@
+[INFO] Scanning for projects...
+[INFO] Reactor build order: 
+[INFO]   Constretto :: Parent - 1.0-rc-5-SNAPSHOT
+[INFO]   Constretto :: API - 1.0-rc-5-SNAPSHOT
+[INFO]   Constretto :: Core implementation - 1.0-rc-5-SNAPSHOT
+[INFO]   Constretto :: Spring Integration - 1.0-rc-5-SNAPSHOT
+[INFO]   Constretto :: Test - 1.0-rc-5-SNAPSHOT
+[INFO] Searching repository for plugin with prefix: 'dependency'.
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Constretto :: Parent - 1.0-rc-5-SNAPSHOT
+[INFO]    task-segment: [dependency:tree]
+[INFO] ------------------------------------------------------------------------
+[INFO] [dependency:tree]
+[INFO] org.constretto:constretto:pom:1.0-rc-5-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Constretto :: API - 1.0-rc-5-SNAPSHOT
+[INFO]    task-segment: [dependency:tree]
+[INFO] ------------------------------------------------------------------------
+[INFO] [dependency:tree]
+[INFO] org.constretto:constretto-api:jar:1.0-rc-5-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Constretto :: Core implementation - 1.0-rc-5-SNAPSHOT
+[INFO]    task-segment: [dependency:tree]
+[INFO] ------------------------------------------------------------------------
+[INFO] [dependency:tree]
+[INFO] org.constretto:constretto-core:jar:1.0-rc-5-SNAPSHOT
+[INFO] +- org.constretto:constretto-api:jar:1.0-rc-5-SNAPSHOT:compile
+[INFO] +- junit:junit:jar:4.4:test
+[INFO] +- org.springframework:spring-core:jar:2.5.6:compile
+[INFO] |  \- commons-logging:commons-logging:jar:1.1.1:compile
+[INFO] +- org.ini4j:ini4j:jar:0.5.1:compile
+[INFO] +- commons-lang:commons-lang:jar:2.4:compile
+[INFO] \- commons-beanutils:commons-beanutils:jar:1.8.0:compile
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Constretto :: Spring Integration - 1.0-rc-5-SNAPSHOT
+[INFO]    task-segment: [dependency:tree]
+[INFO] ------------------------------------------------------------------------
+[INFO] [dependency:tree]
+[INFO] org.constretto:constretto-spring:jar:1.0-rc-5-SNAPSHOT
+[INFO] +- org.constretto:constretto-api:jar:1.0-rc-5-SNAPSHOT:compile
+[INFO] +- org.constretto:constretto-core:jar:1.0-rc-5-SNAPSHOT:compile
+[INFO] |  +- org.ini4j:ini4j:jar:0.5.1:compile
+[INFO] |  +- commons-lang:commons-lang:jar:2.4:compile
+[INFO] |  \- commons-beanutils:commons-beanutils:jar:1.8.0:compile
+[INFO] +- org.springframework:spring-core:jar:2.5.6:compile
+[INFO] +- org.springframework:spring-beans:jar:2.5.6:compile
+[INFO] +- org.springframework:spring-context:jar:2.5.6:compile
+[INFO] |  \- aopalliance:aopalliance:jar:1.0:compile
+[INFO] +- org.springframework:spring-test:jar:2.5.6:compile
+[INFO] +- org.springframework:spring-aop:jar:2.5.6:runtime
+[INFO] +- commons-logging:commons-logging:jar:1.1.1:compile
+[INFO] +- javax.annotation:jsr250-api:jar:1.0:compile
+[INFO] +- junit:junit:jar:4.4:test
+[INFO] \- org.aspectj:aspectjweaver:jar:1.6.1:test
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Constretto :: Test - 1.0-rc-5-SNAPSHOT
+[INFO]    task-segment: [dependency:tree]
+[INFO] ------------------------------------------------------------------------
+[INFO] [dependency:tree]
+[INFO] org.constretto:constretto-test:jar:1.0-rc-5-SNAPSHOT
+[INFO] +- junit:junit:jar:4.4:compile
+[INFO] +- org.constretto:constretto-core:jar:1.0-rc-5-SNAPSHOT:compile
+[INFO] |  +- org.springframework:spring-core:jar:2.5.6:compile
+[INFO] |  +- org.ini4j:ini4j:jar:0.5.1:compile
+[INFO] |  +- commons-lang:commons-lang:jar:2.4:compile
+[INFO] |  \- commons-beanutils:commons-beanutils:jar:1.8.0:compile
+[INFO] +- org.constretto:constretto-api:jar:1.0-rc-5-SNAPSHOT:compile
+[INFO] +- org.springframework:spring-test:jar:2.5.6:compile
+[INFO] |  \- commons-logging:commons-logging:jar:1.1.1:compile
+[INFO] \- org.constretto:constretto-spring:jar:1.0-rc-5-SNAPSHOT:runtime
+[INFO]    +- org.springframework:spring-beans:jar:2.5.6:runtime
+[INFO]    +- org.springframework:spring-context:jar:2.5.6:runtime
+[INFO]    |  \- aopalliance:aopalliance:jar:1.0:runtime
+[INFO]    +- org.springframework:spring-aop:jar:2.5.6:runtime
+[INFO]    \- javax.annotation:jsr250-api:jar:1.0:runtime
+[INFO] 
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary:
+[INFO] ------------------------------------------------------------------------
+[INFO] Constretto :: Parent - 1.0-rc-5-SNAPSHOT .............. SUCCESS [1.873s]
+[INFO] Constretto :: API - 1.0-rc-5-SNAPSHOT ................. SUCCESS [0.003s]
+[INFO] Constretto :: Core implementation - 1.0-rc-5-SNAPSHOT . SUCCESS [0.072s]
+[INFO] Constretto :: Spring Integration - 1.0-rc-5-SNAPSHOT .. SUCCESS [0.054s]
+[INFO] Constretto :: Test - 1.0-rc-5-SNAPSHOT ................ SUCCESS [0.047s]
+[INFO] ------------------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESSFUL
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 3 seconds
+[INFO] Finished at: Tue Jun 02 08:58:02 PDT 2009
+[INFO] Final Memory: 27M/66M
+[INFO] ------------------------------------------------------------------------

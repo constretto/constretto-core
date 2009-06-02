@@ -13,14 +13,14 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd http://constretto.org/schema/constretto http://constretto.org/schema/constretto/constretto-1.0.xsd">
 
-    <constretto:configuration property-placeholder="false">
-        <constretto:stores>
-            <constretto:properties-store>
-                <constretto:resource location="classpath:properties/test1.properties"/>
-            </constretto:properties-store>
-        </constretto:stores>
-    </constretto:configuration>
+  <constretto:configuration property-placeholder="false">
+    <constretto:stores>
+      <constretto:properties-store>
+        <constretto:resource location="classpath:properties/test1.properties"/>
+      </constretto:properties-store>
+    </constretto:stores>
+  </constretto:configuration>
 
-    <bean class="org.constretto.spring.configuration.helper.InvalidBean"/>
+  <bean class="org.constretto.spring.configuration.helper.InvalidBean"/>
 
 </beans>

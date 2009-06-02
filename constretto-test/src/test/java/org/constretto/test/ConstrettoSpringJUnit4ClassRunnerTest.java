@@ -10,13 +10,13 @@
  */
 package org.constretto.test;
 
-import java.util.Arrays;
-
 import org.constretto.annotation.Tags;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
+
+import java.util.Arrays;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
@@ -32,7 +32,7 @@ public class ConstrettoSpringJUnit4ClassRunnerTest {
 
     @Test
     public void givenEnvironmentAnnotationOnTestClassWhenRunningTestThenConstrettoKnowsEnvironment() {
-        String[] expected = { "springjunit" };
+        String[] expected = {"springjunit"};
         System.out.println(Arrays.asList(currentEnvironment));
         Assert.assertArrayEquals(expected, currentEnvironment);
     }

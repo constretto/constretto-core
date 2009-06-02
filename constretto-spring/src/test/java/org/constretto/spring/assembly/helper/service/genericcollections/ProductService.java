@@ -15,15 +15,14 @@
  */
 package org.constretto.spring.assembly.helper.service.genericcollections;
 
-import java.util.Collection;
-
 import org.constretto.spring.assembly.helper.service.genericcollections.handler.ProductHandler;
 import org.constretto.spring.assembly.helper.service.genericcollections.product.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+
 /**
- * 
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 @Service
@@ -44,7 +43,7 @@ public class ProductService {
             }
         }
     }
-    
+
     public Collection<ProductHandler<? extends Product>> getProductHandlers() {
         return productHandlers;
     }

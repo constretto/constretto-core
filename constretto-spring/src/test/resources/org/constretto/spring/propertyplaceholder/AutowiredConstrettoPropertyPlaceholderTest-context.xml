@@ -19,7 +19,7 @@
         <constretto:resource location="classpath:properties/test1.properties"/>
       </constretto:properties-store>
     </constretto:stores>
-    <constretto:property-placeholder-configurer ignore-unresolved-placeholders="true" prefix="!{" suffix="}}" />
+    <constretto:property-placeholder-configurer ignore-unresolved-placeholders="true" prefix="!{" suffix="}}"/>
   </constretto:configuration>
 
   <bean id="testbean" class="org.constretto.spring.propertyplaceholder.helper.TestBean">

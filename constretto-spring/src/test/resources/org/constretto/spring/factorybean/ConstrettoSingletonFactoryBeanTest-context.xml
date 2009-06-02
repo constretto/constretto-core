@@ -15,28 +15,28 @@
            http://www.springframework.org/schema/context
            http://www.springframework.org/schema/context/spring-context-2.5.xsd http://constretto.org/schema/constretto http://constretto.org/schema/constretto/constretto-1.0.xsd">
 
-    <constretto:configuration/>
+  <constretto:configuration/>
 
-    <bean id="productionBean" class="org.constretto.spring.factorybean.helper.ProductionTestBean"/>
+  <bean id="productionBean" class="org.constretto.spring.factorybean.helper.ProductionTestBean"/>
 
-    <bean id="developmentBean" class="org.constretto.spring.factorybean.helper.DevelopmentTestBean"/>
+  <bean id="developmentBean" class="org.constretto.spring.factorybean.helper.DevelopmentTestBean"/>
 
-    <bean id="testBean" class="org.constretto.spring.ConstrettoSingletonFactoryBean">
-        <constructor-arg>
-            <map>
-                <entry key="production" value-ref="productionBean"/>
-                <entry key="development" value-ref="developmentBean"/>
-            </map>
-        </constructor-arg>
-    </bean>
+  <bean id="testBean" class="org.constretto.spring.ConstrettoSingletonFactoryBean">
+    <constructor-arg>
+      <map>
+        <entry key="production" value-ref="productionBean"/>
+        <entry key="development" value-ref="developmentBean"/>
+      </map>
+    </constructor-arg>
+  </bean>
 
-    <bean id="testBeanOverriddenDefaultBean" class="org.constretto.spring.ConstrettoSingletonFactoryBean">
-        <constructor-arg>
-            <map>
-                <entry key="production" value-ref="productionBean"/>
-                <entry key="development" value-ref="developmentBean"/>
-            </map>
-        </constructor-arg>
-        <property name="defaultBean" ref="developmentBean"/>
-    </bean>
+  <bean id="testBeanOverriddenDefaultBean" class="org.constretto.spring.ConstrettoSingletonFactoryBean">
+    <constructor-arg>
+      <map>
+        <entry key="production" value-ref="productionBean"/>
+        <entry key="development" value-ref="developmentBean"/>
+      </map>
+    </constructor-arg>
+    <property name="defaultBean" ref="developmentBean"/>
+  </bean>
 </beans>

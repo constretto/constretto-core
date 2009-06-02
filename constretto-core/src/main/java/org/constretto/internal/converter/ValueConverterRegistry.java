@@ -20,8 +20,8 @@ import org.springframework.core.io.Resource;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>

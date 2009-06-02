@@ -21,19 +21,19 @@
            http://constretto.org/schema/constretto
            http://constretto.org/schema/constretto/constretto-1.0.xsd">
 
-    <constretto:configuration>
-        <constretto:stores>
-            <constretto:properties-store>
-                <constretto:resource location="classpath:properties/test1.properties"/>
-            </constretto:properties-store>
-        </constretto:stores>
-    </constretto:configuration>
+  <constretto:configuration>
+    <constretto:stores>
+      <constretto:properties-store>
+        <constretto:resource location="classpath:properties/test1.properties"/>
+      </constretto:properties-store>
+    </constretto:stores>
+  </constretto:configuration>
 
-    <bean class="org.constretto.spring.configuration.helper.ValidBeanThatAllowsNull"/>
-    <bean class="org.constretto.spring.configuration.helper.ValidBeanWithComplexDefault"/>
-    <bean class="org.constretto.spring.configuration.helper.ValidBeanWithNoDefault"/>
-    <bean class="org.constretto.spring.configuration.helper.ValidBeanWithSimpleDefault"/>
-    <bean class="org.constretto.spring.configuration.helper.ValidBeanUsingPropertyEditors"/>
+  <bean class="org.constretto.spring.configuration.helper.ValidBeanThatAllowsNull"/>
+  <bean class="org.constretto.spring.configuration.helper.ValidBeanWithComplexDefault"/>
+  <bean class="org.constretto.spring.configuration.helper.ValidBeanWithNoDefault"/>
+  <bean class="org.constretto.spring.configuration.helper.ValidBeanWithSimpleDefault"/>
+  <bean class="org.constretto.spring.configuration.helper.ValidBeanUsingPropertyEditors"/>
 
 
 </beans>

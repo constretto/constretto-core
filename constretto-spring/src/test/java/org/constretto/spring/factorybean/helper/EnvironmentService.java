@@ -16,7 +16,6 @@
 package org.constretto.spring.factorybean.helper;
 
 /**
- * 
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public interface EnvironmentService {

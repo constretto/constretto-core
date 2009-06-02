@@ -18,13 +18,12 @@ package org.constretto.spring.assembly.helper.service.genericcollections.handler
 import org.constretto.spring.assembly.helper.service.genericcollections.product.Product;
 
 /**
- * 
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
-public interface ProductHandler <T extends Product> {
-    
+public interface ProductHandler<T extends Product> {
+
     boolean supports(Product product);
-    
+
     void printMe(T product);
 
 }

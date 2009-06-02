@@ -17,9 +17,9 @@ package org.constretto.spring;
 
 import org.constretto.ConstrettoConfiguration;
 import org.constretto.annotation.Configuration;
+import org.constretto.internal.converter.ValueConverterRegistry;
 import org.constretto.spring.annotation.Environment;
 import org.constretto.spring.resolver.AssemblyContextResolver;
-import org.constretto.internal.converter.ValueConverterRegistry;
 import org.springframework.beans.BeanInstantiationException;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;

@@ -15,18 +15,16 @@
  */
 package org.constretto.spring.propertyplaceholder;
 
-import static org.junit.Assert.assertEquals;
-
-import javax.annotation.Resource;
-
 import org.constretto.spring.propertyplaceholder.helper.TestBean;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.annotation.Resource;
+
 /**
- * 
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -39,7 +37,7 @@ public class AutowiredConstrettoPropertyPlaceholderTest {
     public void givenPlaceholderOnPropertyThenPlaceholderResolvedIfPresent() throws Exception {
         assertEquals("http://arktekk.no", testBean.getUrl());
         assertEquals("http://arktekk.no/coolService", testBean.getServiceUrl());
-        assertEquals("",testBean.getMayBeNull());
+        assertEquals("", testBean.getMayBeNull());
 
     }
 

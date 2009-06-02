@@ -20,7 +20,6 @@ import org.constretto.spring.assembly.helper.service.EnvironmentService;
 import org.springframework.stereotype.Service;
 
 /**
- * 
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 @Service

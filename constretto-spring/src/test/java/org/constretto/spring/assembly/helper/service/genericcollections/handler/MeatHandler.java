@@ -15,15 +15,13 @@
  */
 package org.constretto.spring.assembly.helper.service.genericcollections.handler;
 
-import static org.constretto.spring.annotation.Environment.DEVELOPMENT;
-
 import org.constretto.spring.annotation.Environment;
+import static org.constretto.spring.annotation.Environment.DEVELOPMENT;
 import org.constretto.spring.assembly.helper.service.genericcollections.product.Butter;
 import org.constretto.spring.assembly.helper.service.genericcollections.product.Product;
 import org.springframework.stereotype.Component;
 
 /**
- * 
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 @Component

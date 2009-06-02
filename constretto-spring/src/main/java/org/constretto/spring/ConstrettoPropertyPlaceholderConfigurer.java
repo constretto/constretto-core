@@ -145,10 +145,10 @@ public class ConstrettoPropertyPlaceholderConfigurer implements BeanFactoryPostP
 
     private String resolvePlaceholder(String key) {
         String value = null;
-        if (ignoreUnresolvedPlaceHolders){
+        if (ignoreUnresolvedPlaceHolders) {
             value = configuration.evaluateTo(key, "");
         } else {
-            value = configuration.evaluateTo(String.class,key);
+            value = configuration.evaluateTo(String.class, key);
         }
         return null != value ? value : null;
     }

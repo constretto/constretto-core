@@ -7,7 +7,8 @@
   either express or implied. See the License for the specific language governing permissions and limitations under the
   License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.constretto</groupId>
   <artifactId>constretto</artifactId>
@@ -45,7 +46,7 @@
 
   <developers>
     <developer>
-      <id>kaare</id>
+      <id>kaarenilsen</id>
       <name>Kaare Nilsen</name>
       <email>kaare.nilsen@gmail.com</email>
       <organization>Arktekk AS</organization>
@@ -59,6 +60,17 @@
       <id>kristoffer</id>
       <name>Kristoffer Moum</name>
       <email>kristoffer.moum@arktekk.no</email>
+      <organization>Arktekk AS</organization>
+      <organizationUrl>http://arktekk.no</organizationUrl>
+      <roles>
+        <role>Java Developer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+    <developer>
+      <id>thoraage</id>
+      <name>Thor Åge Eldby</name>
+      <email>thor.aage.eldby@arktekk.no</email>
       <organization>Arktekk AS</organization>
       <organizationUrl>http://arktekk.no</organizationUrl>
       <roles>
@@ -120,11 +132,6 @@
       </dependency>
       <dependency>
         <groupId>org.springframework</groupId>
-        <artifactId>spring-web</artifactId>
-        <version>${spring.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
         <artifactId>spring-context</artifactId>
         <version>${spring.version}</version>
       </dependency>
@@ -137,6 +144,23 @@
         <groupId>org.springframework</groupId>
         <artifactId>spring-aop</artifactId>
         <version>${spring.version}</version>
+        <scope>runtime</scope>
+      </dependency>
+      <dependency>
+        <groupId>commons-logging</groupId>
+        <artifactId>commons-logging</artifactId>
+        <version>1.1.1</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.annotation</groupId>
+        <artifactId>jsr250-api</artifactId>
+        <version>1.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.aspectj</groupId>
+        <artifactId>aspectjweaver</artifactId>
+        <version>1.6.1</version>
+        <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.ini4j</groupId>
@@ -147,6 +171,11 @@
         <groupId>commons-lang</groupId>
         <artifactId>commons-lang</artifactId>
         <version>2.4</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-beanutils</groupId>
+        <artifactId>commons-beanutils</artifactId>
+        <version>1.8.0</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -168,6 +197,7 @@
         <configuration>
           <source>1.5</source>
           <target>1.5</target>
+          <encoding>UTF-8</encoding>
         </configuration>
       </plugin>
       <plugin>
@@ -194,6 +224,13 @@
           </links>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <configuration>
+          <encoding>UTF-8</encoding>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
@@ -201,12 +238,7 @@
     <repository>
       <id>constretto.org</id>
       <name>Constretto public maven repository</name>
-      <url>http://repo.constretto.org/releases</url>
-    </repository>
-    <repository>
-      <id>thirdparty.constretto.org</id>
-      <name>Constretto thirdparty dependencies</name>
-      <url>http://repo.constretto.org/thirdparty</url>
+      <url>http://repo.constretto.org/content/groups/public</url>
     </repository>
   </repositories>
 

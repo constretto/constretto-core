@@ -1,10 +1,10 @@
 package org.constretto.spring.assembly.helper.service.scoped;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.config.Scope;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MockSessionScope implements Scope {
 
@@ -21,7 +21,8 @@ public class MockSessionScope implements Scope {
         return null;
     }
 
-    public void registerDestructionCallback(String s, Runnable runnable) {}
+    public void registerDestructionCallback(String s, Runnable runnable) {
+    }
 
     public String getConversationId() {
         return null;

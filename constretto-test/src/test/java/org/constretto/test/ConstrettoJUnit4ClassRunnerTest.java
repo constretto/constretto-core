@@ -21,7 +21,7 @@ import org.junit.runner.RunWith;
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  * @author <a href="mailto:thor.aage.eldby@arktekk.no">Thor &Aring;ge Eldby</a>
  */
-@Tags( { "purejunit", "test" })
+@Tags({"purejunit", "test"})
 @RunWith(ConstrettoJUnit4ClassRunner.class)
 public class ConstrettoJUnit4ClassRunnerTest {
 
@@ -32,7 +32,7 @@ public class ConstrettoJUnit4ClassRunnerTest {
     public void givenEnvironmentAnnotationOnTestClassWhenRunningTestThenConstrettoKnowsEnvironment() {
         ConstrettoConfiguration configuration = new ConstrettoBuilder().createSystemPropertiesStore().getConfiguration();
         configuration.on(this);
-        String[] expected = { "purejunit", "test" };
+        String[] expected = {"purejunit", "test"};
         Assert.assertArrayEquals(expected, currentEnvironment);
     }
 

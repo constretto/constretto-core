@@ -12,9 +12,8 @@ package org.constretto.spring.assembly;
 
 import static junit.framework.Assert.assertEquals;
 import static org.constretto.spring.annotation.Environment.DEVELOPMENT;
-import static org.constretto.spring.internal.resolver.DefaultAssemblyContextResolver.ASSEMBLY_KEY;
-
 import org.constretto.spring.assembly.helper.service.genericcollections.ProductService;
+import static org.constretto.spring.internal.resolver.DefaultAssemblyContextResolver.ASSEMBLY_KEY;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -24,7 +23,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 public class AssemblyWithAutowiredGenericCollectionsTest {
     private ProductService productService;
-    
+
     @Before
     public void removeAssemblyKey() {
         System.clearProperty(ASSEMBLY_KEY);
@@ -35,7 +34,7 @@ public class AssemblyWithAutowiredGenericCollectionsTest {
         loadContextAndInjectConfigurationService();
         assertEquals(2, productService.getProductHandlers().size());
     }
-    
+
     @Test
     public void givenAssemblyContextGenericCollectionsThenCorrectlyWireContext() throws Exception {
         System.setProperty(ASSEMBLY_KEY, DEVELOPMENT);

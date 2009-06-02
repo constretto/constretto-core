@@ -15,12 +15,11 @@
  */
 package org.constretto.spring.configuration.helper;
 
-import java.util.Locale;
-
 import org.constretto.annotation.Configuration;
 
+import java.util.Locale;
+
 /**
- * 
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class ValidBeanWithComplexDefault {
