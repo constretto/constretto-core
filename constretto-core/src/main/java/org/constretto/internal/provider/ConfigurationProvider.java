@@ -21,10 +21,7 @@ import org.constretto.internal.DefaultConstrettoConfiguration;
 import org.constretto.model.ConfigurationNode;
 import org.constretto.model.TaggedPropertySet;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
@@ -59,8 +56,8 @@ public class ConfigurationProvider {
         Collection<TaggedPropertySet> taggedPropertySets = loadPropertySets();
         for (TaggedPropertySet taggedPropertySet : taggedPropertySets) {
             Map<String, String> properties = taggedPropertySet.getProperties();
-            for (String expression : properties.keySet()) {
-                rootNode.update(expression, properties.get(expression), taggedPropertySet.getTag());
+            for (Map.Entry<String,String> entry : properties.entrySet()) {
+                rootNode.update(entry.getKey(), entry.getValue(), taggedPropertySet.getTag());
             }
         }
 

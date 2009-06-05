@@ -39,8 +39,8 @@ import java.util.List;
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
-    private final String VARIABLE_PREFIX = "#{";
-    private final String VARIABLE_SUFFIX = "}";
+    private static final String VARIABLE_PREFIX = "#{";
+    private static final String VARIABLE_SUFFIX = "}";
     private List<String> currentTags;
     private final ConfigurationNode configuration;
     private LocalVariableTableParameterNameDiscoverer nameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
@@ -231,7 +231,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
                             ConfigurationNode node = findElementOrThrowException(expression);
                             resolvedArguments[i] = processAndConvert(parameterTargetClass, node.getExpression());
                         } else {
-                            if (defaultValue != null || (defaultValue == null && !required)) {
+                            if (defaultValue != null || !required) {
                                 resolvedArguments[i] = defaultValue;
                             } else {
                                 throw new ConstrettoException("Missing value or default value for expression [" + expression + "], in method [" + method.getName() + "], in class [" + objectToConfigure.getClass().getName() + "], with tags " + currentTags + ".");
@@ -337,7 +337,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         return null != value && value.contains(VARIABLE_PREFIX) && value.contains(VARIABLE_SUFFIX);
     }
 
-    private class ConfigurationVariable {
+    private static class ConfigurationVariable {
         private final int startIndex;
         private final int endIndex;
         private final String expression;

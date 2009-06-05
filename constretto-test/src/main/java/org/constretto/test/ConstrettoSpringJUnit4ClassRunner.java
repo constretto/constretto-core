@@ -29,14 +29,14 @@ public class ConstrettoSpringJUnit4ClassRunner extends SpringJUnit4ClassRunner {
     private String changeTagsSystemProperty() {
         Tags tags = getTestClass().getJavaClass().getAnnotation(Tags.class);
         if (tags != null) {
-            String tagcsv = "";
+            StringBuffer tagcsv = new StringBuffer();
             for (String tag : tags.value()) {
                 if (tagcsv.length() > 0) {
-                    tagcsv += ",";
+                    tagcsv.append(",");
                 }
-                tagcsv += tag;
+                tagcsv.append(tag);
             }
-            return System.setProperty(DefaultConfigurationContextResolver.TAGS, tagcsv);
+            return System.setProperty(DefaultConfigurationContextResolver.TAGS, tagcsv.toString());
         }
         return System.getProperty(DefaultConfigurationContextResolver.TAGS);
     }

@@ -111,10 +111,10 @@ public class PropertiesStore implements ConfigurationStore {
         String prefixedTag = prefixTag(nonPrefixedTag);
 
         Map<String, String> taggedProperties = new HashMap<String, String>();
-        for (String key : allProperties.keySet()) {
-            if (key.startsWith(prefixedTag)) {
-                String strippedKey = stripTag(key, nonPrefixedTag);
-                taggedProperties.put(strippedKey, allProperties.get(key));
+        for (Map.Entry<String,String> entry : allProperties.entrySet()) {
+            if (entry.getKey().startsWith(prefixedTag)) {
+                String strippedKey = stripTag(entry.getKey(), nonPrefixedTag);
+                taggedProperties.put(strippedKey, entry.getValue());
             }
         }
         return taggedProperties;
@@ -128,9 +128,9 @@ public class PropertiesStore implements ConfigurationStore {
      */
     private Map<String, String> getUnTaggedProperties(Map<String, String> properties) {
         Map<String, String> unTagged = new HashMap<String, String>();
-        for (String key : properties.keySet()) {
-            if (!isTag(key)) {
-                unTagged.put(key, properties.get(key));
+        for (Map.Entry<String,String> entry : properties.entrySet()) {
+            if (!isTag(entry.getKey())) {
+                unTagged.put(entry.getKey(), entry.getValue());
             }
         }
         return unTagged;
