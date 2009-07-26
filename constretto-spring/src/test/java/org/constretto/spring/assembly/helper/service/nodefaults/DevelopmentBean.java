@@ -13,25 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.constretto.spring.annotation;
 
-import java.lang.annotation.*;
+package org.constretto.spring.assembly.helper.service.nodefaults;
 
+import org.constretto.spring.annotation.Environment;
+import static org.constretto.spring.annotation.Environment.DEVELOPMENT;
+import org.springframework.stereotype.Component;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Target({ElementType.TYPE, ElementType.FIELD})
+@Retention(RetentionPolicy.RUNTIME)
+@Environment(DEVELOPMENT)
+@Component
+@DevelopmentBean  // added here to test annotation recursion :)
 /**
- * Indicated for what environment the annotated class should be a candidate for autowiring.
- * <p/>
- * When used on fields if will instruct the Spring container to inject the current environment into the annotated field.
- *
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
-@Target({ElementType.TYPE, ElementType.FIELD, ElementType.ANNOTATION_TYPE})
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Environment {
-    public static final String DEVELOPMENT = "development";
-    public static final String TEST = "test";
-    public static final String PRODUCTION = "production";
-
-    String value() default "";
-
-    String[] tags() default {};
+public @interface DevelopmentBean {
 }

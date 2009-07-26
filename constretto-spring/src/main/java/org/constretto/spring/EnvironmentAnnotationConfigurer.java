@@ -28,10 +28,9 @@ import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.lang.annotation.Annotation;
+import java.util.*;
 import static java.util.Arrays.asList;
-import java.util.List;
 
 /**
  * A BeanFactoryBeanFactoryPostProcessor implementation that will if registered as a bean in a spring context, enable
@@ -68,7 +67,7 @@ public class EnvironmentAnnotationConfigurer implements BeanFactoryPostProcessor
             BeanDefinition beanDefinition = configurableListableBeanFactory.getBeanDefinition(beanName);
             try {
                 Class beanClass = Class.forName(beanDefinition.getBeanClassName());
-                Environment environmentAnnotation = (Environment) beanClass.getAnnotation(Environment.class);
+                Environment environmentAnnotation = findEnvironmentAnnotation(beanClass);
                 if (environmentAnnotation != null) {
                     if (assemblyContextResolver.isAssemblyContextDefined()) {
                         boolean autowireCandidate = decideIfAutowireCandiate(beanName, environmentAnnotation);
@@ -86,6 +85,31 @@ public class EnvironmentAnnotationConfigurer implements BeanFactoryPostProcessor
         }
     }
 
+    private Environment findEnvironmentAnnotation(Class beanClass) {
+        if (beanClass.isAnnotationPresent(Environment.class)) {
+            return (Environment) beanClass.getAnnotation(Environment.class);
+        } else {
+            return searchRecursivly(new HashSet<Annotation>(), beanClass.getAnnotations());
+        }
+    }
+
+    private Environment searchRecursivly(Set<Annotation> visited, Annotation[] annotations) {
+        for (Annotation annotation : annotations) {
+            if (annotation instanceof Environment) {
+                return (Environment) annotation;
+            } else {
+                if (!visited.contains(annotation)) {
+                    visited.add(annotation);
+                    Environment environment = searchRecursivly(visited, annotation.annotationType().getAnnotations());
+                    if (environment != null) {
+                        return environment;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
     @SuppressWarnings("unchecked")
     private void removeNonAnnotatedBeansFromAutowireForType(Class lookupClass, ConfigurableListableBeanFactory configurableListableBeanFactory) throws ClassNotFoundException {
         List<String> beanNames = new ArrayList<String>();
@@ -97,7 +121,7 @@ public class EnvironmentAnnotationConfigurer implements BeanFactoryPostProcessor
         for (String beanName : beanNames) {
             BeanDefinition beanDefinition = configurableListableBeanFactory.getBeanDefinition(beanName);
             Class beanClass = Class.forName(beanDefinition.getBeanClassName());
-            Environment environmentAnnotation = (Environment) beanClass.getAnnotation(Environment.class);
+            Environment environmentAnnotation = findEnvironmentAnnotation(beanClass);
             if (environmentAnnotation == null) {
                 beanDefinition.setAttribute(INCLUDE_IN_COLLECTIONS, beanClass.getInterfaces());
                 beanDefinition.setAutowireCandidate(false);
