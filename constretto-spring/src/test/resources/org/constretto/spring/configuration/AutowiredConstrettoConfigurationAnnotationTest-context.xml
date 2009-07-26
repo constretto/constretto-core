@@ -25,9 +25,7 @@
     <constretto:stores>
       <constretto:properties-store>
         <constretto:resource location="classpath:properties/test1.properties"/>
-        <constretto:resource location="file:/var/wtf/somefile.properties"/>
       </constretto:properties-store>
-      <constretto:system-properties-store/>
     </constretto:stores>
   </constretto:configuration>
 

@@ -89,18 +89,18 @@ public class EnvironmentAnnotationConfigurer implements BeanFactoryPostProcessor
         if (beanClass.isAnnotationPresent(Environment.class)) {
             return (Environment) beanClass.getAnnotation(Environment.class);
         } else {
-            return searchRecursivly(new HashSet<Annotation>(), beanClass.getAnnotations());
+            return findEnvironmentMetaAnnotation(new HashSet<Annotation>(), beanClass.getAnnotations());
         }
     }
 
-    private Environment searchRecursivly(Set<Annotation> visited, Annotation[] annotations) {
+    private Environment findEnvironmentMetaAnnotation(Set<Annotation> visited, Annotation[] annotations) {
         for (Annotation annotation : annotations) {
             if (annotation instanceof Environment) {
                 return (Environment) annotation;
             } else {
                 if (!visited.contains(annotation)) {
                     visited.add(annotation);
-                    Environment environment = searchRecursivly(visited, annotation.annotationType().getAnnotations());
+                    Environment environment = findEnvironmentMetaAnnotation(visited, annotation.annotationType().getAnnotations());
                     if (environment != null) {
                         return environment;
                     }
