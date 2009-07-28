@@ -26,6 +26,7 @@ import java.lang.annotation.*;
  */
 @Target({ElementType.TYPE, ElementType.FIELD, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
+@Inherited
 public @interface Environment {
     public static final String DEVELOPMENT = "development";
     public static final String TEST = "test";
