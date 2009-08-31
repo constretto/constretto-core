@@ -12,6 +12,8 @@ package org.constretto.test;
 
 import org.constretto.annotation.Tags;
 import org.constretto.internal.resolver.DefaultConfigurationContextResolver;
+import org.constretto.spring.annotation.Environment;
+import org.constretto.spring.internal.resolver.DefaultAssemblyContextResolver;
 import org.junit.internal.runners.InitializationError;
 import org.junit.runner.notification.RunNotifier;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -41,14 +43,28 @@ public class ConstrettoSpringJUnit4ClassRunner extends SpringJUnit4ClassRunner {
         return System.getProperty(DefaultConfigurationContextResolver.TAGS);
     }
 
+    private String changeAssembleSystemProperty() {
+        Environment environment = getTestClass().getJavaClass().getAnnotation(Environment.class);
+        if (environment != null) {
+            return System.setProperty(DefaultAssemblyContextResolver.ASSEMBLY_KEY, environment.value());
+        }
+        return System.getProperty(DefaultAssemblyContextResolver.ASSEMBLY_KEY);
+    }
+
     @Override
     public void run(RunNotifier notifier) {
-        String originalValue = changeTagsSystemProperty();
+        String originalTags = changeTagsSystemProperty();
+        String originalEnvironment = changeAssembleSystemProperty();
         super.run(notifier);
-        if (originalValue == null) {
+        if (originalTags == null) {
             System.getProperties().remove(DefaultConfigurationContextResolver.TAGS);
         } else {
-            System.setProperty(DefaultConfigurationContextResolver.TAGS, originalValue);
+            System.setProperty(DefaultConfigurationContextResolver.TAGS, originalTags);
+        }
+        if (originalEnvironment == null) {
+            System.getProperties().remove(DefaultAssemblyContextResolver.ASSEMBLY_KEY);
+        } else {
+            System.setProperty(DefaultAssemblyContextResolver.ASSEMBLY_KEY, originalEnvironment);
         }
     }
 
