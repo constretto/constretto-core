@@ -53,6 +53,7 @@ public class ConstrettoNamespaceHandler extends NamespaceHandlerSupport {
 
     public void init() {
         registerBeanDefinitionParser("configuration", new ConfigurationDefinitionParser());
+        registerBeanDefinitionParser("import", new ImportDefinitionParser());
     }
 
     private static class ConfigurationDefinitionParser implements BeanDefinitionParser {
@@ -201,4 +202,34 @@ public class ConstrettoNamespaceHandler extends NamespaceHandlerSupport {
             return childElements;
         }
     }
+
+    private static class ImportDefinitionParser implements BeanDefinitionParser {
+
+        public BeanDefinition parse(Element element, ParserContext parserContext) {
+            String environmentCsv = element.getAttribute("environments");
+            List<String> environments = new ArrayList<String>();
+            for (String environment : environmentCsv.split(",")) {
+                environments.add(environment);
+            }
+            AssemblyContextResolver assemblyContextResolver = null;
+
+            if (parserContext.getRegistry().containsBeanDefinition(ENVIRONMENT_CONTEXT_RESOLVER_NAME)) {
+                BeanDefinition environmentContextResolverBeanDefinition = parserContext.getRegistry().getBeanDefinition(ENVIRONMENT_CONTEXT_RESOLVER_NAME);
+                String environmentResolverClassName = environmentContextResolverBeanDefinition.getBeanClassName();
+                try {
+                    assemblyContextResolver = (AssemblyContextResolver) Class.forName(environmentResolverClassName).newInstance();
+                } catch (Exception e) {
+                    throw new IllegalStateException("Could not instansiate assembly context resolver with class [" + environmentResolverClassName + "]", e);
+                }
+            } else {
+                assemblyContextResolver = new DefaultAssemblyContextResolver();
+            }
+
+            if (environments.contains(assemblyContextResolver.getAssemblyContext())) {
+                parserContext.getReaderContext().getReader().loadBeanDefinitions(element.getAttribute("resource"));
+            }
+            return null;
+        }
+    }
+
 }

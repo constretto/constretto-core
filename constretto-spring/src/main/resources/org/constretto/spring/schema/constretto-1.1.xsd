@@ -5,7 +5,10 @@
             elementFormDefault="qualified"
             xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 
+
   <xsd:element name="configuration" type="Configuration"/>
+
+  <xsd:element name="import" type="Import"/>
 
   <xsd:complexType name="Configuration">
     <xsd:all>
@@ -77,4 +80,10 @@
       </xsd:extension>
     </xsd:simpleContent>
   </xsd:complexType>
+
+  <xsd:complexType name="Import">
+    <xsd:attribute type="xsd:string" name="environments" use="required"/>
+    <xsd:attribute type="xsd:string" name="resource" use="required"/>
+  </xsd:complexType>
+
 </xsd:schema>
