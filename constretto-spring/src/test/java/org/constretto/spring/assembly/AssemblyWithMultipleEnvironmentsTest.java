@@ -10,6 +10,7 @@
  */
 package org.constretto.spring.assembly;
 
+import org.constretto.exception.ConstrettoException;
 import static org.constretto.spring.annotation.Environment.*;
 import org.constretto.spring.assembly.helper.ConfigurationService;
 import static org.constretto.spring.internal.resolver.DefaultAssemblyContextResolver.ASSEMBLY_KEY;
@@ -51,6 +52,44 @@ public class AssemblyWithMultipleEnvironmentsTest {
         System.setProperty(ASSEMBLY_KEY, TEST);
         loadContextAndInjectConfigurationService();
         assertEquals("developmentAndTest", configurationService.getRunningEnvironment());
+    }
+
+    @Test
+    public void givenMultipleAssemblyContextsWhenClassAnnotatedWithMultipleEnvironmentsThenSelectCorrectImplementation() {
+        System.setProperty(ASSEMBLY_KEY, DEVELOPMENT + "," + PRODUCTION);
+        loadContextAndInjectConfigurationService();
+        assertEquals("developmentAndTest", configurationService.getRunningEnvironment());
+
+        System.setProperty(ASSEMBLY_KEY, TEST + "," + PRODUCTION);
+        loadContextAndInjectConfigurationService();
+        assertEquals("developmentAndTest", configurationService.getRunningEnvironment());
+
+        System.setProperty(ASSEMBLY_KEY, PRODUCTION + "," + TEST);
+        loadContextAndInjectConfigurationService();
+        assertEquals(PRODUCTION, configurationService.getRunningEnvironment());
+
+        System.setProperty(ASSEMBLY_KEY, PRODUCTION + "," + TEST + "," + DEVELOPMENT);
+        loadContextAndInjectConfigurationService();
+        assertEquals(PRODUCTION, configurationService.getRunningEnvironment());
+
+        System.setProperty(ASSEMBLY_KEY, PRODUCTION + ",mock");
+        loadContextAndInjectConfigurationService();
+        assertEquals(PRODUCTION, configurationService.getRunningEnvironment());
+
+        System.setProperty(ASSEMBLY_KEY, PRODUCTION + ",unknown");
+        loadContextAndInjectConfigurationService();
+        assertEquals(PRODUCTION, configurationService.getRunningEnvironment());
+
+        System.setProperty(ASSEMBLY_KEY, "unknown," + PRODUCTION);
+        loadContextAndInjectConfigurationService();
+        assertEquals(PRODUCTION, configurationService.getRunningEnvironment());
+    }
+
+    @Test(expected = ConstrettoException.class)
+    public void givenAssemblyContextsWithSamePriorityFoundInSeveralImplementationsThenBeanCreationExceptionIsThrown() {
+        System.setProperty(ASSEMBLY_KEY, "mock");
+        loadContextAndInjectConfigurationService();
+
     }
 
     @Test(expected = BeanCreationException.class)

@@ -62,7 +62,7 @@ public class EnvironmentAnnotationConfigurer implements BeanFactoryPostProcessor
         DefaultListableBeanFactory defaultListableBeanFactory = (DefaultListableBeanFactory) configurableListableBeanFactory;
         defaultListableBeanFactory.setAutowireCandidateResolver(new ConstrettoAutowireCandidateResolver());
         String[] beanNames = configurableListableBeanFactory.getBeanDefinitionNames();
-
+        int lowestDiscoveredPriority = Integer.MAX_VALUE;
         for (String beanName : beanNames) {
             BeanDefinition beanDefinition = configurableListableBeanFactory.getBeanDefinition(beanName);
             try {
@@ -117,16 +117,78 @@ public class EnvironmentAnnotationConfigurer implements BeanFactoryPostProcessor
         for (Class anInterface : interfaces) {
             beanNames.addAll(Arrays.asList(BeanFactoryUtils.beanNamesForTypeIncludingAncestors(configurableListableBeanFactory, anInterface)));
         }
-
+        List<BeanDefinition> potentialMatches = new ArrayList<BeanDefinition>();
         for (String beanName : beanNames) {
             BeanDefinition beanDefinition = configurableListableBeanFactory.getBeanDefinition(beanName);
             Class beanClass = Class.forName(beanDefinition.getBeanClassName());
+            beanDefinition.setAttribute(INCLUDE_IN_COLLECTIONS, beanClass.getInterfaces());
             Environment environmentAnnotation = findEnvironmentAnnotation(beanClass);
             if (environmentAnnotation == null) {
-                beanDefinition.setAttribute(INCLUDE_IN_COLLECTIONS, beanClass.getInterfaces());
                 beanDefinition.setAutowireCandidate(false);
+            } else {
+                potentialMatches.add(beanDefinition);
             }
         }
+        if (potentialMatches.size() == 1) {
+            potentialMatches.get(0).setAutowireCandidate(true);
+        } else {
+            List<BeanDefinition> highestPriorityBeans = new ArrayList<BeanDefinition>();
+            for (BeanDefinition potentialMatch : potentialMatches) {
+                if (potentialMatch.isAutowireCandidate()) {
+                    potentialMatch.setAutowireCandidate(false);
+                    highestPriorityBeans = prioritizeBeans(potentialMatch, highestPriorityBeans);
+                }
+            }
+            if (highestPriorityBeans.size() == 1) {
+                highestPriorityBeans.get(0).setAutowireCandidate(true);
+            } else {
+                List<String> equalPriorityBeans = new ArrayList<String>();
+                for (BeanDefinition highestPriorityBean : highestPriorityBeans) {
+                    equalPriorityBeans.add(highestPriorityBean.getBeanClassName());
+                }
+                throw new ConstrettoException(
+                        "More than one bean with the class or interface registered with same tag. Could resolve priority. To fix this, remove one of the following beans "
+                                + equalPriorityBeans.toString());
+            }
+        }
+    }
+
+    private List<BeanDefinition> prioritizeBeans(BeanDefinition potentialMatch, List<BeanDefinition> highestPriorityBeans) throws ClassNotFoundException {
+        List<BeanDefinition> result = new ArrayList<BeanDefinition>();
+        int matchPriority = getAutowirePriority(Class.forName(potentialMatch.getBeanClassName()));
+        if (highestPriorityBeans.isEmpty()) {
+            result.add(potentialMatch);
+        } else {
+            for (BeanDefinition highestPriorityBean : highestPriorityBeans) {
+                int mostSpesificPriority = getAutowirePriority(Class.forName(highestPriorityBean.getBeanClassName()));
+                if ((matchPriority - mostSpesificPriority) < 0) {
+                    result.clear();
+                    result.add(potentialMatch);
+                } else if (((matchPriority - mostSpesificPriority) == 0)) {
+                    result.add(potentialMatch);
+                    result.add(highestPriorityBean);
+                } else {
+                    result.add(highestPriorityBean);
+                }
+            }
+        }
+        return result;
+    }
+
+    private int getAutowirePriority(Class beanClass) {
+        Environment environmentAnnotation = (Environment) beanClass.getAnnotation(Environment.class);
+        String environment = environmentAnnotation.value();
+        String[] environmentList = environmentAnnotation.tags();
+        List<String> targetEnvironments = new ArrayList<String>();
+        targetEnvironments.add(environment);
+        targetEnvironments.addAll(asList(environmentList));
+        List<String> assemblyContext = parseCSV(assemblyContextResolver.getAssemblyContext());
+        for (int i = 0; i < assemblyContext.size(); i++) {
+            if (targetEnvironments.contains(assemblyContext.get(i))) {
+                return i;
+            }
+        }
+        return Integer.MAX_VALUE;
     }
 
     private boolean decideIfAutowireCandiate(String beanName, Environment environmentAnnotation) {
@@ -136,7 +198,9 @@ public class EnvironmentAnnotationConfigurer implements BeanFactoryPostProcessor
         List<String> targetEnvironments = new ArrayList<String>();
         targetEnvironments.add(environment);
         targetEnvironments.addAll(asList(environmentList));
-        boolean autowireCandidate = targetEnvironments.contains(assemblyContextResolver.getAssemblyContext());
+        List<String> assemblyContext = parseCSV(assemblyContextResolver.getAssemblyContext());
+        targetEnvironments.retainAll(assemblyContext);
+        boolean autowireCandidate = !targetEnvironments.isEmpty();
         if (autowireCandidate) {
             logger.info(beanName + " is annotated with environment '" + environment
                     + "', and is selected for autowiring in the current environment '"
@@ -160,5 +224,12 @@ public class EnvironmentAnnotationConfigurer implements BeanFactoryPostProcessor
                     "You must specify eigther the value attribute or the tags attribute specified on the @Environment. offending bean: "
                             + beanName);
         }
+    }
+
+    private List<String> parseCSV(String csv) {
+        List<String> elements = new ArrayList<String>();
+        for (String element : csv.split(","))
+            elements.add(element);
+        return elements;
     }
 }
