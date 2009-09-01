@@ -85,6 +85,7 @@ public class EnvironmentAnnotationConfigurer implements BeanFactoryPostProcessor
         }
     }
 
+    @SuppressWarnings("unchecked")
     private Environment findEnvironmentAnnotation(Class beanClass) {
         if (beanClass.isAnnotationPresent(Environment.class)) {
             return (Environment) beanClass.getAnnotation(Environment.class);
@@ -175,8 +176,9 @@ public class EnvironmentAnnotationConfigurer implements BeanFactoryPostProcessor
         return result;
     }
 
+    @SuppressWarnings("unchecked")
     private int getAutowirePriority(Class beanClass) {
-        Environment environmentAnnotation = (Environment) beanClass.getAnnotation(Environment.class);
+        Environment environmentAnnotation = findEnvironmentAnnotation(beanClass);
         if (environmentAnnotation != null) {
             String environment = environmentAnnotation.value();
             String[] environmentList = environmentAnnotation.tags();
