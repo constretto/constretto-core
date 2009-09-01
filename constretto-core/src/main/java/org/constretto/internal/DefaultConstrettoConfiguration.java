@@ -305,6 +305,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     private String processVariablesInProperty(final String expression, final Collection<String> visitedPlaceholders) {
         visitedPlaceholders.add(expression);
         ConfigurationNode currentNode = findElementOrThrowException(expression);
+
         String value = currentNode.getValue();
         if (valueNeedsVariableResolving(value)) {
             value = substituteVariablesinValue(value, visitedPlaceholders);
@@ -319,8 +320,10 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
                 throw new ConstrettoException(
                         "A cyclic dependency found in a property");
             }
+            DefaultConstrettoConfiguration rootConfig = new DefaultConstrettoConfiguration(configuration.root(), currentTags);
+            
             value = value.substring(0, expresionToLookup.startIndex)
-                    + processVariablesInProperty(expresionToLookup.expression, visitedPlaceholders)
+                    + rootConfig.processVariablesInProperty(expresionToLookup.expression, visitedPlaceholders)
                     + value.subSequence(expresionToLookup.endIndex + 1, value.length());
         }
         return value;

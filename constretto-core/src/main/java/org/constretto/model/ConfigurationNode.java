@@ -44,6 +44,14 @@ public class ConfigurationNode {
         }
     }
 
+    public ConfigurationNode root(){
+        ConfigurationNode currentNode = this;
+        while (currentNode.parent != null){
+            currentNode = currentNode.parent;
+        }
+        return currentNode;
+    }
+
     private ConfigurationNode() {
         this.name = ROOT_ELEMENT_NAME;
         this.tag = DEFAULT_TAG;
