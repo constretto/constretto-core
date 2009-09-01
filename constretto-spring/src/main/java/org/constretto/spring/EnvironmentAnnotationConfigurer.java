@@ -177,15 +177,17 @@ public class EnvironmentAnnotationConfigurer implements BeanFactoryPostProcessor
 
     private int getAutowirePriority(Class beanClass) {
         Environment environmentAnnotation = (Environment) beanClass.getAnnotation(Environment.class);
-        String environment = environmentAnnotation.value();
-        String[] environmentList = environmentAnnotation.tags();
-        List<String> targetEnvironments = new ArrayList<String>();
-        targetEnvironments.add(environment);
-        targetEnvironments.addAll(asList(environmentList));
-        List<String> assemblyContext = parseCSV(assemblyContextResolver.getAssemblyContext());
-        for (int i = 0; i < assemblyContext.size(); i++) {
-            if (targetEnvironments.contains(assemblyContext.get(i))) {
-                return i;
+        if (environmentAnnotation != null) {
+            String environment = environmentAnnotation.value();
+            String[] environmentList = environmentAnnotation.tags();
+            List<String> targetEnvironments = new ArrayList<String>();
+            targetEnvironments.add(environment);
+            targetEnvironments.addAll(asList(environmentList));
+            List<String> assemblyContext = parseCSV(assemblyContextResolver.getAssemblyContext());
+            for (int i = 0; i < assemblyContext.size(); i++) {
+                if (targetEnvironments.contains(assemblyContext.get(i))) {
+                    return i;
+                }
             }
         }
         return Integer.MAX_VALUE;
