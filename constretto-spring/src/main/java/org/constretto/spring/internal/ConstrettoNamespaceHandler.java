@@ -206,11 +206,9 @@ public class ConstrettoNamespaceHandler extends NamespaceHandlerSupport {
     private static class ImportDefinitionParser implements BeanDefinitionParser {
 
         public BeanDefinition parse(Element element, ParserContext parserContext) {
-            String environmentCsv = element.getAttribute("environments");
-            List<String> environments = new ArrayList<String>();
-            for (String environment : environmentCsv.split(",")) {
-                environments.add(environment);
-            }
+            String targetEnvironmentsCsv = element.getAttribute("environments");
+            List<String> targetEnvironments = parseCSV(targetEnvironmentsCsv);
+
             AssemblyContextResolver assemblyContextResolver = null;
 
             if (parserContext.getRegistry().containsBeanDefinition(ENVIRONMENT_CONTEXT_RESOLVER_NAME)) {
@@ -225,10 +223,20 @@ public class ConstrettoNamespaceHandler extends NamespaceHandlerSupport {
                 assemblyContextResolver = new DefaultAssemblyContextResolver();
             }
 
-            if (environments.contains(assemblyContextResolver.getAssemblyContext())) {
+            List<String> assemblyContext = parseCSV(assemblyContextResolver.getAssemblyContext());
+            targetEnvironments.retainAll(assemblyContext);
+            boolean include = !targetEnvironments.isEmpty();
+            if (include) {
                 parserContext.getReaderContext().getReader().loadBeanDefinitions(element.getAttribute("resource"));
             }
             return null;
+        }
+
+        private List<String> parseCSV(String csv) {
+            List<String> elements = new ArrayList<String>();
+            for (String element : csv.split(","))
+                elements.add(element);
+            return elements;
         }
     }
 
