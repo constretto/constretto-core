@@ -207,6 +207,7 @@ public class ConstrettoNamespaceHandler extends NamespaceHandlerSupport {
 
         public BeanDefinition parse(Element element, ParserContext parserContext) {
             String targetEnvironmentsCsv = element.getAttribute("environments");
+            String resourcePath = element.getAttribute("resource");
             List<String> targetEnvironments = parseCSV(targetEnvironmentsCsv);
 
             AssemblyContextResolver assemblyContextResolver = null;
@@ -227,7 +228,7 @@ public class ConstrettoNamespaceHandler extends NamespaceHandlerSupport {
             targetEnvironments.retainAll(assemblyContext);
             boolean include = !targetEnvironments.isEmpty();
             if (include) {
-                parserContext.getReaderContext().getReader().loadBeanDefinitions(element.getAttribute("resource"));
+                parserContext.getReaderContext().getReader().loadBeanDefinitions(resourcePath);
             }
             return null;
         }
