@@ -28,29 +28,6 @@ public class ConstrettoSpringJUnit4ClassRunner extends SpringJUnit4ClassRunner {
         super(clazz);
     }
 
-    private String changeTagsSystemProperty() {
-        Tags tags = getTestClass().getJavaClass().getAnnotation(Tags.class);
-        if (tags != null) {
-            StringBuffer tagcsv = new StringBuffer();
-            for (String tag : tags.value()) {
-                if (tagcsv.length() > 0) {
-                    tagcsv.append(",");
-                }
-                tagcsv.append(tag);
-            }
-            return System.setProperty(DefaultConfigurationContextResolver.TAGS, tagcsv.toString());
-        }
-        return System.getProperty(DefaultConfigurationContextResolver.TAGS);
-    }
-
-    private String changeAssembleSystemProperty() {
-        Environment environment = getTestClass().getJavaClass().getAnnotation(Environment.class);
-        if (environment != null) {
-            return System.setProperty(DefaultAssemblyContextResolver.ASSEMBLY_KEY, environment.value());
-        }
-        return System.getProperty(DefaultAssemblyContextResolver.ASSEMBLY_KEY);
-    }
-
     @Override
     public void run(RunNotifier notifier) {
         String originalTags = changeTagsSystemProperty();
@@ -66,6 +43,33 @@ public class ConstrettoSpringJUnit4ClassRunner extends SpringJUnit4ClassRunner {
         } else {
             System.setProperty(DefaultAssemblyContextResolver.ASSEMBLY_KEY, originalEnvironment);
         }
+    }
+
+    private String changeTagsSystemProperty() {
+        Tags tags = getTestClass().getJavaClass().getAnnotation(Tags.class);
+        if (tags != null) {
+            return System.setProperty(DefaultConfigurationContextResolver.TAGS, asCsv(tags.value()));
+        }
+        return System.getProperty(DefaultConfigurationContextResolver.TAGS);
+    }
+
+    private String changeAssembleSystemProperty() {
+        Environment environment = getTestClass().getJavaClass().getAnnotation(Environment.class);
+        if (environment != null) {
+            return System.setProperty(DefaultAssemblyContextResolver.ASSEMBLY_KEY, asCsv(environment.value()));
+        }
+        return System.getProperty(DefaultAssemblyContextResolver.ASSEMBLY_KEY);
+    }
+
+    private String asCsv(String[] arr) {
+        StringBuffer tagcsv = new StringBuffer();
+        for (String tag : arr) {
+            if (tagcsv.length() > 0) {
+                tagcsv.append(",");
+            }
+            tagcsv.append(tag);
+        }
+        return tagcsv.toString();
     }
 
 }

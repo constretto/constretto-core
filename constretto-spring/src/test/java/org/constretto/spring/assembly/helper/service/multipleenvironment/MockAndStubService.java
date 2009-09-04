@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 @Service
-@Environment(tags = {"mock", "stub"})
+@Environment({"mock", "stub"})
 public class MockAndStubService implements EnvironmentService {
 
     public String getEnvironment() {

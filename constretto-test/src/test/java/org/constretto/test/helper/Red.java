@@ -7,9 +7,8 @@ import org.constretto.spring.annotation.Environment;
  * @author <a href="mailto:kaare.nilsen@arktekk.no">Kaare Nilsen</a>
  */
 @Component
-@Environment("springjunit")
 public class Red implements Color{
     public String name() {
-        return "green";
+        return "red";
     }
 }

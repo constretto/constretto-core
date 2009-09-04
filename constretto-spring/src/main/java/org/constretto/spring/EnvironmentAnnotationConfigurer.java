@@ -31,6 +31,7 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import java.lang.annotation.Annotation;
 import java.util.*;
 import static java.util.Arrays.asList;
+import static java.util.Arrays.*;
 
 /**
  * A BeanFactoryBeanFactoryPostProcessor implementation that will if registered as a bean in a spring context, enable
@@ -116,7 +117,7 @@ public class EnvironmentAnnotationConfigurer implements BeanFactoryPostProcessor
         List<String> beanNames = new ArrayList<String>();
         Class[] interfaces = lookupClass.getInterfaces();
         for (Class anInterface : interfaces) {
-            beanNames.addAll(Arrays.asList(BeanFactoryUtils.beanNamesForTypeIncludingAncestors(configurableListableBeanFactory, anInterface)));
+            beanNames.addAll(asList(BeanFactoryUtils.beanNamesForTypeIncludingAncestors(configurableListableBeanFactory, anInterface)));
         }
         List<BeanDefinition> potentialMatches = new ArrayList<BeanDefinition>();
         for (String beanName : beanNames) {
@@ -180,14 +181,10 @@ public class EnvironmentAnnotationConfigurer implements BeanFactoryPostProcessor
     private int getAutowirePriority(Class beanClass) {
         Environment environmentAnnotation = findEnvironmentAnnotation(beanClass);
         if (environmentAnnotation != null) {
-            String environment = environmentAnnotation.value();
-            String[] environmentList = environmentAnnotation.tags();
-            List<String> targetEnvironments = new ArrayList<String>();
-            targetEnvironments.add(environment);
-            targetEnvironments.addAll(asList(environmentList));
+            List<String> environments = asList(environmentAnnotation.value());
             List<String> assemblyContext = parseCSV(assemblyContextResolver.getAssemblyContext());
             for (int i = 0; i < assemblyContext.size(); i++) {
-                if (targetEnvironments.contains(assemblyContext.get(i))) {
+                if (environments.contains(assemblyContext.get(i))) {
                     return i;
                 }
             }
@@ -195,37 +192,28 @@ public class EnvironmentAnnotationConfigurer implements BeanFactoryPostProcessor
         return Integer.MAX_VALUE;
     }
 
-    private boolean decideIfAutowireCandiate(String beanName, Environment environmentAnnotation) {
-        String environment = environmentAnnotation.value();
-        String[] environmentList = environmentAnnotation.tags();
-        validateAnnotationValues(beanName, environment, environmentList);
-        List<String> targetEnvironments = new ArrayList<String>();
-        targetEnvironments.add(environment);
-        targetEnvironments.addAll(asList(environmentList));
+    private boolean decideIfAutowireCandiate(String beanName, final Environment environmentAnnotation) {
+        List<String> targetEnvironments = new ArrayList<String>(){{addAll(asList(environmentAnnotation.value()));}};
+        validateAnnotationValues(beanName, targetEnvironments);
         List<String> assemblyContext = parseCSV(assemblyContextResolver.getAssemblyContext());
         targetEnvironments.retainAll(assemblyContext);
         boolean autowireCandidate = !targetEnvironments.isEmpty();
         if (autowireCandidate) {
-            logger.info(beanName + " is annotated with environment '" + environment
+            logger.info(beanName + " is annotated with environment '" + environmentAnnotation.value()
                     + "', and is selected for autowiring in the current environment '"
                     + assemblyContextResolver.getAssemblyContext() + "'");
         } else {
-            logger.info(beanName + " is annotated with environment '" + environment
+            logger.info(beanName + " is annotated with environment '" + environmentAnnotation.value()
                     + "', and is discarded for autowiring in the current environment '"
                     + assemblyContextResolver.getAssemblyContext() + "'");
         }
         return autowireCandidate;
     }
 
-    private void validateAnnotationValues(String beanName, String beanEnvironment, String[] beanEnvironments) {
-        if (!"".equals(beanEnvironment) && beanEnvironments.length > 0) {
+    private void validateAnnotationValues(String beanName, List<String> beanEnvironments) {
+        if (beanEnvironments.isEmpty()) {
             throw new ConstrettoException(
-                    "You may not have both the value attribute and tags attribute specified on the @Environment annotation at the same time. offending bean: "
-                            + beanName);
-        }
-        if ("".equals(beanEnvironment) && beanEnvironments.length == 0) {
-            throw new ConstrettoException(
-                    "You must specify eigther the value attribute or the tags attribute specified on the @Environment. offending bean: "
+                    "You must specify environment tags in @Environment. offending bean: "
                             + beanName);
         }
     }

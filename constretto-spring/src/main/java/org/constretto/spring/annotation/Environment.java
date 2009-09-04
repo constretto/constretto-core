@@ -32,7 +32,5 @@ public @interface Environment {
     public static final String TEST = "test";
     public static final String PRODUCTION = "production";
 
-    String value() default "";
-
-    String[] tags() default {};
+    String[] value() default {};
 }
