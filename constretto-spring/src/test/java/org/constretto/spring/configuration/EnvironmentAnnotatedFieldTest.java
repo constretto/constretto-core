@@ -10,13 +10,14 @@
  */
 package org.constretto.spring.configuration;
 
-import static junit.framework.Assert.assertEquals;
 import org.constretto.internal.provider.ConfigurationProvider;
 import org.constretto.spring.ConfigurationAnnotationConfigurer;
 import org.constretto.spring.annotation.Environment;
 import org.constretto.spring.assembly.helper.AlwaysDevelopmentEnvironmentResolver;
-import static org.constretto.spring.configuration.EnvironmentAnnotatedFieldTest.MyEnvironments.development;
+import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.List;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
@@ -29,27 +30,16 @@ public class EnvironmentAnnotatedFieldTest {
         ConfigurationAnnotationConfigurer annotationConfigurer = new ConfigurationAnnotationConfigurer(
                 new ConfigurationProvider().getConfiguration(), new AlwaysDevelopmentEnvironmentResolver());
         annotationConfigurer.postProcessAfterInstantiation(testClazz, "testBean");
-        assertEquals(development, testClazz.getEnvironment());
-        assertEquals("development", testClazz.getEnvironmentAsString());
+        Assert.assertTrue(testClazz.getEnvironments().contains("development"));
     }
 
     private class TestClazz {
-        @Environment
-        private MyEnvironments environment;
-        @Environment
-        private String environmentAsString;
 
-        public MyEnvironments getEnvironment() {
-            return environment;
-        }
+        @Environment
+        private List<String> environments;
 
-        public String getEnvironmentAsString() {
-            return environmentAsString;
+        public List<String> getEnvironments() {
+            return environments;
         }
     }
-
-    public enum MyEnvironments {
-        development, test
-    }
-
 }

@@ -17,17 +17,14 @@ package org.constretto.spring;
 
 import org.constretto.ConstrettoConfiguration;
 import org.constretto.annotation.Configuration;
-import org.constretto.internal.converter.ValueConverterRegistry;
 import org.constretto.spring.annotation.Environment;
 import org.constretto.spring.resolver.AssemblyContextResolver;
 import org.springframework.beans.BeanInstantiationException;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessorAdapter;
-import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 
 /**
  * {@link BeanPostProcessor} implementation that autowires annotated fields annotated with the &#064;Configuration or
@@ -67,40 +64,20 @@ public class ConfigurationAnnotationConfigurer extends InstantiationAwareBeanPos
     }
 
     private void injectEnvironment(final Object bean) {
-        ReflectionUtils.doWithFields(bean.getClass(), new ReflectionUtils.FieldCallback() {
-            public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
-                Environment annotation = field.getAnnotation(Environment.class);
-                if (annotation != null) {
-                    if (Modifier.isStatic(field.getModifiers())) {
-                        throw new IllegalAccessException("Autowiring of environment not allowed on static fields");
-                    }
-
-                    if (assemblyContextResolver.isAssemblyContextDefined()) {
-                        updateProperty(bean, field, assemblyContextResolver.getAssemblyContext());
-                    }
+        try {
+            Field[] fields = bean.getClass().getDeclaredFields();
+            for (Field field : fields) {
+                if (field.isAnnotationPresent(Environment.class)) {
+                    field.setAccessible(true);
+                    field.set(bean, assemblyContextResolver.getAssemblyContext());
                 }
             }
-        });
+        } catch (IllegalAccessException e) {
+            throw new BeanInstantiationException(bean.getClass(), "Could not inject Environment on spring bean");
+        }
     }
 
     private void injectConfiguration(final Object bean) {
         configuration.on(bean);
-    }
-
-    private void updateProperty(Object beanInstance, Field field, String newValue) throws IllegalArgumentException,
-            IllegalAccessException {
-        field.setAccessible(true);
-        Object convertedValue = null;
-        if (field.getType().isEnum()) {
-            Object[] enumConstants = field.getType().getEnumConstants();
-            for (Object enumConstant : enumConstants) {
-                if (enumConstant.toString().equals(newValue)) {
-                    convertedValue = enumConstant;
-                }
-            }
-        } else {
-            convertedValue = ValueConverterRegistry.convert(field.getType(), newValue);
-        }
-        field.set(beanInstance, convertedValue);
     }
 }

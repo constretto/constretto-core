@@ -15,6 +15,8 @@
  */
 package org.constretto.spring.resolver;
 
+import java.util.List;
+
 /**
  * The interface used to resolve the environment the application is running in.
  * <p/>
@@ -26,7 +28,6 @@ package org.constretto.spring.resolver;
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public interface AssemblyContextResolver {
-    String getAssemblyContext();
+    List<String> getAssemblyContext();
 
-    boolean isAssemblyContextDefined();
 }

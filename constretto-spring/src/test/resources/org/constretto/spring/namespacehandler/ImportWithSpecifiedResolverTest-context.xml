@@ -15,17 +15,18 @@
            http://constretto.org/schema/constretto
            http://constretto.org/schema/constretto/constretto-1.1.xsd">
 
-    <constretto:configuration>
-        <constretto:assembly-context-resolver class="org.constretto.spring.assembly.helper.AlwaysDevelopmentEnvironmentResolver"/>
-    </constretto:configuration>
+  <constretto:configuration>
+    <constretto:assembly-context-resolver
+            class="org.constretto.spring.assembly.helper.AlwaysDevelopmentEnvironmentResolver"/>
+  </constretto:configuration>
 
-    <constretto:import environments="junit,test,stub"
-                       resource="org/constretto/spring/namespacehandler/Junit-context.xml"/>
-    <constretto:import environments="development"
-                       resource="org/constretto/spring/namespacehandler/Development-context.xml"/>
+  <constretto:import environments="junit,test,stub"
+                     resource="org/constretto/spring/namespacehandler/Junit-context.xml"/>
+  <constretto:import environments="development"
+                     resource="org/constretto/spring/namespacehandler/Development-context.xml"/>
 
 
-    <bean id="inMainConfig" class="org.constretto.spring.configuration.helper.EmptyBean"/>
+  <bean id="inMainConfig" class="org.constretto.spring.configuration.helper.EmptyBean"/>
 
 
 </beans>

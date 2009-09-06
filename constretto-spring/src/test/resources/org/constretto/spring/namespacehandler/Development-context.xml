@@ -13,9 +13,7 @@
            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
 
-
   <bean id="inDevelopmentConfig" class="org.constretto.spring.configuration.helper.EmptyBean"/>
-
 
 
 </beans>

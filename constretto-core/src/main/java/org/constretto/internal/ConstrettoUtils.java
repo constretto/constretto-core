@@ -13,10 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.constretto.spring.assembly.helper;
-
-import static org.constretto.spring.annotation.Environment.DEVELOPMENT;
-import org.constretto.spring.resolver.AssemblyContextResolver;
+package org.constretto.internal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,13 +21,23 @@ import java.util.List;
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
-public class AlwaysDevelopmentEnvironmentResolver implements AssemblyContextResolver {
+public class ConstrettoUtils {
 
-    public List<String> getAssemblyContext() {
-        return new ArrayList<String>() {{
-            add(DEVELOPMENT);
-        }};
+    public static String asCsv(String[] arr) {
+        StringBuffer tagcsv = new StringBuffer();
+        for (String tag : arr) {
+            if (tagcsv.length() > 0) {
+                tagcsv.append(",");
+            }
+            tagcsv.append(tag);
+        }
+        return tagcsv.toString();
     }
 
-
+    public static List<String> fromCSV(String csv) {
+        List<String> elements = new ArrayList<String>();
+        for (String element : csv.split(","))
+            elements.add(element);
+        return elements;
+    }
 }

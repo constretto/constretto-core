@@ -29,7 +29,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Environment(DEVELOPMENT)
 @Component
-@DevelopmentBean // added here to test annotation recursion :)
+@DevelopmentBean
+// added here to test annotation recursion :)
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */

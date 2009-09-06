@@ -11,6 +11,7 @@
 package org.constretto.test;
 
 import org.constretto.annotation.Tags;
+import org.constretto.internal.ConstrettoUtils;
 import org.constretto.internal.resolver.DefaultConfigurationContextResolver;
 import org.constretto.spring.annotation.Environment;
 import org.constretto.spring.internal.resolver.DefaultAssemblyContextResolver;
@@ -48,7 +49,7 @@ public class ConstrettoSpringJUnit4ClassRunner extends SpringJUnit4ClassRunner {
     private String changeTagsSystemProperty() {
         Tags tags = getTestClass().getJavaClass().getAnnotation(Tags.class);
         if (tags != null) {
-            return System.setProperty(DefaultConfigurationContextResolver.TAGS, asCsv(tags.value()));
+            return System.setProperty(DefaultConfigurationContextResolver.TAGS, ConstrettoUtils.asCsv(tags.value()));
         }
         return System.getProperty(DefaultConfigurationContextResolver.TAGS);
     }
@@ -56,20 +57,10 @@ public class ConstrettoSpringJUnit4ClassRunner extends SpringJUnit4ClassRunner {
     private String changeAssembleSystemProperty() {
         Environment environment = getTestClass().getJavaClass().getAnnotation(Environment.class);
         if (environment != null) {
-            return System.setProperty(DefaultAssemblyContextResolver.ASSEMBLY_KEY, asCsv(environment.value()));
+            return System.setProperty(DefaultAssemblyContextResolver.ASSEMBLY_KEY, ConstrettoUtils.asCsv(environment.value()));
         }
         return System.getProperty(DefaultAssemblyContextResolver.ASSEMBLY_KEY);
     }
 
-    private String asCsv(String[] arr) {
-        StringBuffer tagcsv = new StringBuffer();
-        for (String tag : arr) {
-            if (tagcsv.length() > 0) {
-                tagcsv.append(",");
-            }
-            tagcsv.append(tag);
-        }
-        return tagcsv.toString();
-    }
 
 }

@@ -29,9 +29,11 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 import java.lang.annotation.Annotation;
-import java.util.*;
+import java.util.ArrayList;
 import static java.util.Arrays.asList;
-import static java.util.Arrays.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * A BeanFactoryBeanFactoryPostProcessor implementation that will if registered as a bean in a spring context, enable
@@ -70,7 +72,7 @@ public class EnvironmentAnnotationConfigurer implements BeanFactoryPostProcessor
                 Class beanClass = Class.forName(beanDefinition.getBeanClassName());
                 Environment environmentAnnotation = findEnvironmentAnnotation(beanClass);
                 if (environmentAnnotation != null) {
-                    if (assemblyContextResolver.isAssemblyContextDefined()) {
+                    if (!assemblyContextResolver.getAssemblyContext().isEmpty()) {
                         boolean autowireCandidate = decideIfAutowireCandiate(beanName, environmentAnnotation);
                         beanDefinition.setAutowireCandidate(autowireCandidate);
                         if (autowireCandidate) {
@@ -182,7 +184,7 @@ public class EnvironmentAnnotationConfigurer implements BeanFactoryPostProcessor
         Environment environmentAnnotation = findEnvironmentAnnotation(beanClass);
         if (environmentAnnotation != null) {
             List<String> environments = asList(environmentAnnotation.value());
-            List<String> assemblyContext = parseCSV(assemblyContextResolver.getAssemblyContext());
+            List<String> assemblyContext = assemblyContextResolver.getAssemblyContext();
             for (int i = 0; i < assemblyContext.size(); i++) {
                 if (environments.contains(assemblyContext.get(i))) {
                     return i;
@@ -193,9 +195,11 @@ public class EnvironmentAnnotationConfigurer implements BeanFactoryPostProcessor
     }
 
     private boolean decideIfAutowireCandiate(String beanName, final Environment environmentAnnotation) {
-        List<String> targetEnvironments = new ArrayList<String>(){{addAll(asList(environmentAnnotation.value()));}};
+        List<String> targetEnvironments = new ArrayList<String>() {{
+            addAll(asList(environmentAnnotation.value()));
+        }};
         validateAnnotationValues(beanName, targetEnvironments);
-        List<String> assemblyContext = parseCSV(assemblyContextResolver.getAssemblyContext());
+        List<String> assemblyContext = assemblyContextResolver.getAssemblyContext();
         targetEnvironments.retainAll(assemblyContext);
         boolean autowireCandidate = !targetEnvironments.isEmpty();
         if (autowireCandidate) {
@@ -218,10 +222,5 @@ public class EnvironmentAnnotationConfigurer implements BeanFactoryPostProcessor
         }
     }
 
-    private List<String> parseCSV(String csv) {
-        List<String> elements = new ArrayList<String>();
-        for (String element : csv.split(","))
-            elements.add(element);
-        return elements;
-    }
+
 }

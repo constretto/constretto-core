@@ -115,20 +115,22 @@ public class ConstrettoSingletonFactoryBean implements FactoryBean {
     }
 
     private Object getResolvedBean() {
-        Object bean;
-        String currentEnvironment = assemblyContextResolver.isAssemblyContextDefined() ? assemblyContextResolver
-                .getAssemblyContext() : "[not defined]";
-        if (assemblyContextResolver.isAssemblyContextDefined()) {
-            bean = beans.get(currentEnvironment);
-            if (null == bean) {
-                bean = defaultBean;
+        Object bean = null;
+        if (!assemblyContextResolver.getAssemblyContext().isEmpty()) {
+            for (String currentEnvironment : assemblyContextResolver.getAssemblyContext()) {
+                bean = beans.get(currentEnvironment);
+                if (null != bean) {
+                    break;
+                }
             }
-        } else {
+        }
+
+        if (bean == null) {
             bean = defaultBean;
         }
 
-        if (null == bean) {
-            throw new BeanInitializationException("No bean assosiated with the prefix " + currentEnvironment
+        if (bean == null) {
+            throw new BeanInitializationException("No bean assosiated with the prefix " + assemblyContextResolver.getAssemblyContext()
                     + ", and no default bean could be found");
         }
         return bean;

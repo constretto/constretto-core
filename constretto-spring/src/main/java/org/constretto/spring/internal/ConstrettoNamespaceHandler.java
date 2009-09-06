@@ -17,6 +17,7 @@ package org.constretto.spring.internal;
 
 import org.constretto.ConstrettoBuilder;
 import org.constretto.ConstrettoConfiguration;
+import org.constretto.internal.ConstrettoUtils;
 import org.constretto.internal.resolver.DefaultConfigurationContextResolver;
 import org.constretto.resolver.ConfigurationContextResolver;
 import org.constretto.spring.ConfigurationAnnotationConfigurer;
@@ -208,7 +209,7 @@ public class ConstrettoNamespaceHandler extends NamespaceHandlerSupport {
         public BeanDefinition parse(Element element, ParserContext parserContext) {
             String targetEnvironmentsCsv = element.getAttribute("environments");
             String resourcePath = element.getAttribute("resource");
-            List<String> targetEnvironments = parseCSV(targetEnvironmentsCsv);
+            List<String> targetEnvironments = ConstrettoUtils.fromCSV(targetEnvironmentsCsv);
 
             AssemblyContextResolver assemblyContextResolver = null;
 
@@ -224,7 +225,7 @@ public class ConstrettoNamespaceHandler extends NamespaceHandlerSupport {
                 assemblyContextResolver = new DefaultAssemblyContextResolver();
             }
 
-            List<String> assemblyContext = parseCSV(assemblyContextResolver.getAssemblyContext());
+            List<String> assemblyContext = assemblyContextResolver.getAssemblyContext();
             targetEnvironments.retainAll(assemblyContext);
             boolean include = !targetEnvironments.isEmpty();
             if (include) {
@@ -233,12 +234,6 @@ public class ConstrettoNamespaceHandler extends NamespaceHandlerSupport {
             return null;
         }
 
-        private List<String> parseCSV(String csv) {
-            List<String> elements = new ArrayList<String>();
-            for (String element : csv.split(","))
-                elements.add(element);
-            return elements;
-        }
     }
 
 }

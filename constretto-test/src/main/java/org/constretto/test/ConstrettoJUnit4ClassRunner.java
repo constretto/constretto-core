@@ -11,6 +11,7 @@
 package org.constretto.test;
 
 import org.constretto.annotation.Tags;
+import org.constretto.internal.ConstrettoUtils;
 import org.constretto.internal.resolver.DefaultConfigurationContextResolver;
 import org.junit.internal.runners.InitializationError;
 import org.junit.internal.runners.JUnit4ClassRunner;
@@ -29,13 +30,7 @@ public class ConstrettoJUnit4ClassRunner extends JUnit4ClassRunner {
     private String changeTagsSystemProperty() {
         Tags tags = getTestClass().getJavaClass().getAnnotation(Tags.class);
         if (tags != null) {
-            StringBuffer tagcsv = new StringBuffer();
-            for (String tag : tags.value()) {
-                if (tagcsv.length() > 0) {
-                    tagcsv.append(",");
-                }
-                tagcsv.append(tag);
-            }
+            String tagcsv = ConstrettoUtils.asCsv(tags.value());
             return System.setProperty(DefaultConfigurationContextResolver.TAGS, tagcsv.toString());
         }
         return System.getProperty(DefaultConfigurationContextResolver.TAGS);

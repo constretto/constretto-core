@@ -285,7 +285,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
                     }
                 } else if (field.isAnnotationPresent(Tags.class)) {
                     field.setAccessible(true);
-                    field.set(objectToConfigure, currentTags.toArray(new String[currentTags.size()]));
+                    field.set(objectToConfigure, currentTags);
                 }
             } catch (IllegalAccessException e) {
                 throw new ConstrettoException("Cold not inject configuration into field ["
@@ -321,7 +321,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
                         "A cyclic dependency found in a property");
             }
             DefaultConstrettoConfiguration rootConfig = new DefaultConstrettoConfiguration(configuration.root(), currentTags);
-            
+
             value = value.substring(0, expresionToLookup.startIndex)
                     + rootConfig.processVariablesInProperty(expresionToLookup.expression, visitedPlaceholders)
                     + value.subSequence(expresionToLookup.endIndex + 1, value.length());

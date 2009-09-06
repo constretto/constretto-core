@@ -15,8 +15,12 @@
  */
 package org.constretto.spring.internal.resolver;
 
-import org.constretto.spring.annotation.Environment;
 import org.constretto.spring.resolver.AssemblyContextResolver;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Provides the default assembly environment resolving strategy which is used if no other implementation found in the
@@ -34,16 +38,25 @@ import org.constretto.spring.resolver.AssemblyContextResolver;
 public class DefaultAssemblyContextResolver implements AssemblyContextResolver {
     public static final String ASSEMBLY_KEY = "CONSTRETTO_ENV";
 
-    public String getAssemblyContext() {
-        String assemblyEnvironment = System.getProperty(ASSEMBLY_KEY);
-        if (null == assemblyEnvironment) {
-            assemblyEnvironment = System.getenv(ASSEMBLY_KEY);
+    public List<String> getAssemblyContext() {
+        String tags = getFromSystemPropertyOrSystemEnv();
+        if (tags != null) {
+            return new ArrayList<String>() {
+                {
+                    addAll(Arrays.asList(getFromSystemPropertyOrSystemEnv().split(",")));
+                }
+            };
+        } else {
+            return Collections.emptyList();
         }
-        return null != assemblyEnvironment ? assemblyEnvironment : Environment.DEVELOPMENT;
     }
 
-    public boolean isAssemblyContextDefined() {
-        return System.getProperty(ASSEMBLY_KEY) != null || System.getenv(ASSEMBLY_KEY) != null;
+    private String getFromSystemPropertyOrSystemEnv() {
+        String assemblyEnvironment = System.getProperty(ASSEMBLY_KEY);
+        if (assemblyEnvironment == null) {
+            assemblyEnvironment = System.getenv(ASSEMBLY_KEY);
+        }
+        return assemblyEnvironment;
     }
 
 }

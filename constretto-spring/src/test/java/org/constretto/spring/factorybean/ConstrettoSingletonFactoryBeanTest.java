@@ -10,10 +10,10 @@
  */
 package org.constretto.spring.factorybean;
 
-import static org.constretto.spring.annotation.Environment.DEVELOPMENT;
-import static org.constretto.spring.annotation.Environment.TEST;
+import static org.constretto.spring.annotation.Environment.*;
 import org.constretto.spring.factorybean.helper.DevelopmentTestBean;
 import org.constretto.spring.factorybean.helper.EnvironmentService;
+import org.constretto.spring.factorybean.helper.ProductionTestBean;
 import static org.constretto.spring.internal.resolver.DefaultAssemblyContextResolver.ASSEMBLY_KEY;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
@@ -50,6 +50,20 @@ public class ConstrettoSingletonFactoryBeanTest extends AbstractJUnit4SpringCont
         System.setProperty(ASSEMBLY_KEY, DEVELOPMENT);
         EnvironmentService testBean = (EnvironmentService) applicationContext.getBean("testBean");
         assertEquals(DevelopmentTestBean.class, testBean.getClass());
+    }
+
+    @Test
+    public void givenDevelopmentFirstStageOnStartupThenDevelopmentBeanIsSelected() throws Exception {
+        System.setProperty(ASSEMBLY_KEY, DEVELOPMENT + "," + PRODUCTION);
+        EnvironmentService testBean = (EnvironmentService) applicationContext.getBean("testBean");
+        assertEquals(DevelopmentTestBean.class, testBean.getClass());
+    }
+
+    @Test
+    public void givenProductionFirstStageOnStartupThenProductionBeanIsSelected() throws Exception {
+        System.setProperty(ASSEMBLY_KEY, PRODUCTION + "," + DEVELOPMENT);
+        EnvironmentService testBean = (EnvironmentService) applicationContext.getBean("testBean");
+        assertEquals(ProductionTestBean.class, testBean.getClass());
     }
 
     @Test(expected = BeanCreationException.class)

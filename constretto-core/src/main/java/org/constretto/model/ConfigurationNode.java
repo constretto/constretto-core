@@ -44,9 +44,9 @@ public class ConfigurationNode {
         }
     }
 
-    public ConfigurationNode root(){
+    public ConfigurationNode root() {
         ConfigurationNode currentNode = this;
-        while (currentNode.parent != null){
+        while (currentNode.parent != null) {
             currentNode = currentNode.parent;
         }
         return currentNode;

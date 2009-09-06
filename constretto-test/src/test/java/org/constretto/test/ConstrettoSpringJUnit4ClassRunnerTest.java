@@ -16,10 +16,11 @@ import org.constretto.test.helper.Color;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
@@ -32,16 +33,18 @@ import java.util.Arrays;
 public class ConstrettoSpringJUnit4ClassRunnerTest {
 
     @Tags
-    String[] currentEnvironment;
+    List<String> currentEnvironment;
 
     @Autowired
     Color color;
 
     @Test
     public void givenEnvironmentAnnotationOnTestClassWhenRunningTestThenConstrettoKnowsEnvironment() {
-        String[] expected = {"springjunit"};
-        Assert.assertArrayEquals(expected, currentEnvironment);
-        Assert.assertEquals("green",color.name());
+        List<String> expected = new ArrayList<String>() {{
+            add("springjunit");
+        }};
+        Assert.assertArrayEquals(expected.toArray(new String[0]), currentEnvironment.toArray(new String[0]));
+        Assert.assertEquals("green", color.name());
     }
 
 }
