@@ -91,7 +91,7 @@ public class IniFileConfigurationStore implements ConfigurationStore {
 
     private Preferences load(Resource resource) {
         try {
-            return new IniPreferences(new Ini(resource.getFile()));
+            return new IniPreferences(resource.getInputStream());
         } catch (Exception e) {
             throw new ConstrettoException(e);
         }
