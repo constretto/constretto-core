@@ -68,22 +68,24 @@ public class EnvironmentAnnotationConfigurer implements BeanFactoryPostProcessor
         int lowestDiscoveredPriority = Integer.MAX_VALUE;
         for (String beanName : beanNames) {
             BeanDefinition beanDefinition = configurableListableBeanFactory.getBeanDefinition(beanName);
-            try {
-                Class beanClass = Class.forName(beanDefinition.getBeanClassName());
-                Environment environmentAnnotation = findEnvironmentAnnotation(beanClass);
-                if (environmentAnnotation != null) {
-                    if (!assemblyContextResolver.getAssemblyContext().isEmpty()) {
-                        boolean autowireCandidate = decideIfAutowireCandiate(beanName, environmentAnnotation);
-                        beanDefinition.setAutowireCandidate(autowireCandidate);
-                        if (autowireCandidate) {
-                            removeNonAnnotatedBeansFromAutowireForType(beanClass, configurableListableBeanFactory);
+            if (beanDefinition.getBeanClassName() != null) {
+                try {
+                    Class beanClass = Class.forName(beanDefinition.getBeanClassName());
+                    Environment environmentAnnotation = findEnvironmentAnnotation(beanClass);
+                    if (environmentAnnotation != null) {
+                        if (!assemblyContextResolver.getAssemblyContext().isEmpty()) {
+                            boolean autowireCandidate = decideIfAutowireCandiate(beanName, environmentAnnotation);
+                            beanDefinition.setAutowireCandidate(autowireCandidate);
+                            if (autowireCandidate) {
+                                removeNonAnnotatedBeansFromAutowireForType(beanClass, configurableListableBeanFactory);
+                            }
+                        } else {
+                            beanDefinition.setAutowireCandidate(false);
                         }
-                    } else {
-                        beanDefinition.setAutowireCandidate(false);
                     }
+                } catch (ClassNotFoundException e) {
+                    throw new ConstrettoException("Could not instanciateclass [" + beanDefinition.getBeanClassName() + "] for bean [" + beanName + "]", e);
                 }
-            } catch (ClassNotFoundException e) {
-                throw new ConstrettoException("Could not instanciateclass [" + beanDefinition.getBeanClassName() + "] for bean [" + beanName + "]", e);
             }
         }
     }
