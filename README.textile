@@ -29,6 +29,7 @@ Constretto is built with maven, so if you are using maven, you can simply add Co
 </pre>
 
 If you would like to use the Spring support add:
+
 <pre>
 	<dependency>
 		<groupId>org.constretto</groupId>
@@ -38,6 +39,7 @@ If you would like to use the Spring support add:
 </pre>
 
 If you would like to use the Constretto Junit support add:
+
 <pre>
 	<dependency>
 		<groupId>org.constretto</groupId>
@@ -49,6 +51,7 @@ If you would like to use the Constretto Junit support add:
 
 
 These artifacts are currently not published to the main maven repository, so in order to download them add the following repository definition in your pom:
+
 <pre>
 	<repositories>
 	    <repository>
@@ -65,6 +68,7 @@ h3. Using Java API
 
 Constretto provides a fluent API to be used in any Java application. Its main interface is ConstrettoConfiguration, that supplies methods to query for values in your configuration.
 To initialize the ConstrettoConfiguration interface, use the supplied ConstrettoBuilder as shown in the example below:
+
 <pre>
 	ConstrettoConfiguration config = 
 	                new ConstrettoBuilder()
@@ -89,6 +93,7 @@ Constretto works very well in a Spring environment, It provides a namespace for 
 enables ConfigurationInjection.
 
 To tell spring to use Constretto:
+
 <pre>
 	<beans xmlns="http://www.springframework.org/schema/beans"
 	       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -113,6 +118,7 @@ h2. How to use Constretto in your application?
 h3. Using Java API
 
 Now that you've configured Constretto, by Java API or Spring, you may query your configuration using the methods in the ConstrettoConfiguration interface like in the examples below:
+
 <pre>
 	// Simple lookup
 	String aDataSourceUrl = configuration.evaluateToString("datasources.customer.url");
@@ -129,6 +135,7 @@ In much the same way as dependency injection work in e.g. Spring and Guice, Cons
 It supports injection in fields, and methods as seen in the example below:
 
 Java class to be injected with configuration:
+
 <pre>
 	public class DataSourceConfiguration {
 
@@ -178,6 +185,7 @@ Java class to be injected with configuration:
 </pre>
 
 A test that shows this feature used with the Java API:
+
 <pre>
 	public class ConfigurationAnnotationsTest {
 	    private ConstrettoConfiguration configuration;
@@ -228,6 +236,7 @@ h3. Java Property Files
 When using Java Property files, you may tag your entry with "@[tag]." if a key does not have a tag, it will be considered a default, and always be available
 
 Example:
+
 <pre>
 	somedb.username=default username
 	@production.somedb.username=username in production
@@ -239,6 +248,7 @@ h3. Ini Files
 Constretto also supports Ini files and here, sections are used as tags
 
 Example:
+
 <pre>
 	[default]
 	somedb.username=default username
@@ -256,6 +266,7 @@ Constretto are able to use Java objects as configuration sources, and then annot
 Also the ConfigurationSource annotation can use an optional basePath attribute, that are prepended to the JavaBean property names found in the class resulting in "somedb.username" in the example below.
 
 Example:
+
 <pre>
 	@ConfigurationSource(basePath = "somedb")
 	public class DefaultDataSourceConfigurer {
@@ -283,6 +294,7 @@ h2. How to tell Constretto what tags to look up?
 Constretto uses a System property, or System environment property to know what tags to look up.  this property is called "CONSTRETTO_TAGS"
 
 Example:
+
 <pre>
 	$java MyApp -DCONSTRETTO_TAGS=tag1,tag2,tag3
 </pre>
