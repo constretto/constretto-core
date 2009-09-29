@@ -24,6 +24,8 @@ Constretto is built with maven, so if you are using maven, you can simply add Co
 			<version>1.0-rc-10</version>
 			<scope>runtime</scope>
 		</dependency>
+		...
+	</dependencies>
 </pre>
 
 If you would like to use the Spring support add:
@@ -54,7 +56,7 @@ These artifacts are currently not published to the main maven repository, so in 
 	      <name>Constretto public maven repository</name>
 	      <url>http://repo.constretto.org/content/repositories/releases</url>
 	    </repository>
-	  </repositories>		
+	</repositories>		
 </pre>	
 
 h2. How to configure Constretto?
