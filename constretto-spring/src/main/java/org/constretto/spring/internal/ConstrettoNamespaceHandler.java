@@ -133,7 +133,7 @@ public class ConstrettoNamespaceHandler extends NamespaceHandlerSupport {
                     String suffix = propertyPlaceholderElement.getAttribute("suffix") != null ? propertyPlaceholderElement.getAttribute("suffix") : "}";
                     placeHolderBean.addPropertyValue("placeholderPrefix", prefix);
                     placeHolderBean.addPropertyValue("placeholderSuffix", suffix);
-                    placeHolderBean.addPropertyValue("ignoreUnresolvedPlaceHolders", ignoreUnresolved);
+                    placeHolderBean.addPropertyValue("ignoreUnresolvablePlaceholders", ignoreUnresolved);
 
                 }
                 parserContext.getRegistry().registerBeanDefinition(CONSTRETTO_PLACEHOLDER_BEAN_NAME, placeHolderBean.getBeanDefinition());
