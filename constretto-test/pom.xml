@@ -10,7 +10,7 @@
   <parent>
     <artifactId>constretto</artifactId>
     <groupId>org.constretto</groupId>
-    <version>1.0-rc-11-SNAPSHOT</version>
+    <version>1.0-rc-11</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>constretto-test</artifactId>
