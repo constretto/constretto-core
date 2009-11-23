@@ -32,14 +32,12 @@
     <dependency>
       <groupId>org.ini4j</groupId>
       <artifactId>ini4j</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>commons-lang</groupId>
-      <artifactId>commons-lang</artifactId>
+      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>commons-beanutils</groupId>
       <artifactId>commons-beanutils</artifactId>
+      <optional>true</optional>
     </dependency>
   </dependencies>
 

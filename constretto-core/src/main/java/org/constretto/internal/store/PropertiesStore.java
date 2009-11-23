@@ -15,8 +15,8 @@
  */
 package org.constretto.internal.store;
 
-import org.apache.commons.lang.StringUtils;
 import org.constretto.ConfigurationStore;
+import org.constretto.internal.ConstrettoUtils;
 import org.constretto.exception.ConstrettoException;
 import org.constretto.model.TaggedPropertySet;
 import org.springframework.core.io.Resource;
@@ -158,7 +158,7 @@ public class PropertiesStore implements ConfigurationStore {
      */
     private String getTag(String key) {
         if (isTag(key)) {
-            return StringUtils.substringBetween(key, tagPrefix, PROPERTY_CONTEXT_SEPARATOR);
+            return ConstrettoUtils.substringBetween(key, tagPrefix, PROPERTY_CONTEXT_SEPARATOR);
         } else {
             return null;
         }
@@ -169,6 +169,6 @@ public class PropertiesStore implements ConfigurationStore {
     }
 
     private String stripTag(String key, String tag) {
-        return StringUtils.substringAfter(key, tagPrefix + tag + PROPERTY_CONTEXT_SEPARATOR);
+        return ConstrettoUtils.substringAfter(key, tagPrefix + tag + PROPERTY_CONTEXT_SEPARATOR);
     }
 }

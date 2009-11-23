@@ -16,8 +16,8 @@
 package org.constretto.internal.store;
 
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.lang.StringUtils;
 import org.constretto.ConfigurationStore;
+import org.constretto.internal.ConstrettoUtils;
 import org.constretto.annotation.ConfigurationSource;
 import org.constretto.exception.ConstrettoException;
 import org.constretto.model.ConfigurationNode;
@@ -73,7 +73,7 @@ public class ObjectConfigurationStore implements ConfigurationStore {
                 String path = propertyDescriptor.getName();
                 try {
                     String value = (String) PropertyUtils.getProperty(configurationObject, path);
-                    if (!StringUtils.isEmpty(basePath)) {
+                    if (!ConstrettoUtils.isEmpty(basePath)) {
                         path = basePath + "." + path;
                     }
                     properties.put(path, value);
