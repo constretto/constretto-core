@@ -17,6 +17,7 @@ package org.constretto.internal;
 
 import org.constretto.ConfigurationDefaultValueFactory;
 import org.constretto.ConstrettoConfiguration;
+import org.constretto.Property;
 import org.constretto.annotation.Configuration;
 import org.constretto.annotation.Configure;
 import org.constretto.annotation.Tags;
@@ -31,14 +32,13 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
+    private static final String NULL_STRING = "![![Null]!]!";
     private static final String VARIABLE_PREFIX = "#{";
     private static final String VARIABLE_SUFFIX = "}";
     private List<String> currentTags;
@@ -132,6 +132,33 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     public boolean hasValue(String expression) {
         ConfigurationNode node = findElementOrNull(expression);
         return null != node;
+    }
+
+    public Iterator<Property> iterator() {
+        List<Property> properties = new ArrayList<Property>();
+        Map<String,String> map = asMap();
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            properties.add(new Property(entry.getKey(),entry.getValue()));                        
+        }
+        return properties.iterator();
+    }
+
+     private Map<String,String> asMap(){
+        Map<String,String> properties = new HashMap<String,String>();
+        extractProperties(configuration,properties);
+        return properties;
+    }
+
+    private void extractProperties(ConfigurationNode currentNode, Map<String, String> properties) {
+        String value = evaluateTo(currentNode.getExpression(),NULL_STRING);
+        if (!value.equals(NULL_STRING)){
+            properties.put(currentNode.getExpression(),value);
+        }
+        if (currentNode.hasChildren()){
+            for (ConfigurationNode child : currentNode.children()) {
+                extractProperties(child,properties);
+            }
+        }
     }
 
     //

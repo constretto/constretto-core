@@ -19,12 +19,14 @@ import org.constretto.exception.ConstrettoConversionException;
 import org.constretto.exception.ConstrettoException;
 import org.constretto.exception.ConstrettoExpressionException;
 
+import java.util.Properties;
+
 /**
  * Client interface.
  *
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
-public interface ConstrettoConfiguration {
+public interface ConstrettoConfiguration extends Iterable<Property>{
 
     /**
      * Looks up an expression in the configuration.

@@ -15,9 +15,7 @@
  */
 package org.constretto.model;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
@@ -85,6 +83,14 @@ public class ConfigurationNode {
         return name;
     }
 
+    public boolean hasChildren(){
+        return !children.isEmpty();
+    }
+
+    public List<ConfigurationNode> children() {
+        return children;
+    }
+
     public String getExpression() {
         String expression;
         if (parent != null && !parent.name.equals(ROOT_ELEMENT_NAME)) {
@@ -118,6 +124,8 @@ public class ConfigurationNode {
         }
         return currentNode.parent.getAllMatchingChildren(currentNode.name);
     }
+
+
 
     private boolean containsChild(String name) {
         for (ConfigurationNode currentNode : children) {
