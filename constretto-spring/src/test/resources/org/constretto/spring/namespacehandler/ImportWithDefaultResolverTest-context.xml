@@ -12,8 +12,7 @@
        xmlns:constretto="http://constretto.org/schema/constretto"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-           http://constretto.org/schema/constretto
-           http://constretto.org/schema/constretto/constretto-1.1.xsd">
+                  http://constretto.org/schema/constretto http://constretto.org/schema/constretto/constretto-1.1.xsd">
 
   <constretto:import environments="junit,test,stub"
                      resource="org/constretto/spring/namespacehandler/Junit-context.xml"/>
