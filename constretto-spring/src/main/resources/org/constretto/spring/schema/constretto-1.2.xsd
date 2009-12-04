@@ -25,8 +25,8 @@
   </xsd:element>
 
   <xsd:element name="configuration" type="Configuration"/>
-  <xsd:element name="propertyPlaceHolderConfigurer" type="PlaceHolderConfigurer"/>
-  <xsd:element name="annotationConfig" type="xsd:element"/>
+  <xsd:element name="property-placeholder-configurer" type="PlaceHolderConfigurer"/>
+  <xsd:element name="annotation-config"/>
 
   <xsd:complexType name="Configuration">
     <xsd:all>

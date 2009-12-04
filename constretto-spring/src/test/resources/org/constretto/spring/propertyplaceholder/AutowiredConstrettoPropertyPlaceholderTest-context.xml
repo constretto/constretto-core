@@ -10,17 +10,19 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:util="http://www.springframework.org/schema/util"
        xmlns:constretto="http://constretto.org/schema/constretto"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
-           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd http://constretto.org/schema/constretto http://constretto.org/schema/constretto/constretto-1.0.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd
+       http://constretto.org/schema/constretto http://constretto.org/schema/constretto/constretto-1.2.xsd">
 
-  <constretto:configuration>
+  <constretto:configuration property-placeholder="false">
     <constretto:stores>
       <constretto:properties-store>
         <constretto:resource location="classpath:properties/test1.properties"/>
       </constretto:properties-store>
     </constretto:stores>
-    <constretto:property-placeholder-configurer ignore-unresolved-placeholders="true" prefix="!{" suffix="}}"/>
   </constretto:configuration>
+
+  <constretto:property-placeholder-configurer ignore-unresolved-placeholders="true" prefix="!{" suffix="}}"/>
 
   <bean id="testbean" class="org.constretto.spring.propertyplaceholder.helper.TestBean">
     <constructor-arg value="!{aCoolService}}"/>

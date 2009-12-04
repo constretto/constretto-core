@@ -55,9 +55,50 @@ public class ConstrettoNamespaceHandler extends NamespaceHandlerSupport {
     public void init() {
         registerBeanDefinitionParser("configuration", new ConfigurationDefinitionParser());
         registerBeanDefinitionParser("import", new ImportDefinitionParser());
+        registerBeanDefinitionParser("property-placeholder-configurer", new PropertyPlaceHolderDefinitionParser());
+        registerBeanDefinitionParser("annotation-config", new AnnotationConfigDefinitionParser());
     }
 
-    private static class ConfigurationDefinitionParser implements BeanDefinitionParser {
+    private void createPropertyPlaceholder(ConstrettoConfiguration configuration, ParserContext parserContext, Element propertyPlaceholderElement) {
+        BeanDefinitionBuilder placeHolderBean = BeanDefinitionBuilder.rootBeanDefinition(ConstrettoPropertyPlaceholderConfigurer.class);
+        if (configuration != null) {
+            placeHolderBean.addConstructorArgValue(configuration);
+        } else {
+            placeHolderBean.addConstructorArgReference(CONSTRETTO_CONFIGURATION_BEAN_NAME);
+        }
+
+        if (propertyPlaceholderElement != null) {
+            boolean ignoreUnresolved = propertyPlaceholderElement.getAttribute("ignore-unresolved-placeholders") != null ? Boolean.valueOf(propertyPlaceholderElement.getAttribute("ignore-unresolved-placeholders")) : false;
+            String prefix = propertyPlaceholderElement.getAttribute("prefix") != null ? propertyPlaceholderElement.getAttribute("prefix") : "${";
+            String suffix = propertyPlaceholderElement.getAttribute("suffix") != null ? propertyPlaceholderElement.getAttribute("suffix") : "}";
+            placeHolderBean.addPropertyValue("placeholderPrefix", prefix);
+            placeHolderBean.addPropertyValue("placeholderSuffix", suffix);
+            placeHolderBean.addPropertyValue("ignoreUnresolvablePlaceholders", ignoreUnresolved);
+
+        }
+        parserContext.getRegistry().registerBeanDefinition(CONSTRETTO_PLACEHOLDER_BEAN_NAME, placeHolderBean.getBeanDefinition());
+    }
+
+    private void createAnnotationConfigBean(ConstrettoConfiguration configuration, AssemblyContextResolver assemblyContextResolver, ParserContext parserContext) {
+        BeanDefinitionBuilder configurationAnnotationConfigurerBean = BeanDefinitionBuilder.rootBeanDefinition(ConfigurationAnnotationConfigurer.class);
+        if (configuration != null) {
+            configurationAnnotationConfigurerBean.addConstructorArgValue(configuration);
+        } else {
+            configurationAnnotationConfigurerBean.addConstructorArgReference(CONSTRETTO_CONFIGURATION_BEAN_NAME);
+        }
+        if (assemblyContextResolver != null) {
+            configurationAnnotationConfigurerBean.addConstructorArgValue(assemblyContextResolver);
+        } else {
+            configurationAnnotationConfigurerBean.addConstructorArgReference(ENVIRONMENT_CONTEXT_RESOLVER_NAME);
+        }
+        parserContext.getRegistry().registerBeanDefinition(CONSTRETTO_CONFIGURATION_ANNOTATION_BEAN_NAME, configurationAnnotationConfigurerBean.getBeanDefinition());
+        BeanDefinitionBuilder environmentAnnotationConfigurerBean = BeanDefinitionBuilder.rootBeanDefinition(EnvironmentAnnotationConfigurer.class);
+        environmentAnnotationConfigurerBean.addConstructorArgValue(assemblyContextResolver);
+        parserContext.getRegistry().registerBeanDefinition(CONSTRETTO_ENVIRONMENT_ANNOTATION_BEAN_NAME, environmentAnnotationConfigurerBean.getBeanDefinition());
+    }
+
+
+    private class ConfigurationDefinitionParser implements BeanDefinitionParser {
 
         public BeanDefinition parse(Element element, ParserContext parserContext) {
             ConfigurationContextResolver configurationContextResolver = processConfigurationContextResolverTag(DomUtils.getChildElementByTagName(element, "configuration-context-resolver"), parserContext);
@@ -74,6 +115,7 @@ public class ConstrettoNamespaceHandler extends NamespaceHandlerSupport {
 
             return null;
         }
+
 
         @SuppressWarnings("unchecked")
         private ConstrettoConfiguration buildConfig(Element element, ConfigurationContextResolver configurationContextResolver) {
@@ -125,32 +167,16 @@ public class ConstrettoNamespaceHandler extends NamespaceHandlerSupport {
             Element propertyPlaceholderElement = DomUtils.getChildElementByTagName(element, "property-placeholder-configurer");
             boolean enabled = propertyPlaceholderAttribute != null ? Boolean.valueOf(propertyPlaceholderAttribute) : true;
             if (enabled) {
-                BeanDefinitionBuilder placeHolderBean = BeanDefinitionBuilder.rootBeanDefinition(ConstrettoPropertyPlaceholderConfigurer.class);
-                placeHolderBean.addConstructorArgValue(configuration);
-                if (propertyPlaceholderElement != null) {
-                    boolean ignoreUnresolved = propertyPlaceholderElement.getAttribute("ignore-unresolved-placeholders") != null ? Boolean.valueOf(propertyPlaceholderElement.getAttribute("ignore-unresolved-placeholders")) : false;
-                    String prefix = propertyPlaceholderElement.getAttribute("prefix") != null ? propertyPlaceholderElement.getAttribute("prefix") : "${";
-                    String suffix = propertyPlaceholderElement.getAttribute("suffix") != null ? propertyPlaceholderElement.getAttribute("suffix") : "}";
-                    placeHolderBean.addPropertyValue("placeholderPrefix", prefix);
-                    placeHolderBean.addPropertyValue("placeholderSuffix", suffix);
-                    placeHolderBean.addPropertyValue("ignoreUnresolvablePlaceholders", ignoreUnresolved);
-
-                }
-                parserContext.getRegistry().registerBeanDefinition(CONSTRETTO_PLACEHOLDER_BEAN_NAME, placeHolderBean.getBeanDefinition());
+                createPropertyPlaceholder(configuration, parserContext, propertyPlaceholderElement);
             }
         }
+
 
         private void processAnnotationConfig(Element element, ConstrettoConfiguration configuration, AssemblyContextResolver assemblyContextResolver, ParserContext parserContext) {
             String annotationConfigAttribute = element.getAttribute("annotation-config");
             boolean enabled = annotationConfigAttribute != null ? Boolean.valueOf(annotationConfigAttribute) : true;
             if (enabled) {
-                BeanDefinitionBuilder configurationAnnotationConfigurerBean = BeanDefinitionBuilder.rootBeanDefinition(ConfigurationAnnotationConfigurer.class);
-                configurationAnnotationConfigurerBean.addConstructorArgValue(configuration);
-                configurationAnnotationConfigurerBean.addConstructorArgValue(assemblyContextResolver);
-                parserContext.getRegistry().registerBeanDefinition(CONSTRETTO_CONFIGURATION_ANNOTATION_BEAN_NAME, configurationAnnotationConfigurerBean.getBeanDefinition());
-                BeanDefinitionBuilder environmentAnnotationConfigurerBean = BeanDefinitionBuilder.rootBeanDefinition(EnvironmentAnnotationConfigurer.class);
-                environmentAnnotationConfigurerBean.addConstructorArgValue(assemblyContextResolver);
-                parserContext.getRegistry().registerBeanDefinition(CONSTRETTO_ENVIRONMENT_ANNOTATION_BEAN_NAME, environmentAnnotationConfigurerBean.getBeanDefinition());
+                createAnnotationConfigBean(configuration, assemblyContextResolver, parserContext);
             }
         }
 
@@ -190,7 +216,7 @@ public class ConstrettoNamespaceHandler extends NamespaceHandlerSupport {
             }
         }
 
-        public static List<Element> getAllChildElements(Element element) {
+        public List<Element> getAllChildElements(Element element) {
             Assert.notNull(element, "Element must not be null");
             NodeList childNodes = element.getChildNodes();
             List<Element> childElements = new ArrayList<Element>();
@@ -204,7 +230,7 @@ public class ConstrettoNamespaceHandler extends NamespaceHandlerSupport {
         }
     }
 
-    private static class ImportDefinitionParser implements BeanDefinitionParser {
+    private class ImportDefinitionParser implements BeanDefinitionParser {
 
         public BeanDefinition parse(Element element, ParserContext parserContext) {
             String targetEnvironmentsCsv = element.getAttribute("environments");
@@ -236,4 +262,17 @@ public class ConstrettoNamespaceHandler extends NamespaceHandlerSupport {
 
     }
 
+    private class PropertyPlaceHolderDefinitionParser implements BeanDefinitionParser {
+        public BeanDefinition parse(Element element, ParserContext parserContext) {
+            createPropertyPlaceholder(null, parserContext, element);
+            return null;
+        }
+    }
+
+    private class AnnotationConfigDefinitionParser implements BeanDefinitionParser {
+        public BeanDefinition parse(Element element, ParserContext parserContext) {
+            createAnnotationConfigBean(null, null, parserContext);
+            return null;
+        }
+    }
 }
