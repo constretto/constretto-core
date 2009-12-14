@@ -14,7 +14,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>constretto-test-junit-4.5</artifactId>
-  <name>Constretto :: Test (junit 4.5)- ${project.version}</name>
+  <name>Constretto :: Test (junit 4.5) - ${project.version}</name>
 
   <dependencies>
     <dependency>
