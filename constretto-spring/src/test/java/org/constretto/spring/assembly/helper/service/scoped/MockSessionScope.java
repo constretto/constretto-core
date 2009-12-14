@@ -24,6 +24,10 @@ public class MockSessionScope implements Scope {
     public void registerDestructionCallback(String s, Runnable runnable) {
     }
 
+    public Object resolveContextualObject(String key) {
+        return null; 
+    }
+
     public String getConversationId() {
         return null;
     }

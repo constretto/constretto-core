@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.QualifierAnnotationAutowireC
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.config.DependencyDescriptor;
 import org.springframework.beans.factory.support.AutowireCandidateResolver;
+import org.springframework.core.MethodParameter;
 
 /**
  * Internal class that reads &#064;Environment annotations on classes and removes all classes that are not annotated
@@ -22,11 +23,7 @@ import org.springframework.beans.factory.support.AutowireCandidateResolver;
  *
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
-public class ConstrettoAutowireCandidateResolver implements AutowireCandidateResolver {
-    private QualifierAnnotationAutowireCandidateResolver annotationAutowireCandidateResolver = new QualifierAnnotationAutowireCandidateResolver();
-
-    public ConstrettoAutowireCandidateResolver() {
-    }
+public class ConstrettoAutowireCandidateResolver extends QualifierAnnotationAutowireCandidateResolver {
 
     @SuppressWarnings("unchecked")
     public boolean isAutowireCandidate(BeanDefinitionHolder bdHolder, DependencyDescriptor descriptor) {
@@ -38,6 +35,6 @@ public class ConstrettoAutowireCandidateResolver implements AutowireCandidateRes
                 }
             }
         }
-        return annotationAutowireCandidateResolver.isAutowireCandidate(bdHolder, descriptor);
-    }
+        return super.isAutowireCandidate(bdHolder, descriptor);
+    }    
 }
