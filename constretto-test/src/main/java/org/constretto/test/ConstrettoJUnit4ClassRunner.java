@@ -13,15 +13,15 @@ package org.constretto.test;
 import org.constretto.annotation.Tags;
 import org.constretto.internal.ConstrettoUtils;
 import org.constretto.internal.resolver.DefaultConfigurationContextResolver;
+import org.junit.internal.runners.InitializationError;
+import org.junit.internal.runners.JUnit4ClassRunner;
 import org.junit.runner.notification.RunNotifier;
-import org.junit.runners.BlockJUnit4ClassRunner;
-import org.junit.runners.model.InitializationError;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  * @author <a href="mailto:thor.aage.eldby@arktekk.no">Thor &Aring;ge Eldby</a>
  */
-public class ConstrettoJUnit4ClassRunner extends BlockJUnit4ClassRunner {
+public class ConstrettoJUnit4ClassRunner extends JUnit4ClassRunner {
 
     public ConstrettoJUnit4ClassRunner(Class<?> clazz) throws InitializationError {
         super(clazz);

@@ -15,8 +15,8 @@ import org.constretto.internal.ConstrettoUtils;
 import org.constretto.internal.resolver.DefaultConfigurationContextResolver;
 import org.constretto.spring.annotation.Environment;
 import org.constretto.spring.internal.resolver.DefaultAssemblyContextResolver;
+import org.junit.internal.runners.InitializationError;
 import org.junit.runner.notification.RunNotifier;
-import org.junit.runners.model.InitializationError;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
