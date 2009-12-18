@@ -245,11 +245,6 @@
             <name>Constretto public maven repository</name>
             <url>http://repo.constretto.org/content/groups/public</url>
         </repository>
-        <repository>
-            <id>org.springframework.maven.milestone</id>
-            <name>Maven Central Compatible Spring Milestone Repository</name>
-            <url>http://maven.springframework.org/milestone</url>
-        </repository>
     </repositories>
 
     <distributionManagement>
