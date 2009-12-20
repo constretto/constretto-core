@@ -17,7 +17,7 @@
     <inceptionYear>2008</inceptionYear>
     <url>http://constretto.org</url>
     <packaging>pom</packaging>
-    
+
     <description>
         This project aims to help java application developers to manage
         their configuration issues.
@@ -28,7 +28,7 @@
         <module>constretto-core</module>
         <module>constretto-spring</module>
         <module>constretto-test</module>
-		<module>constretto-test-junit-4.5</module>
+        <module>constretto-test-junit-4.5</module>
     </modules>
 
     <scm>
@@ -90,10 +90,26 @@
         </license>
     </licenses>
 
-    <properties>
-        <spring.version>2.5.6</spring.version>
-        <junit.version>4.4</junit.version>
-    </properties>
+    <profiles>
+        <profile>
+            <id>spring2.x</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <spring.version>2.5.6</spring.version>
+                <junit.version>4.4</junit.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>spring3.x</id>
+            <properties>
+                <spring.version>3.0.0.RELEASE</spring.version>
+                <junit.version>4.5</junit.version>
+            </properties>
+        </profile>
+    </profiles>
+
 
     <dependencyManagement>
         <dependencies>
@@ -184,7 +200,7 @@
     </dependencyManagement>
 
     <build>
-        
+
         <plugins>
             <plugin>
                 <groupId>com.atlassian.maven.plugins</groupId>
