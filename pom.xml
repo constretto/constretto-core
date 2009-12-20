@@ -32,7 +32,7 @@
     </modules>
 
     <scm>
-        <developerConnection>scm:git@github.com:constretto/constretto-core.git</developerConnection>
+        <developerConnection>scm:git:git@github.com:constretto/constretto-core.git</developerConnection>
         <url>http://github.com/constretto/constretto-core</url>
     </scm>
 
