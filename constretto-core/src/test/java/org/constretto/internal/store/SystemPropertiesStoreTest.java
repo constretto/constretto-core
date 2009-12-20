@@ -35,6 +35,13 @@ public class SystemPropertiesStoreTest {
         assertNotNull(set);
         assertEquals(1, set.size());
         assertEquals("user0", set.get(0).getProperties().get("somedb.username"));
+        assertEquals(System.getenv().get("USER"), set.get(0).getProperties().get("USER"));
+        System.setProperty("USER", "mrTest");
+        store = new SystemPropertiesStore();
+        set = store.parseConfiguration();
+        assertEquals("mrTest", set.get(0).getProperties().get("USER"));
     }
+
+
 
 }

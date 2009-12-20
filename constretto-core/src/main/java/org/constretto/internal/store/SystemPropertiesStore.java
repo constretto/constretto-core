@@ -31,6 +31,10 @@ public class SystemPropertiesStore implements ConfigurationStore {
     public List<TaggedPropertySet> parseConfiguration() {
         final Map<String, String> properties = new HashMap<String, String>();
         Properties systemProperties = getProperties();
+        Set<Map.Entry<String, String>> systemEnv = System.getenv().entrySet();
+        for (Map.Entry<String, String> envEntry : systemEnv) {
+            properties.put(envEntry.getKey(),envEntry.getValue());
+        }
         for (Object key : systemProperties.keySet()) {
             String keyAsString = (String) key;
             properties.put(keyAsString, getProperty(keyAsString));
