@@ -32,17 +32,17 @@
     </modules>
 
     <scm>
-        <developerConnection>scm:git:http://git.constretto.org/</developerConnection>
-        <url>http://constretto.org/repositories/show/constretto</url>
+        <developerConnection>scm:git@github.com:constretto/constretto-core.git</developerConnection>
+        <url>http://github.com/constretto/constretto-core</url>
     </scm>
 
     <issueManagement>
-        <system>redmine</system>
-        <url>http://constretto.org/projects/constretto/issues</url>
+        <system>lighthouse</system>
+        <url>http://constretto.lighthouseapp.com/projects/30709-constretto-core</url>
     </issueManagement>
 
     <ciManagement>
-        <system>bamboo</system>
+        <system>hudson</system>
         <url>http://ci.constretto.org</url>
     </ciManagement>
 
@@ -200,7 +200,6 @@
     </dependencyManagement>
 
     <build>
-
         <plugins>
             <plugin>
                 <groupId>com.atlassian.maven.plugins</groupId>
