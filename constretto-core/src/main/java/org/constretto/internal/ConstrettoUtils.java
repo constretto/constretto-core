@@ -43,7 +43,7 @@ public class ConstrettoUtils {
     }
 
     public static boolean isEmpty(String string){
-        return (string == null || string.trim().isEmpty());
+        return (string == null || string.trim().length() == 0);
     }
 
     public static String substringBetween(String str, String open, String close) {
