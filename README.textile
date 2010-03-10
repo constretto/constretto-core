@@ -16,12 +16,12 @@ Constretto is built with maven, so if you are using maven, you can simply add Co
 		<dependency>
 			<groupId>org.constretto</groupId>
 			<artifactId>constretto-api</artifactId>
-			<version>1.0-rc-12</version>
+			<version>1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.constretto</groupId>
 			<artifactId>constretto-core</artifactId>
-			<version>1.0-rc-12</version>
+			<version>1.0</version>
 			<scope>runtime</scope>
 		</dependency>
 		...
@@ -34,7 +34,7 @@ If you would like to use the Spring support add:
 	<dependency>
 		<groupId>org.constretto</groupId>
 		<artifactId>constretto-spring</artifactId>
-		<version>1.0-rc-12</version>
+		<version>1.0</version>
 	</dependency>
 </pre>
 
@@ -45,7 +45,7 @@ If you would like to use the Constretto Junit support with junit 4.4 (spring 2.5
 	<dependency>
 		<groupId>org.constretto</groupId>
 		<artifactId>constretto-test</artifactId>
-		<version>1.0-rc-12</version>
+		<version>1.0</version>
 		<scope>test</scope>
 	</dependency>
 </pre>
@@ -56,7 +56,7 @@ If you would like to use the Constretto Junit support with junit 4.5 (spring 3.x
 	<dependency>
 		<groupId>org.constretto</groupId>
 		<artifactId>constretto-test-junit-4.5</artifactId>
-		<version>1.0-rc-12</version>
+		<version>1.0</version>
 		<scope>test</scope>
 	</dependency>
 </pre>
@@ -113,7 +113,7 @@ To tell spring to use Constretto:
 	       xsi:schemaLocation="http://www.springframework.org/schema/beans
 	           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
 	           http://constretto.org/schema/constretto
-	           http://constretto.org/schema/constretto/constretto-1.1.xsd">
+	           http://constretto.org/schema/constretto/constretto-1.2.xsd">
 
 	    <constretto:configuration annotation-config="true" property-placeholder="true">
 	        <constretto:stores>
