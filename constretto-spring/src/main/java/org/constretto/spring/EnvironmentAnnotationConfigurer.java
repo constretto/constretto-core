@@ -153,7 +153,7 @@ public class EnvironmentAnnotationConfigurer implements BeanFactoryPostProcessor
                     equalPriorityBeans.add(highestPriorityBean.getBeanClassName());
                 }
                 throw new ConstrettoException(
-                        "More than one bean with the class or interface registered with same tag. Could resolve priority. To fix this, remove one of the following beans "
+                        "More than one bean with the class or interface + [" + lookupClass.getSimpleName() +"] registered with same tag. Could not resolve priority. To fix this, remove one of the following beans "
                                 + equalPriorityBeans.toString());
             }
         }
