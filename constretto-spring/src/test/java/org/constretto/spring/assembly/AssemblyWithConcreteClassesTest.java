@@ -14,7 +14,9 @@ package org.constretto.spring.assembly;
 import org.constretto.spring.assembly.helper.service.concreteclasses.CommonInterface;
 import org.constretto.spring.assembly.helper.service.concreteclasses.CommonInterfaceDefault;
 import org.constretto.spring.assembly.helper.service.concreteclasses.CommonInterfaceStub;
+import org.constretto.spring.assembly.helper.service.concreteclasses.PureTestClazz;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,52 +33,80 @@ public class AssemblyWithConcreteClassesTest {
 
 
     @Test
-    public void injectionUsingConstrettoWithEnvironmeentSetAndUsinginterface(){
-        class MyConsumer{
+    public void injectionUsingConstrettoWithEnvironmentSetAndUsinginterface() {
+        class MyConsumer {
             @Autowired
             CommonInterface commonInterface;
         }
-        setProperty(ASSEMBLY_KEY,"stub");
+        setProperty(ASSEMBLY_KEY, "stub");
         ApplicationContext ctx = loadContextAndInjectWithConstretto();
 
         MyConsumer consumer = new MyConsumer();
         ctx.getAutowireCapableBeanFactory().autowireBean(consumer);
-        Assert.assertEquals(consumer.commonInterface.getClass(),CommonInterfaceStub.class);
+        Assert.assertEquals(consumer.commonInterface.getClass(), CommonInterfaceStub.class);
     }
 
     @Test
-    public void injectionUsingConstrettoWithEnvironmeentSetAndUsingConcreteClass(){
-        class MyConsumer{
+    public void injectionUsingConstrettoWithEnvironmentSetAndUsingConcreteClass() {
+        class MyConsumer {
             @Autowired
             CommonInterfaceDefault commonInterface;
         }
-        setProperty(ASSEMBLY_KEY,"stub");
+        setProperty(ASSEMBLY_KEY, "stub");
         ApplicationContext ctx = loadContextAndInjectWithConstretto();
 
         MyConsumer consumer = new MyConsumer();
         ctx.getAutowireCapableBeanFactory().autowireBean(consumer);
-        Assert.assertEquals(consumer.commonInterface.getClass(),CommonInterfaceDefault.class);
+        Assert.assertEquals(consumer.commonInterface.getClass(), CommonInterfaceDefault.class);
+    }
+
+    @Test
+    @Ignore("Fix this. This really should work") //TODO:Fix this in 1.0.1 || 1.0.2
+    public void injectionUsingConstrettoWithRecognizedEnvironmentAutowiringConcreteClassThatDoNotImplementAnInterface() {
+        class MyConsumer {
+            @Autowired
+            PureTestClazz pureTestClazz;
+        }
+        setProperty(ASSEMBLY_KEY, "stub");
+        ApplicationContext ctx = loadContextAndInjectWithConstretto();
+
+        MyConsumer consumer = new MyConsumer();
+        ctx.getAutowireCapableBeanFactory().autowireBean(consumer);
+        Assert.assertEquals(consumer.pureTestClazz.getClass(), PureTestClazz.class);
+    }
+
+    @Test(expected = BeanCreationException.class)
+    public void injectionUsingConstrettoWitUnhRecognizedEnvironmentAutowiringConcreteClassThatDoNotImplementAnInterface() {
+        class MyConsumer {
+            @Autowired
+            PureTestClazz pureTestClazz;
+        }
+        setProperty(ASSEMBLY_KEY, "unknown");
+        ApplicationContext ctx = loadContextAndInjectWithConstretto();
+
+        MyConsumer consumer = new MyConsumer();
+        ctx.getAutowireCapableBeanFactory().autowireBean(consumer);
     }
 
 
     @Test
-    public void injectionUsingConstrettoWithUnknownEnvironmentSetAndUsingInterface(){
-        class MyConsumer{
+    public void injectionUsingConstrettoWithUnknownEnvironmentSetAndUsingInterface() {
+        class MyConsumer {
             @Autowired
             CommonInterface commonInterface;
         }
-        setProperty(ASSEMBLY_KEY,"unknown");
+        setProperty(ASSEMBLY_KEY, "unknown");
         ApplicationContext ctx = loadContextAndInjectWithConstretto();
 
         MyConsumer consumer = new MyConsumer();
         ctx.getAutowireCapableBeanFactory().autowireBean(consumer);
-        Assert.assertEquals(consumer.commonInterface.getClass(),CommonInterfaceDefault.class);
+        Assert.assertEquals(consumer.commonInterface.getClass(), CommonInterfaceDefault.class);
     }
 
-    
+
     @Test
-    public void injectionNotUsingConstrettoUsingConcreteClass(){
-        class MyConsumer{
+    public void injectionNotUsingConstrettoUsingConcreteClass() {
+        class MyConsumer {
             @Autowired
             CommonInterfaceDefault commonInterface;
         }
@@ -84,13 +114,13 @@ public class AssemblyWithConcreteClassesTest {
 
         MyConsumer consumer = new MyConsumer();
         ctx.getAutowireCapableBeanFactory().autowireBean(consumer);
-        Assert.assertEquals(consumer.commonInterface.getClass(),CommonInterfaceDefault.class);
+        Assert.assertEquals(consumer.commonInterface.getClass(), CommonInterfaceDefault.class);
     }
 
 
     @Test(expected = BeanCreationException.class)
-    public void injectionNotUsingConstrettoUsingInterface(){
-        class MyConsumer{
+    public void injectionNotUsingConstrettoUsingInterface() {
+        class MyConsumer {
             @Autowired
             CommonInterface commonInterface;
         }
@@ -98,7 +128,7 @@ public class AssemblyWithConcreteClassesTest {
 
         MyConsumer consumer = new MyConsumer();
         ctx.getAutowireCapableBeanFactory().autowireBean(consumer);
-        Assert.assertEquals(consumer.commonInterface.getClass(),CommonInterfaceDefault.class);
+        Assert.assertEquals(consumer.commonInterface.getClass(), CommonInterfaceDefault.class);
     }
 
 
