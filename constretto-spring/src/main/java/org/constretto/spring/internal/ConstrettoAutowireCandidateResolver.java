@@ -11,11 +11,14 @@
 package org.constretto.spring.internal;
 
 import org.constretto.spring.EnvironmentAnnotationConfigurer;
+import org.constretto.spring.annotation.Environment;
 import org.springframework.beans.factory.annotation.QualifierAnnotationAutowireCandidateResolver;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.config.DependencyDescriptor;
 import org.springframework.beans.factory.support.AutowireCandidateResolver;
 import org.springframework.core.MethodParameter;
+
+import static org.constretto.spring.EnvironmentAnnotationConfigurer.findEnvironmentAnnotation;
 
 /**
  * Internal class that reads &#064;Environment annotations on classes and removes all classes that are not annotated
@@ -35,6 +38,12 @@ public class ConstrettoAutowireCandidateResolver extends QualifierAnnotationAuto
                 }
             }
         }
-        return super.isAutowireCandidate(bdHolder, descriptor);
+
+        if (descriptor.getDependencyType().isInterface()){
+            return super.isAutowireCandidate(bdHolder, descriptor);
+        } else {
+            return findEnvironmentAnnotation(descriptor.getDependencyType()) == null || super.isAutowireCandidate(bdHolder, descriptor);
+        }
+
     }    
 }

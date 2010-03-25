@@ -91,7 +91,7 @@ public class EnvironmentAnnotationConfigurer implements BeanFactoryPostProcessor
     }
 
     @SuppressWarnings("unchecked")
-    private Environment findEnvironmentAnnotation(Class beanClass) {
+    public static Environment findEnvironmentAnnotation(Class beanClass) {
         if (beanClass.isAnnotationPresent(Environment.class)) {
             return (Environment) beanClass.getAnnotation(Environment.class);
         } else {
@@ -99,7 +99,7 @@ public class EnvironmentAnnotationConfigurer implements BeanFactoryPostProcessor
         }
     }
 
-    private Environment findEnvironmentMetaAnnotation(Set<Annotation> visited, Annotation[] annotations) {
+    public static Environment findEnvironmentMetaAnnotation(Set<Annotation> visited, Annotation[] annotations) {
         for (Annotation annotation : annotations) {
             if (annotation instanceof Environment) {
                 return (Environment) annotation;
