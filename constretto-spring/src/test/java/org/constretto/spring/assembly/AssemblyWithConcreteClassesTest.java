@@ -14,10 +14,9 @@ package org.constretto.spring.assembly;
 import org.constretto.spring.assembly.helper.service.concreteclasses.CommonInterface;
 import org.constretto.spring.assembly.helper.service.concreteclasses.CommonInterfaceDefault;
 import org.constretto.spring.assembly.helper.service.concreteclasses.CommonInterfaceStub;
-import org.constretto.spring.internal.resolver.DefaultAssemblyContextResolver;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -32,13 +31,13 @@ public class AssemblyWithConcreteClassesTest {
 
 
     @Test
-    public void injectionWithEnvironmeentSetAndUsinginterface(){
+    public void injectionUsingConstrettoWithEnvironmeentSetAndUsinginterface(){
         class MyConsumer{
             @Autowired
             CommonInterface commonInterface;
         }
         setProperty(ASSEMBLY_KEY,"stub");
-        ApplicationContext ctx = loadContextAndInjectConfigurationService();
+        ApplicationContext ctx = loadContextAndInjectWithConstretto();
 
         MyConsumer consumer = new MyConsumer();
         ctx.getAutowireCapableBeanFactory().autowireBean(consumer);
@@ -46,13 +45,13 @@ public class AssemblyWithConcreteClassesTest {
     }
 
     @Test
-    public void injectionWithEnvironmeentSetAndUsingConcreteClass(){
+    public void injectionUsingConstrettoWithEnvironmeentSetAndUsingConcreteClass(){
         class MyConsumer{
             @Autowired
             CommonInterfaceDefault commonInterface;
         }
         setProperty(ASSEMBLY_KEY,"stub");
-        ApplicationContext ctx = loadContextAndInjectConfigurationService();
+        ApplicationContext ctx = loadContextAndInjectWithConstretto();
 
         MyConsumer consumer = new MyConsumer();
         ctx.getAutowireCapableBeanFactory().autowireBean(consumer);
@@ -61,13 +60,27 @@ public class AssemblyWithConcreteClassesTest {
 
 
     @Test
-    public void injectionWithUnknownEnvironmeentSetAndUsingInterface(){
+    public void injectionUsingConstrettoWithUnknownEnvironmentSetAndUsingInterface(){
         class MyConsumer{
             @Autowired
             CommonInterface commonInterface;
         }
         setProperty(ASSEMBLY_KEY,"unknown");
-        ApplicationContext ctx = loadContextAndInjectConfigurationService();
+        ApplicationContext ctx = loadContextAndInjectWithConstretto();
+
+        MyConsumer consumer = new MyConsumer();
+        ctx.getAutowireCapableBeanFactory().autowireBean(consumer);
+        Assert.assertEquals(consumer.commonInterface.getClass(),CommonInterfaceDefault.class);
+    }
+
+    
+    @Test
+    public void injectionNotUsingConstrettoUsingConcreteClass(){
+        class MyConsumer{
+            @Autowired
+            CommonInterfaceDefault commonInterface;
+        }
+        ApplicationContext ctx = loadContextAndInjectWithoutConstretto();
 
         MyConsumer consumer = new MyConsumer();
         ctx.getAutowireCapableBeanFactory().autowireBean(consumer);
@@ -75,9 +88,29 @@ public class AssemblyWithConcreteClassesTest {
     }
 
 
-    private ApplicationContext loadContextAndInjectConfigurationService() {
+    @Test(expected = BeanCreationException.class)
+    public void injectionNotUsingConstrettoUsingInterface(){
+        class MyConsumer{
+            @Autowired
+            CommonInterface commonInterface;
+        }
+        ApplicationContext ctx = loadContextAndInjectWithoutConstretto();
+
+        MyConsumer consumer = new MyConsumer();
+        ctx.getAutowireCapableBeanFactory().autowireBean(consumer);
+        Assert.assertEquals(consumer.commonInterface.getClass(),CommonInterfaceDefault.class);
+    }
+
+
+    private ApplicationContext loadContextAndInjectWithConstretto() {
         return new ClassPathXmlApplicationContext(
-                "org/constretto/spring/assembly/AssemblyWithConcreteClassesTest-context.xml");
+                "org/constretto/spring/assembly/AssemblyWithConcreteClassesTestWithConstretto-context.xml");
+
+    }
+
+    private ApplicationContext loadContextAndInjectWithoutConstretto() {
+        return new ClassPathXmlApplicationContext(
+                "org/constretto/spring/assembly/AssemblyWithConcreteClassesTestWithoutConstretto-context.xml");
 
     }
 }
