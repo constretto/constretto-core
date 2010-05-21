@@ -84,7 +84,7 @@ public class EnvironmentAnnotationConfigurer implements BeanFactoryPostProcessor
                         }
                     }
                 } catch (ClassNotFoundException e) {
-                    throw new ConstrettoException("Could not instanciateclass [" + beanDefinition.getBeanClassName() + "] for bean [" + beanName + "]", e);
+                    beanDefinition.setAutowireCandidate(false);
                 }
             }
         }
