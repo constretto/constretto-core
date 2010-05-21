@@ -3,23 +3,22 @@ package org.constretto.internal.provider;
 import org.constretto.ConstrettoBuilder;
 import org.constretto.ConstrettoConfiguration;
 import org.constretto.Property;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertTrue;
 import org.springframework.core.io.DefaultResourceLoader;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author <a href="mailto:kaare.nilsen@arktekk.no">Kaare Nilsen</a>
  */
 public class ConstrettoConfigurationTest {
     private ConstrettoConfiguration constrettoConfiguration;
-    private final DefaultResourceLoader resourceLoader = new DefaultResourceLoader();
+    private final DefaultResourceLoader resourceLoader = new DefaultResourceLoader(this.getClass().getClassLoader());
 
 
     @Before

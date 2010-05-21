@@ -130,7 +130,7 @@ public class ConstrettoNamespaceHandler extends NamespaceHandlerSupport {
                         List<Element> resources = DomUtils.getChildElementsByTagName(store, "resource");
                         for (Element resource : resources) {
                             String location = resource.getAttribute("location");
-                            propertiesBuilder.addResource(new DefaultResourceLoader().getResource(location));
+                            propertiesBuilder.addResource(new DefaultResourceLoader(this.getClass().getClassLoader()).getResource(location));
                         }
                         propertiesBuilder.done();
                     } else if ("ini-store".equals(tagName)) {
@@ -138,7 +138,7 @@ public class ConstrettoNamespaceHandler extends NamespaceHandlerSupport {
                         List<Element> resources = DomUtils.getChildElementsByTagName(store, "resource");
                         for (Element resource : resources) {
                             String location = resource.getAttribute("location");
-                            iniBuilder.addResource(new DefaultResourceLoader().getResource(location));
+                            iniBuilder.addResource(new DefaultResourceLoader(this.getClass().getClassLoader()).getResource(location));
                         }
                         iniBuilder.done();
                     } else if ("system-properties-store".equals(tagName)) {

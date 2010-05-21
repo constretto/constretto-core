@@ -25,6 +25,6 @@ import org.springframework.core.io.Resource;
 public class SpringResourceValueConverter implements ValueConverter<Resource> {
 
     public Resource fromString(String value) throws ConstrettoConversionException {
-        return new DefaultResourceLoader().getResource(value);
+        return new DefaultResourceLoader(this.getClass().getClassLoader()).getResource(value);
     }
 }
