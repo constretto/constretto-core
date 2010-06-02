@@ -133,6 +133,14 @@ public class ConstrettoNamespaceHandler extends NamespaceHandlerSupport {
                             propertiesBuilder.addResource(new DefaultResourceLoader(this.getClass().getClassLoader()).getResource(location));
                         }
                         propertiesBuilder.done();
+                    } else if ("encrypted-properties-store".equals(tagName)) {
+                        ConstrettoBuilder.EncryptedPropertiesStoreBuilder propertiesBuilder = builder.createEncryptedPropertiesStore(store.getAttribute("password-property"));
+                        List<Element> resources = DomUtils.getChildElementsByTagName(store, "resource");
+                        for (Element resource : resources) {
+                            String location = resource.getAttribute("location");
+                            propertiesBuilder.addResource(new DefaultResourceLoader().getResource(location));
+                        }
+                        propertiesBuilder.done();
                     } else if ("ini-store".equals(tagName)) {
                         ConstrettoBuilder.IniFileConfigurationStoreBuilder iniBuilder = builder.createIniFileConfigurationStore();
                         List<Element> resources = DomUtils.getChildElementsByTagName(store, "resource");

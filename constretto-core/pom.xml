@@ -39,6 +39,12 @@
       <artifactId>commons-beanutils</artifactId>
       <optional>true</optional>
     </dependency>
+    <dependency>
+      <groupId>org.jasypt</groupId>
+      <artifactId>jasypt</artifactId>
+      <version>1.4</version>
+      <optional>true</optional>
+    </dependency>
   </dependencies>
 
 </project>

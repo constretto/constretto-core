@@ -58,8 +58,17 @@ public class PropertiesStore implements ConfigurationStore {
 
     private void addPropertiesToMap(Properties... props) {
         for (Properties p : props) {
-            CollectionUtils.mergePropertiesIntoMap(p, this.properties);
+            CollectionUtils.mergePropertiesIntoMap(parseProperties(p), this.properties);
         }
+    }
+
+    /**
+     * Used by sublclasses
+     * @param props the properties currently read
+     * @return the argument
+     */
+    protected Properties parseProperties(Properties props) {
+        return props;
     }
 
     /**

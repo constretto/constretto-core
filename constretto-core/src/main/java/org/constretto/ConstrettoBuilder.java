@@ -17,6 +17,7 @@ package org.constretto;
 
 import org.constretto.internal.provider.ConfigurationProvider;
 import org.constretto.internal.resolver.DefaultConfigurationContextResolver;
+import org.constretto.internal.store.EncryptedPropertiesStore;
 import org.constretto.internal.store.IniFileConfigurationStore;
 import org.constretto.internal.store.ObjectConfigurationStore;
 import org.constretto.internal.store.PropertiesStore;
@@ -63,6 +64,10 @@ public class ConstrettoBuilder {
         return new PropertiesStoreBuilder();
     }
 
+    public EncryptedPropertiesStoreBuilder createEncryptedPropertiesStore(String passwordProperty) {
+        return new EncryptedPropertiesStoreBuilder(passwordProperty);
+    }
+
     public IniFileConfigurationStoreBuilder createIniFileConfigurationStore() {
         return new IniFileConfigurationStoreBuilder();
     }
@@ -80,6 +85,7 @@ public class ConstrettoBuilder {
     //
     // Store builders
     //
+
     private interface StoreBuilder {
         public ConstrettoBuilder done();
     }
@@ -88,6 +94,24 @@ public class ConstrettoBuilder {
         private final PropertiesStore store = new PropertiesStore();
 
         public PropertiesStoreBuilder addResource(Resource resource) {
+            store.addResource(resource);
+            return this;
+        }
+
+        public ConstrettoBuilder done() {
+            configurationProvider.addConfigurationStore(store);
+            return builder;
+        }
+    }
+
+    public class EncryptedPropertiesStoreBuilder implements StoreBuilder {
+        private final EncryptedPropertiesStore store;
+
+        public EncryptedPropertiesStoreBuilder(String passwordProperty) {
+            store = new EncryptedPropertiesStore(passwordProperty);
+        }
+
+        public EncryptedPropertiesStoreBuilder addResource(Resource resource) {
             store.addResource(resource);
             return this;
         }
