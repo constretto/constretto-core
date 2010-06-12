@@ -29,6 +29,7 @@ import org.constretto.model.ConfigurationNode;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 
 import java.lang.annotation.Annotation;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -44,7 +45,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     private List<String> currentTags;
     private final ConfigurationNode configuration;
     private LocalVariableTableParameterNameDiscoverer nameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
-    private Set<Object> configuredObjects = new HashSet<Object>();
+    private Set<WeakReference<Object>> configuredObjects = new HashSet<WeakReference<Object>>();
 
     public DefaultConstrettoConfiguration(ConfigurationNode configuration, List<String> currentTags) {
         this.configuration = configuration;
@@ -177,10 +178,13 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     //
     // Helper methods
     //
+
     private void reconfigure() {
-        final Object[] objects = configuredObjects.toArray();
-        for (Object object : objects) {
-            on(object);
+        WeakReference[] references = configuredObjects.toArray(new WeakReference[configuredObjects.size()]);
+        for (WeakReference reference : references) {
+            if (reference != null && reference.get() != null) {
+                on(reference.get());
+            }
         }
     }
 
@@ -231,7 +235,16 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     private <T> void injectConfiguration(T objectToConfigure) {
         injectFields(objectToConfigure);
         injectMethods(objectToConfigure);
-        this.configuredObjects.add(objectToConfigure);
+        boolean found = false;
+        for (WeakReference<Object> configuredObject : configuredObjects) {
+            if (configuredObject.get() == objectToConfigure) {
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            this.configuredObjects.add(new WeakReference<Object>(objectToConfigure));
+        }
     }
 
     private <T> void injectMethods(T objectToConfigure) {
