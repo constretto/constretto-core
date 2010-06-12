@@ -11,7 +11,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.constretto</groupId>
     <artifactId>constretto</artifactId>
-    <version>1.1.1-SNAPSHOT</version>
+    <version>1.2-SNAPSHOT</version>
     <name>Constretto :: Parent - ${project.version}</name>
     <inceptionYear>2008</inceptionYear>
     <url>http://constretto.org</url>

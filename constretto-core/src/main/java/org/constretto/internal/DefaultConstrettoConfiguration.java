@@ -44,6 +44,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     private List<String> currentTags;
     private final ConfigurationNode configuration;
     private LocalVariableTableParameterNameDiscoverer nameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
+    private Set<Object> configuredObjects = new HashSet<Object>();
 
     public DefaultConstrettoConfiguration(ConfigurationNode configuration, List<String> currentTags) {
         this.configuration = configuration;
@@ -134,29 +135,41 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         return null != node;
     }
 
+    public void addTag(String... newtags) {
+        currentTags.addAll(Arrays.asList(newtags));
+        reconfigure();
+    }
+
+    public void removeTag(String... newTags) {
+        for (String newTag : newTags) {
+            currentTags.remove(newTag);
+        }
+        reconfigure();
+    }
+
     public Iterator<Property> iterator() {
         List<Property> properties = new ArrayList<Property>();
-        Map<String,String> map = asMap();
+        Map<String, String> map = asMap();
         for (Map.Entry<String, String> entry : map.entrySet()) {
-            properties.add(new Property(entry.getKey(),entry.getValue()));                        
+            properties.add(new Property(entry.getKey(), entry.getValue()));
         }
         return properties.iterator();
     }
 
-     private Map<String,String> asMap(){
-        Map<String,String> properties = new HashMap<String,String>();
-        extractProperties(configuration,properties);
+    private Map<String, String> asMap() {
+        Map<String, String> properties = new HashMap<String, String>();
+        extractProperties(configuration, properties);
         return properties;
     }
 
     private void extractProperties(ConfigurationNode currentNode, Map<String, String> properties) {
-        String value = evaluateTo(currentNode.getExpression(),NULL_STRING);
-        if (!value.equals(NULL_STRING)){
-            properties.put(currentNode.getExpression(),value);
+        String value = evaluateTo(currentNode.getExpression(), NULL_STRING);
+        if (!value.equals(NULL_STRING)) {
+            properties.put(currentNode.getExpression(), value);
         }
-        if (currentNode.hasChildren()){
+        if (currentNode.hasChildren()) {
             for (ConfigurationNode child : currentNode.children()) {
-                extractProperties(child,properties);
+                extractProperties(child, properties);
             }
         }
     }
@@ -164,6 +177,13 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     //
     // Helper methods
     //
+    private void reconfigure() {
+        final Object[] objects = configuredObjects.toArray();
+        for (Object object : objects) {
+            on(object);
+        }
+    }
+
     private ConfigurationNode findElementOrThrowException(String expression) {
         List<ConfigurationNode> node = configuration.findAllBy(expression);
         ConfigurationNode resolvedNode = resolveMatch(node);
@@ -211,6 +231,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     private <T> void injectConfiguration(T objectToConfigure) {
         injectFields(objectToConfigure);
         injectMethods(objectToConfigure);
+        this.configuredObjects.add(objectToConfigure);
     }
 
     private <T> void injectMethods(T objectToConfigure) {
