@@ -1,4 +1,4 @@
-package org.constretto.spring.configuration;
+package org.constretto.internal.provider;
 
 import org.constretto.ConstrettoBuilder;
 import org.constretto.ConstrettoConfiguration;
@@ -21,15 +21,15 @@ public class DynamicReconfiguringTagsTest {
     public void createConfiguration() {
         config = new ConstrettoBuilder()
                 .createPropertiesStore()
-                .addResource(new ClassPathResource("properties/test1.properties"))
+                .addResource(new ClassPathResource("dynamic.properties"))
                 .done().getConfiguration();
     }
 
     @Test
     public void whenSettingTagsRuntimeVariablesShouldBeResolvedCorrectlyWhenUsingJavaApi() {
         assertEquals("default value", config.evaluateToString("stagedKey"));
-        config.addTag("development");
-        assertEquals("development value", config.evaluateToString("stagedKey"));
+        config.addTag("test");
+        assertEquals("test value", config.evaluateToString("stagedKey"));
     }
 
     @Test
