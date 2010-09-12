@@ -138,7 +138,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         List<Property> properties = new ArrayList<Property>();
         Map<String,String> map = asMap();
         for (Map.Entry<String, String> entry : map.entrySet()) {
-            properties.add(new Property(entry.getKey(),entry.getValue()));                        
+            properties.add(new Property(entry.getKey(),entry.getValue()));
         }
         return properties.iterator();
     }
@@ -287,42 +287,45 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
 
     private <T> void injectFields(T objectToConfigure) {
 
-        Field[] fields = objectToConfigure.getClass().getDeclaredFields();
-        for (Field field : fields) {
-            try {
-                if (field.isAnnotationPresent(Configuration.class)) {
-                    Configuration configurationAnnotation = field.getAnnotation(Configuration.class);
-                    String expression = "".equals(configurationAnnotation.expression()) ? field.getName() : configurationAnnotation.expression();
-                    field.setAccessible(true);
-                    Class<?> fieldType = field.getType();
-                    if (hasValue(expression)) {
-                        ConfigurationNode node = findElementOrThrowException(expression);
-                        field.set(objectToConfigure, processAndConvert(fieldType, node.getExpression()));
-                    } else {
-                        if (hasAnnotationDefaults(configurationAnnotation)) {
-                            if (configurationAnnotation.defaultValueFactory().equals(Configuration.EmptyValueFactory.class)) {
-                                field.set(objectToConfigure, ValueConverterRegistry.convert(fieldType, configurationAnnotation.defaultValue()));
-                            } else {
-                                ConfigurationDefaultValueFactory valueFactory = configurationAnnotation.defaultValueFactory().newInstance();
-                                field.set(objectToConfigure, valueFactory.getDefaultValue());
-                            }
-                        } else if (configurationAnnotation.required()) {
-                            throw new ConstrettoException("Missing value or default value for expression [" + expression + "] for field [" + field.getName() + "], in class [" + objectToConfigure.getClass().getName() + "] with tags " + currentTags + ".");
-                        }
-                    }
-                } else if (field.isAnnotationPresent(Tags.class)) {
-                    field.setAccessible(true);
-                    field.set(objectToConfigure, currentTags);
-                }
-            } catch (IllegalAccessException e) {
-                throw new ConstrettoException("Cold not inject configuration into field ["
-                        + field.getName() + "] annotated with @Configuration, in class [" + objectToConfigure.getClass().getName() + "] with tags " + currentTags, e);
-            } catch (InstantiationException e) {
-                throw new ConstrettoException("Cold not inject configuration into field ["
-                        + field.getName() + "] annotated with @Configuration, in class [" + objectToConfigure.getClass().getName() + "] with tags " + currentTags, e);
-            }
-        }
+        Class objectToConfigureClass = objectToConfigure.getClass();
 
+        do {
+            Field[] fields = objectToConfigureClass.getDeclaredFields();
+            for (Field field : fields) {
+                try {
+                    if (field.isAnnotationPresent(Configuration.class)) {
+                        Configuration configurationAnnotation = field.getAnnotation(Configuration.class);
+                        String expression = "".equals(configurationAnnotation.expression()) ? field.getName() : configurationAnnotation.expression();
+                        field.setAccessible(true);
+                        Class<?> fieldType = field.getType();
+                        if (hasValue(expression)) {
+                            ConfigurationNode node = findElementOrThrowException(expression);
+                            field.set(objectToConfigure, processAndConvert(fieldType, node.getExpression()));
+                        } else {
+                            if (hasAnnotationDefaults(configurationAnnotation)) {
+                                if (configurationAnnotation.defaultValueFactory().equals(Configuration.EmptyValueFactory.class)) {
+                                    field.set(objectToConfigure, ValueConverterRegistry.convert(fieldType, configurationAnnotation.defaultValue()));
+                                } else {
+                                    ConfigurationDefaultValueFactory valueFactory = configurationAnnotation.defaultValueFactory().newInstance();
+                                    field.set(objectToConfigure, valueFactory.getDefaultValue());
+                                }
+                            } else if (configurationAnnotation.required()) {
+                                throw new ConstrettoException("Missing value or default value for expression [" + expression + "] for field [" + field.getName() + "], in class [" + objectToConfigure.getClass().getName() + "] with tags " + currentTags + ".");
+                            }
+                        }
+                    } else if (field.isAnnotationPresent(Tags.class)) {
+                        field.setAccessible(true);
+                        field.set(objectToConfigure, currentTags);
+                    }
+                } catch (IllegalAccessException e) {
+                    throw new ConstrettoException("Cold not inject configuration into field ["
+                            + field.getName() + "] annotated with @Configuration, in class [" + objectToConfigure.getClass().getName() + "] with tags " + currentTags, e);
+                } catch (InstantiationException e) {
+                    throw new ConstrettoException("Cold not inject configuration into field ["
+                            + field.getName() + "] annotated with @Configuration, in class [" + objectToConfigure.getClass().getName() + "] with tags " + currentTags, e);
+                }
+            }
+        } while ((objectToConfigureClass = objectToConfigureClass.getSuperclass()) != null);
     }
 
     private boolean hasAnnotationDefaults(Configuration configurationAnnotation) {
