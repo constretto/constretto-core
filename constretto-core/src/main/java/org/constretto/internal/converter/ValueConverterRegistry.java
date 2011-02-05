@@ -22,6 +22,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
@@ -47,6 +48,8 @@ public class ValueConverterRegistry {
             put(Resource.class, new SpringResourceValueConverter());
             put(File.class, new FileValueConverter());
             put(Locale.class, new LocaleValueConverter());
+            put(Properties.class, new PropertyFileValueConverter());
+            put(InputStreamValueConverter.class, new InputStreamValueConverter());
         }
     };
 
