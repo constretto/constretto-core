@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns="http://constretto.org/schema/constretto"
+            targetNamespace="http://constretto.org/schema/constretto"
+            elementFormDefault="qualified"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+  <xsd:element name="import">
+    <xsd:annotation>
+      <xsd:documentation source="java:org.springframework.core.io.Resource">
+        Specifies an XML bean definition resource to import.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:restriction base="xsd:anyType">
+          <xsd:attribute type="xsd:string" name="environments" use="required"/>
+          <xsd:attribute type="xsd:string" name="resource" use="required">
+            <xsd:annotation>
+              <xsd:documentation>The spring xml file to import</xsd:documentation>
+            </xsd:annotation>
+          </xsd:attribute>
+        </xsd:restriction>
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="configuration" type="Configuration"/>
+
+  <xsd:complexType name="Configuration">
+    <xsd:all>
+      <xsd:element type="Stores" name="stores" minOccurs="0" maxOccurs="1"/>
+      <xsd:element type="PlaceHolderConfigurer" name="property-placeholder-configurer" maxOccurs="1"
+                   minOccurs="0"/>
+      <xsd:element type="ContextResolver" name="assembly-context-resolver" maxOccurs="1"
+                   minOccurs="0"/>
+      <xsd:element type="ContextResolver" name="configuration-context-resolver" maxOccurs="1"
+                   minOccurs="0"/>
+    </xsd:all>
+    <xsd:attribute type="xsd:boolean" name="annotation-config" use="optional" default="true"/>
+    <xsd:attribute type="xsd:boolean" name="property-placeholder" use="optional" default="true"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="PlaceHolderConfigurer">
+    <xsd:attribute type="xsd:boolean" name="ignore-unresolved-placeholders" use="optional" default="false"/>
+    <xsd:attribute type="xsd:string" name="prefix" use="optional" default="${"/>
+    <xsd:attribute type="xsd:string" name="suffix" use="optional" default="}"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="Stores">
+    <xsd:sequence minOccurs="1" maxOccurs="4">
+      <xsd:element type="PropertiesStore" name="properties-store" minOccurs="0" maxOccurs="1"/>
+      <xsd:element type="ObjectStore" name="object-store" minOccurs="0" maxOccurs="1"/>
+      <xsd:element type="IniStore" name="ini-store" minOccurs="0" maxOccurs="1"/>
+      <xsd:element type="xsd:anyType" name="system-properties-store" minOccurs="0" maxOccurs="1"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="PropertiesStore">
+    <xsd:sequence>
+      <xsd:element type="Resource" name="resource" maxOccurs="unbounded" minOccurs="1"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="ContextResolver">
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:string">
+        <xsd:attribute type="xsd:string" name="class" use="required"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="ObjectStore">
+    <xsd:sequence>
+      <xsd:element type="ObjectType" name="object" maxOccurs="unbounded" minOccurs="1"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="IniStore">
+    <xsd:sequence>
+      <xsd:element type="Resource" name="resource" minOccurs="1" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="ObjectType">
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:string">
+        <xsd:attribute type="xsd:string" name="class" use="required"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="Resource">
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:string">
+        <xsd:attribute type="xsd:string" name="location" use="required"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+</xsd:schema>
