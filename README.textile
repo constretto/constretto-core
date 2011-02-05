@@ -318,7 +318,7 @@ Or
 
 h2. How to report errors or request features?
 
-Please go to "http://constretto.lighthouseapp.com/":http://constretto.lighthouseapp.com/
+Please use the JIRA issue tracker at "http://constretto.org":http://constretto.jira.com/browse/CC
 
 h2. For further information and documentation
 
