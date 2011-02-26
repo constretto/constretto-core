@@ -15,15 +15,12 @@
  */
 package org.constretto.internal.provider;
 
-import junit.framework.Assert;
 import org.constretto.ConstrettoBuilder;
 import org.constretto.ConstrettoConfiguration;
 import org.constretto.internal.provider.helper.ContagiousConfigurationMethod;
 import org.junit.Test;
-import org.springframework.core.io.ClassPathResource;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNull;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
@@ -31,11 +28,11 @@ import static junit.framework.Assert.assertNull;
 public class DefaultValuesInAnnotationsTest {
 
     @Test
-    public void defaultValuesShouldNotBeContagious(){
+    public void defaultValuesShouldNotBeContagious() {
         ConstrettoConfiguration configuration = new ConstrettoBuilder().getConfiguration();
         ContagiousConfigurationMethod testObject = configuration.as(ContagiousConfigurationMethod.class);
         assertEquals("default-value", testObject.valueWithDefault());
-        assertEquals(null,testObject.missingValue());
-        assertEquals(null,testObject.otherMissingValue());
+        assertEquals(null, testObject.missingValue());
+        assertEquals(null, testObject.otherMissingValue());
     }
 }
