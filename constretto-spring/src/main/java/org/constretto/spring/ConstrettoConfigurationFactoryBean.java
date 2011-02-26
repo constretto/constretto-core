@@ -16,7 +16,10 @@
 package org.constretto.spring;
 
 import org.constretto.ConstrettoConfiguration;
+import org.constretto.internal.converter.ValueConverterRegistry;
+import org.constretto.spring.internal.converter.SpringResourceValueConverter;
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.core.io.Resource;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
@@ -26,6 +29,7 @@ public class ConstrettoConfigurationFactoryBean implements FactoryBean {
 
     public ConstrettoConfigurationFactoryBean(ConstrettoConfiguration configuration) {
         this.configuration = configuration;
+        ValueConverterRegistry.registerCustomConverter(Resource.class, new SpringResourceValueConverter());
     }
 
     public Object getObject() throws Exception {

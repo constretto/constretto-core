@@ -3,9 +3,9 @@ package org.constretto.internal.provider;
 import org.constretto.ConstrettoBuilder;
 import org.constretto.ConstrettoConfiguration;
 import org.constretto.Property;
+import org.constretto.model.Resource;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.core.io.DefaultResourceLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,6 @@ import static org.junit.Assert.assertTrue;
  */
 public class ConstrettoConfigurationTest {
     private ConstrettoConfiguration constrettoConfiguration;
-    private final DefaultResourceLoader resourceLoader = new DefaultResourceLoader(this.getClass().getClassLoader());
 
 
     @Before
@@ -26,7 +25,7 @@ public class ConstrettoConfigurationTest {
         constrettoConfiguration = new ConstrettoBuilder()
                 .addCurrentTag("production")
                 .createPropertiesStore()
-                .addResource(resourceLoader.getResource("classpath:test.properties"))
+                .addResource(new Resource("classpath:test.properties"))
                 .done()
                 .getConfiguration();
     }

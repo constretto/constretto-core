@@ -18,13 +18,14 @@ package org.constretto.internal.store;
 import org.constretto.ConfigurationStore;
 import org.constretto.internal.ConstrettoUtils;
 import org.constretto.exception.ConstrettoException;
+import org.constretto.model.Resource;
 import org.constretto.model.TaggedPropertySet;
-import org.springframework.core.io.Resource;
-import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+
+import static org.constretto.internal.ConstrettoUtils.mergePropertiesIntoMap;
 
 /**
  * This is a store for text files implementing key=value pairs. Also, it supports adding a convention of tgsa to
@@ -58,7 +59,7 @@ public class PropertiesStore implements ConfigurationStore {
 
     private void addPropertiesToMap(Properties... props) {
         for (Properties p : props) {
-            CollectionUtils.mergePropertiesIntoMap(parseProperties(p), this.properties);
+            mergePropertiesIntoMap(parseProperties(p), this.properties);
         }
     }
 

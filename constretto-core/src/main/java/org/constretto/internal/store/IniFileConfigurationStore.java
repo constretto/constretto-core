@@ -18,10 +18,10 @@ package org.constretto.internal.store;
 import org.constretto.ConfigurationStore;
 import org.constretto.exception.ConstrettoException;
 import org.constretto.model.ConfigurationNode;
+import org.constretto.model.Resource;
 import org.constretto.model.TaggedPropertySet;
 import org.ini4j.Ini;
 import org.ini4j.IniPreferences;
-import org.springframework.core.io.Resource;
 
 import java.util.*;
 import java.util.prefs.BackingStoreException;

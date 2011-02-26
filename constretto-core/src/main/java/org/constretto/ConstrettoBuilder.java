@@ -22,8 +22,8 @@ import org.constretto.internal.store.IniFileConfigurationStore;
 import org.constretto.internal.store.ObjectConfigurationStore;
 import org.constretto.internal.store.PropertiesStore;
 import org.constretto.internal.store.SystemPropertiesStore;
+import org.constretto.model.Resource;
 import org.constretto.resolver.ConfigurationContextResolver;
-import org.springframework.core.io.Resource;
 
 /**
  * Provides a fluent Java api to build a constretto configuration object.

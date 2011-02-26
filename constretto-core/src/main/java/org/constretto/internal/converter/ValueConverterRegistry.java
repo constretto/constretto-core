@@ -16,7 +16,6 @@
 package org.constretto.internal.converter;
 
 import org.constretto.exception.ConstrettoException;
-import org.springframework.core.io.Resource;
 
 import java.io.File;
 import java.util.HashMap;
@@ -44,7 +43,6 @@ public class ValueConverterRegistry {
             put(Short.class, new ShortValueConverter());
             put(short.class, new ShortValueConverter());
             put(String.class, new StringValueConverter());
-            put(Resource.class, new SpringResourceValueConverter());
             put(File.class, new FileValueConverter());
             put(Locale.class, new LocaleValueConverter());
         }
