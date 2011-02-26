@@ -19,6 +19,7 @@ import org.constretto.exception.ConstrettoException;
 
 import java.io.File;
 import java.net.InetAddress;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -47,6 +48,7 @@ public class ValueConverterRegistry {
             put(File.class, new FileValueConverter());
             put(Locale.class, new LocaleValueConverter());
             put(InetAddress.class, new InetAddressValueConverter());
+            put(URL.class, new UrlValueConverter());
         }
     };
 
