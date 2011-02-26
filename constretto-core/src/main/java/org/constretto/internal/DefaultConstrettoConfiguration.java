@@ -256,9 +256,9 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
                     String[] parameterNames = nameDiscoverer.getParameterNames(method);
                     Object[] resolvedArguments = new Object[methodAnnotations.length];
                     int i = 0;
-                    Object defaultValue = null;
-                    boolean required = true;
                     for (Annotation[] parameterAnnotations : methodAnnotations) {
+                        Object defaultValue = null;
+                        boolean required = true;
                         String expression = "";
                         Class<?> parameterTargetClass = method.getParameterTypes()[i];
                         if (parameterAnnotations.length != 0) {
