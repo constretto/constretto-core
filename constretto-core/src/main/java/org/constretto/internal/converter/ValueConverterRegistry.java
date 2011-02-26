@@ -18,6 +18,7 @@ package org.constretto.internal.converter;
 import org.constretto.exception.ConstrettoException;
 
 import java.io.File;
+import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -45,6 +46,7 @@ public class ValueConverterRegistry {
             put(String.class, new StringValueConverter());
             put(File.class, new FileValueConverter());
             put(Locale.class, new LocaleValueConverter());
+            put(InetAddress.class, new InetAddressValueConverter());
         }
     };
 
