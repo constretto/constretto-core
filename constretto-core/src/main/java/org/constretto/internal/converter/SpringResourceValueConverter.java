@@ -15,6 +15,7 @@
  */
 package org.constretto.internal.converter;
 
+import org.constretto.ValueConverter;
 import org.constretto.exception.ConstrettoConversionException;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;

@@ -20,7 +20,7 @@ import org.constretto.ConstrettoBuilder;
 import org.constretto.ConstrettoConfiguration;
 import org.constretto.exception.ConstrettoConversionException;
 import org.constretto.exception.ConstrettoException;
-import org.constretto.internal.converter.ValueConverter;
+import org.constretto.ValueConverter;
 import org.constretto.internal.converter.ValueConverterRegistry;
 import org.junit.Before;
 import org.junit.Test;
