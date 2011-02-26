@@ -19,8 +19,7 @@ import org.constretto.ConstrettoBuilder;
 import org.constretto.ConstrettoConfiguration;
 import org.constretto.internal.store.IniFileConfigurationStore;
 import org.constretto.internal.store.PropertiesStore;
-import org.springframework.core.io.DefaultResourceLoader;
-import org.springframework.core.io.ResourceLoader;
+import org.constretto.model.Resource;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +29,6 @@ import java.util.Map;
  *         Based on a configurationfactory used, and donated by FinnTech.
  */
 public class StaticlyCachedConfiguration {
-    private static ResourceLoader resourceLoader = new DefaultResourceLoader(StaticlyCachedConfiguration.class.getClassLoader());
     private static Map<CacheKey, ConstrettoConfiguration> cache = new HashMap<CacheKey, ConstrettoConfiguration>();
     private static int cacheHits = 0;
 
@@ -47,9 +45,9 @@ public class StaticlyCachedConfiguration {
 
         for (String location : locations) {
             if (location.toLowerCase().endsWith(".ini")) {
-                iniFileConfigurationStore.addResource(resourceLoader.getResource(location));
+                iniFileConfigurationStore.addResource(new Resource(location));
             } else if (location.toLowerCase().endsWith(".properties")) {
-                propertyFileConfigurationStore.addResource(resourceLoader.getResource(location));
+                propertyFileConfigurationStore.addResource(new Resource(location));
             }
         }
         builder = builder.addConfigurationStore(iniFileConfigurationStore);
