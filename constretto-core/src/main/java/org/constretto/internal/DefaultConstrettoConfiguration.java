@@ -15,6 +15,9 @@
  */
 package org.constretto.internal;
 
+import com.thoughtworks.paranamer.BytecodeReadingParanamer;
+import com.thoughtworks.paranamer.CachingParanamer;
+import com.thoughtworks.paranamer.Paranamer;
 import org.constretto.ConfigurationDefaultValueFactory;
 import org.constretto.ConstrettoConfiguration;
 import org.constretto.Property;
@@ -26,7 +29,6 @@ import org.constretto.exception.ConstrettoException;
 import org.constretto.exception.ConstrettoExpressionException;
 import org.constretto.internal.converter.ValueConverterRegistry;
 import org.constretto.model.ConfigurationNode;
-import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -43,7 +45,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     private static final String VARIABLE_SUFFIX = "}";
     private List<String> currentTags;
     private final ConfigurationNode configuration;
-    private LocalVariableTableParameterNameDiscoverer nameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
+    private final Paranamer paranamer = new BytecodeReadingParanamer();
 
     public DefaultConstrettoConfiguration(ConfigurationNode configuration, List<String> currentTags) {
         this.configuration = configuration;
@@ -138,7 +140,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         List<Property> properties = new ArrayList<Property>();
         Map<String,String> map = asMap();
         for (Map.Entry<String, String> entry : map.entrySet()) {
-            properties.add(new Property(entry.getKey(),entry.getValue()));                        
+            properties.add(new Property(entry.getKey(),entry.getValue()));
         }
         return properties.iterator();
     }
@@ -219,7 +221,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
             try {
                 if (method.isAnnotationPresent(Configure.class)) {
                     Annotation[][] methodAnnotations = method.getParameterAnnotations();
-                    String[] parameterNames = nameDiscoverer.getParameterNames(method);
+                    String[] parameterNames = paranamer.lookupParameterNames(method);
                     Object[] resolvedArguments = new Object[methodAnnotations.length];
                     int i = 0;
                     Object defaultValue = null;

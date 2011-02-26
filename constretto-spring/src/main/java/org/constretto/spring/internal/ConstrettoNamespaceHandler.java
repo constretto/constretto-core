@@ -19,6 +19,7 @@ import org.constretto.ConstrettoBuilder;
 import org.constretto.ConstrettoConfiguration;
 import org.constretto.internal.ConstrettoUtils;
 import org.constretto.internal.resolver.DefaultConfigurationContextResolver;
+import org.constretto.model.Resource;
 import org.constretto.resolver.ConfigurationContextResolver;
 import org.constretto.spring.ConfigurationAnnotationConfigurer;
 import org.constretto.spring.ConstrettoConfigurationFactoryBean;
@@ -31,7 +32,6 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.util.Assert;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
@@ -51,7 +51,6 @@ public class ConstrettoNamespaceHandler extends NamespaceHandlerSupport {
     private static final String CONSTRETTO_PLACEHOLDER_BEAN_NAME = "constretto:constrettoPlaceholderConfigurer";
     private static final String CONSTRETTO_CONFIGURATION_ANNOTATION_BEAN_NAME = "constretto:configurationAnnotationConfigurer";
     private static final String CONSTRETTO_ENVIRONMENT_ANNOTATION_BEAN_NAME = "constretto:environmentAnnotationConfigurer";
-    private final DefaultResourceLoader resourceLoader = new DefaultResourceLoader(this.getClass().getClassLoader());
 
     public void init() {
         registerBeanDefinitionParser("configuration", new ConfigurationDefinitionParser());
@@ -131,7 +130,7 @@ public class ConstrettoNamespaceHandler extends NamespaceHandlerSupport {
                         List<Element> resources = DomUtils.getChildElementsByTagName(store, "resource");
                         for (Element resource : resources) {
                             String location = resource.getAttribute("location");
-                            propertiesBuilder.addResource(resourceLoader.getResource(location));
+                            propertiesBuilder.addResource(new Resource(location));
                         }
                         propertiesBuilder.done();
                     } else if ("encrypted-properties-store".equals(tagName)) {
@@ -139,7 +138,7 @@ public class ConstrettoNamespaceHandler extends NamespaceHandlerSupport {
                         List<Element> resources = DomUtils.getChildElementsByTagName(store, "resource");
                         for (Element resource : resources) {
                             String location = resource.getAttribute("location");
-                            propertiesBuilder.addResource(resourceLoader.getResource(location));
+                            propertiesBuilder.addResource(new Resource(location));
                         }
                         propertiesBuilder.done();
                     } else if ("ini-store".equals(tagName)) {
@@ -147,7 +146,7 @@ public class ConstrettoNamespaceHandler extends NamespaceHandlerSupport {
                         List<Element> resources = DomUtils.getChildElementsByTagName(store, "resource");
                         for (Element resource : resources) {
                             String location = resource.getAttribute("location");
-                            iniBuilder.addResource(resourceLoader.getResource(location));
+                            iniBuilder.addResource(new Resource(location));
                         }
                         iniBuilder.done();
                     } else if ("system-properties-store".equals(tagName)) {

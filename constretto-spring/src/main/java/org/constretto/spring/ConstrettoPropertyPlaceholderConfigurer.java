@@ -16,7 +16,10 @@
 package org.constretto.spring;
 
 import org.constretto.ConstrettoConfiguration;
+import org.constretto.internal.converter.ValueConverterRegistry;
+import org.constretto.spring.internal.converter.SpringResourceValueConverter;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
+import org.springframework.core.io.Resource;
 
 import java.util.Properties;
 
@@ -30,7 +33,7 @@ import java.util.Properties;
  * &lt;bean class=&quot;org.constretto.spring.ConstrettoPropertyPlaceholderConfigurer&quot;&gt;
  *   &lt;constructor-arg ref=&quot;someProvider&quot; /&gt;
  * &lt;/bean&gt;
- * <p/>
+ *
  * &lt;bean id=&quot;myBean&quot; class=&quot;com.example.MyClass&quot;&gt;
  *   &lt;property name=&quot;myProperty&quot; value=&quot;${propertyKey}&quot; /&gt;
  * &lt;/bean&gt;
@@ -51,13 +54,14 @@ public class ConstrettoPropertyPlaceholderConfigurer extends PropertyPlaceholder
 
     public ConstrettoPropertyPlaceholderConfigurer(ConstrettoConfiguration configuration) {
         this.configuration = configuration;
+        ValueConverterRegistry.registerCustomConverter(Resource.class, new SpringResourceValueConverter());
     }
 
     @Override
     public void setIgnoreUnresolvablePlaceholders(boolean ignoreUnresolvablePlaceholders) {
         this.ignoreUnresolvedPlaceHolders = ignoreUnresolvablePlaceholders;
-		super.setIgnoreUnresolvablePlaceholders(ignoreUnresolvablePlaceholders);
-	}
+        super.setIgnoreUnresolvablePlaceholders(ignoreUnresolvablePlaceholders);
+    }
 
     @Override
     protected String resolvePlaceholder(String placeholder, Properties props, int systemPropertiesMode) {

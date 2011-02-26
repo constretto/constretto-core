@@ -16,8 +16,8 @@
 package org.constretto.internal.store;
 
 import org.constretto.ConfigurationStore;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
+import org.constretto.model.ClassPathResource;
+import org.constretto.model.Resource;
 
 import java.util.ArrayList;
 import java.util.List;

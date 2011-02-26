@@ -15,9 +15,7 @@
  */
 package org.constretto.internal;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
@@ -111,4 +109,25 @@ public class ConstrettoUtils {
             }
         }
     }
+
+    /**
+	 * Merge the given Properties instance into the given Map,
+	 * copying all properties (key-value pairs) over.
+	 * <p>Uses <code>Properties.propertyNames()</code> to even catch
+	 * default properties linked into the original Properties instance.
+	 * @param props the Properties instance to merge (may be <code>null</code>)
+	 * @param map the target Map to merge the properties into
+	 */
+    @SuppressWarnings("uncheked")
+	public static void mergePropertiesIntoMap(Properties props, Map map) {
+		if (map == null) {
+			throw new IllegalArgumentException("Map must not be null");
+		}
+		if (props != null) {
+			for (Enumeration en = props.propertyNames(); en.hasMoreElements();) {
+				String key = (String) en.nextElement();
+				map.put(key, props.getProperty(key));
+			}
+		}
+	}
 }

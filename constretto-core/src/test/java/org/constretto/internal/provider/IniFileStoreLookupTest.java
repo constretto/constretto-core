@@ -17,7 +17,7 @@ package org.constretto.internal.provider;
 
 import org.constretto.ConstrettoBuilder;
 import org.constretto.ConstrettoConfiguration;
-import org.springframework.core.io.ClassPathResource;
+import org.constretto.model.ClassPathResource;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>

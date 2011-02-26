@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.constretto.internal.converter;
+package org.constretto.spring.internal.converter;
 
 import org.constretto.exception.ConstrettoConversionException;
+import org.constretto.internal.converter.ValueConverter;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 
