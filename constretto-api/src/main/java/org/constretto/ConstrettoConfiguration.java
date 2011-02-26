@@ -19,14 +19,14 @@ import org.constretto.exception.ConstrettoConversionException;
 import org.constretto.exception.ConstrettoException;
 import org.constretto.exception.ConstrettoExpressionException;
 
-import java.util.Properties;
+import java.util.List;
 
 /**
  * Client interface.
  *
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
-public interface ConstrettoConfiguration extends Iterable<Property>{
+public interface ConstrettoConfiguration extends Iterable<Property> {
 
     /**
      * Looks up an expression in the configuration.
@@ -75,5 +75,9 @@ public interface ConstrettoConfiguration extends Iterable<Property>{
 
     ConstrettoConfiguration from(String expression) throws ConstrettoException;
 
-    boolean hasValue(String expression);
+    boolean hasValue(String expression) throws ConstrettoException;
+
+    void addTag(String... newtag) throws ConstrettoException;
+
+    void removeTag(String... newTag) throws ConstrettoException;
 }

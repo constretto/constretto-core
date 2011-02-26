@@ -31,6 +31,7 @@ import org.constretto.internal.converter.ValueConverterRegistry;
 import org.constretto.model.ConfigurationNode;
 
 import java.lang.annotation.Annotation;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -46,6 +47,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     private List<String> currentTags;
     private final ConfigurationNode configuration;
     private final Paranamer paranamer = new BytecodeReadingParanamer();
+    private Set<WeakReference<Object>> configuredObjects = new HashSet<WeakReference<Object>>();
 
     public DefaultConstrettoConfiguration(ConfigurationNode configuration, List<String> currentTags) {
         this.configuration = configuration;
@@ -136,29 +138,41 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         return null != node;
     }
 
+    public void addTag(String... newtags) {
+        currentTags.addAll(Arrays.asList(newtags));
+        reconfigure();
+    }
+
+    public void removeTag(String... newTags) {
+        for (String newTag : newTags) {
+            currentTags.remove(newTag);
+        }
+        reconfigure();
+    }
+
     public Iterator<Property> iterator() {
         List<Property> properties = new ArrayList<Property>();
-        Map<String,String> map = asMap();
+        Map<String, String> map = asMap();
         for (Map.Entry<String, String> entry : map.entrySet()) {
-            properties.add(new Property(entry.getKey(),entry.getValue()));
+            properties.add(new Property(entry.getKey(), entry.getValue()));
         }
         return properties.iterator();
     }
 
-     private Map<String,String> asMap(){
-        Map<String,String> properties = new HashMap<String,String>();
-        extractProperties(configuration,properties);
+    private Map<String, String> asMap() {
+        Map<String, String> properties = new HashMap<String, String>();
+        extractProperties(configuration, properties);
         return properties;
     }
 
     private void extractProperties(ConfigurationNode currentNode, Map<String, String> properties) {
-        String value = evaluateTo(currentNode.getExpression(),NULL_STRING);
-        if (!value.equals(NULL_STRING)){
-            properties.put(currentNode.getExpression(),value);
+        String value = evaluateTo(currentNode.getExpression(), NULL_STRING);
+        if (!value.equals(NULL_STRING)) {
+            properties.put(currentNode.getExpression(), value);
         }
-        if (currentNode.hasChildren()){
+        if (currentNode.hasChildren()) {
             for (ConfigurationNode child : currentNode.children()) {
-                extractProperties(child,properties);
+                extractProperties(child, properties);
             }
         }
     }
@@ -166,6 +180,16 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     //
     // Helper methods
     //
+
+    private void reconfigure() {
+        WeakReference[] references = configuredObjects.toArray(new WeakReference[configuredObjects.size()]);
+        for (WeakReference reference : references) {
+            if (reference != null && reference.get() != null) {
+                on(reference.get());
+            }
+        }
+    }
+
     private ConfigurationNode findElementOrThrowException(String expression) {
         List<ConfigurationNode> node = configuration.findAllBy(expression);
         ConfigurationNode resolvedNode = resolveMatch(node);
@@ -213,6 +237,16 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     private <T> void injectConfiguration(T objectToConfigure) {
         injectFields(objectToConfigure);
         injectMethods(objectToConfigure);
+        boolean found = false;
+        for (WeakReference<Object> configuredObject : configuredObjects) {
+            if (configuredObject.get() == objectToConfigure) {
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            this.configuredObjects.add(new WeakReference<Object>(objectToConfigure));
+        }
     }
 
     private <T> void injectMethods(T objectToConfigure) {
