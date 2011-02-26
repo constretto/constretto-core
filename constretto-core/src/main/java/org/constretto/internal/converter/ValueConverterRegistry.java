@@ -19,7 +19,11 @@ import org.constretto.exception.ConstrettoException;
 import org.springframework.core.io.Resource;
 
 import java.io.File;
+<<<<<<< HEAD
 import java.net.InetAddress;
+=======
+import java.net.URL;
+>>>>>>> CC-19
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -52,6 +56,7 @@ public class ValueConverterRegistry {
             put(Properties.class, new PropertyFileValueConverter());
             put(InputStreamValueConverter.class, new InputStreamValueConverter());
             put(InetAddress.class, new InetAddressValueConverter());
+            put(URL.class, new UrlValueConverter());
         }
     };
 
