@@ -35,9 +35,10 @@ public interface ConstrettoConfiguration extends Iterable<Property> {
      * @param defaultValue The value to return of no value found for the expression
      * @param <K>          The target Type
      * @return The converted value for the expression, or the passed default value if expression not found, or conversion error occured.
+     * @throws ConstrettoExpressionException If the key is not found
      * @throws ConstrettoConversionException If a valid converter is not found for the target Type
      */
-    <K> K evaluateTo(String expression, K defaultValue) throws ConstrettoConversionException;
+    <K> K evaluateTo(String expression, K defaultValue) throws ConstrettoExpressionException, ConstrettoConversionException;
 
     /**
      * Looks up an expression in the configuration.
@@ -70,10 +71,6 @@ public interface ConstrettoConfiguration extends Iterable<Property> {
     <T> T as(Class<T> configurationClass) throws ConstrettoException;
 
     <T> T on(T objectToConfigure) throws ConstrettoException;
-
-    ConstrettoConfiguration at(String expression) throws ConstrettoException;
-
-    ConstrettoConfiguration from(String expression) throws ConstrettoException;
 
     boolean hasValue(String expression) throws ConstrettoException;
 
