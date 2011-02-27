@@ -122,8 +122,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     }
 
     public boolean hasValue(String expression) {
-        ConfigurationValue node = findElementOrNull(expression);
-        return null != node;
+        return configuration.containsKey(expression);
     }
 
     public void addTag(String... newtags) {
@@ -182,14 +181,6 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
             throw new ConstrettoExpressionException(expression, currentTags);
         }
         return resolvedNode;
-    }
-
-    private ConfigurationValue findElementOrNull(String expression) {
-        if (!configuration.containsKey(expression)) {
-            return null;
-        }
-        List<ConfigurationValue> values = configuration.get(expression);
-        return resolveMatch(values);
     }
 
     private <T> T processAndConvert(Class<T> clazz, String expression) throws ConstrettoException {
