@@ -16,7 +16,7 @@
 package org.constretto.internal.store;
 
 import org.constretto.ConfigurationStore;
-import org.constretto.model.ConfigurationNode;
+import org.constretto.model.ConfigurationValue;
 import org.constretto.model.TaggedPropertySet;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -36,14 +36,14 @@ public abstract class AbstractConfigurationStoreTest {
         assertEquals("Unexpected number of tags loaded for " + store, 3, props.size());
         for (TaggedPropertySet prop : props) {
             String value = prop.getProperties().get("somedb.username");
-            if (prop.getTag().equals(ConfigurationNode.DEFAULT_TAG)) {
+            if (prop.tag().equals(ConfigurationValue.DEFAULT_TAG)) {
                 assertEquals("user0", value);
-            } else if (prop.getTag().equals("production")) {
+            } else if (prop.tag().equals("production")) {
                 assertEquals("user1", value);
-            } else if (prop.getTag().equals("systest")) {
+            } else if (prop.tag().equals("systest")) {
                 assertEquals("user2", value);
             } else {
-                fail("Unexpected tag " + prop.getTag());
+                fail("Unexpected tag " + prop.tag());
             }
             assertNull(prop.getProperties().get("barekudd"));
         }

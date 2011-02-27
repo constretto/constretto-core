@@ -18,13 +18,10 @@ package org.constretto.internal.provider;
 import org.constretto.ConfigurationStore;
 import org.constretto.ConstrettoConfiguration;
 import org.constretto.internal.DefaultConstrettoConfiguration;
-import org.constretto.model.ConfigurationNode;
+import org.constretto.model.ConfigurationValue;
 import org.constretto.model.TaggedPropertySet;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
@@ -55,16 +52,28 @@ public class ConfigurationProvider {
     }
 
     private ConstrettoConfiguration buildConfiguration() {
-        ConfigurationNode rootNode = ConfigurationNode.createRootElement();
+        Map<String, List<ConfigurationValue>> configuration = new HashMap<String, List<ConfigurationValue>>();
         Collection<TaggedPropertySet> taggedPropertySets = loadPropertySets();
         for (TaggedPropertySet taggedPropertySet : taggedPropertySets) {
             Map<String, String> properties = taggedPropertySet.getProperties();
             for (Map.Entry<String, String> entry : properties.entrySet()) {
-                rootNode.update(entry.getKey(), entry.getValue(), taggedPropertySet.getTag());
+                if (configuration.containsKey(entry.getKey())) {
+                    List<ConfigurationValue> values = configuration.get(entry.getKey());
+                    if (values == null) {
+                        values = new ArrayList<ConfigurationValue>();
+                    }
+                    values.add(new ConfigurationValue(entry.getValue(), taggedPropertySet.tag()));
+                    configuration.put(entry.getKey(), values);
+
+                } else {
+                    List<ConfigurationValue> values = new ArrayList<ConfigurationValue>();
+                    values.add(new ConfigurationValue(entry.getValue(), taggedPropertySet.tag()));
+                    configuration.put(entry.getKey(), values);
+                }
             }
         }
 
-        return new DefaultConstrettoConfiguration(rootNode, tags);
+        return new DefaultConstrettoConfiguration(configuration, tags);
     }
 
     private Collection<TaggedPropertySet> loadPropertySets() {

@@ -16,7 +16,6 @@
 package org.constretto.internal;
 
 import com.thoughtworks.paranamer.BytecodeReadingParanamer;
-import com.thoughtworks.paranamer.CachingParanamer;
 import com.thoughtworks.paranamer.Paranamer;
 import org.constretto.ConfigurationDefaultValueFactory;
 import org.constretto.ConstrettoConfiguration;
@@ -28,7 +27,7 @@ import org.constretto.exception.ConstrettoConversionException;
 import org.constretto.exception.ConstrettoException;
 import org.constretto.exception.ConstrettoExpressionException;
 import org.constretto.internal.converter.ValueConverterRegistry;
-import org.constretto.model.ConfigurationNode;
+import org.constretto.model.ConfigurationValue;
 
 import java.lang.annotation.Annotation;
 import java.lang.ref.WeakReference;
@@ -44,12 +43,13 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     private static final String NULL_STRING = "![![Null]!]!";
     private static final String VARIABLE_PREFIX = "#{";
     private static final String VARIABLE_SUFFIX = "}";
-    private List<String> currentTags;
-    private final ConfigurationNode configuration;
     private final Paranamer paranamer = new BytecodeReadingParanamer();
-    private Set<WeakReference<Object>> configuredObjects = new HashSet<WeakReference<Object>>();
 
-    public DefaultConstrettoConfiguration(ConfigurationNode configuration, List<String> currentTags) {
+    private final Map<String, List<ConfigurationValue>> configuration;
+    private Set<WeakReference<Object>> configuredObjects = new HashSet<WeakReference<Object>>();
+    private List<String> currentTags;
+
+    public DefaultConstrettoConfiguration(Map<String, List<ConfigurationValue>> configuration, List<String> currentTags) {
         this.configuration = configuration;
         this.currentTags = currentTags;
     }
@@ -112,9 +112,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
             throw new ConstrettoException("Could not instansiate class of type: " + configurationClass.getName()
                     + " when trying to inject it with configuration, It may be missing a default constructor", e);
         }
-
         injectConfiguration(objectToConfigure);
-
         return objectToConfigure;
     }
 
@@ -123,18 +121,8 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         return objectToConfigure;
     }
 
-    public ConstrettoConfiguration at(String expression) throws ConstrettoException {
-        ConfigurationNode currentConfigurationNode = findElementOrThrowException(expression);
-        ConfigurationNode.createRootElementOf(currentConfigurationNode);
-        return new DefaultConstrettoConfiguration(currentConfigurationNode, currentTags);
-    }
-
-    public ConstrettoConfiguration from(String expression) throws ConstrettoException {
-        return at(expression);
-    }
-
     public boolean hasValue(String expression) {
-        ConfigurationNode node = findElementOrNull(expression);
+        ConfigurationValue node = findElementOrNull(expression);
         return null != node;
     }
 
@@ -161,21 +149,15 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
 
     private Map<String, String> asMap() {
         Map<String, String> properties = new HashMap<String, String>();
-        extractProperties(configuration, properties);
+        for (String key : configuration.keySet()) {
+            String value = evaluateTo(key, NULL_STRING);
+            if (!value.equals(NULL_STRING)) {
+                properties.put(key, value);
+            }
+        }
         return properties;
     }
 
-    private void extractProperties(ConfigurationNode currentNode, Map<String, String> properties) {
-        String value = evaluateTo(currentNode.getExpression(), NULL_STRING);
-        if (!value.equals(NULL_STRING)) {
-            properties.put(currentNode.getExpression(), value);
-        }
-        if (currentNode.hasChildren()) {
-            for (ConfigurationNode child : currentNode.children()) {
-                extractProperties(child, properties);
-            }
-        }
-    }
 
     //
     // Helper methods
@@ -190,13 +172,24 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         }
     }
 
-    private ConfigurationNode findElementOrThrowException(String expression) {
-        List<ConfigurationNode> node = configuration.findAllBy(expression);
-        ConfigurationNode resolvedNode = resolveMatch(node);
+    private ConfigurationValue findElementOrThrowException(String expression) {
+        if (!configuration.containsKey(expression)) {
+            throw new ConstrettoExpressionException(expression, currentTags);
+        }
+        List<ConfigurationValue> values = configuration.get(expression);
+        ConfigurationValue resolvedNode = resolveMatch(values);
         if (resolvedNode == null) {
             throw new ConstrettoExpressionException(expression, currentTags);
         }
         return resolvedNode;
+    }
+
+    private ConfigurationValue findElementOrNull(String expression) {
+        if (!configuration.containsKey(expression)) {
+            return null;
+        }
+        List<ConfigurationValue> values = configuration.get(expression);
+        return resolveMatch(values);
     }
 
     private <T> T processAndConvert(Class<T> clazz, String expression) throws ConstrettoException {
@@ -204,30 +197,25 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         return ValueConverterRegistry.convert(clazz, parsedValue);
     }
 
-    private ConfigurationNode findElementOrNull(String expression) {
-        List<ConfigurationNode> node = configuration.findAllBy(expression);
-        return resolveMatch(node);
-    }
-
-    private ConfigurationNode resolveMatch(List<ConfigurationNode> node) {
-        ConfigurationNode bestMatch = null;
-        for (ConfigurationNode configurationNode : node) {
-            if (ConfigurationNode.DEFAULT_TAG.equals(configurationNode.getTag())) {
-                if (bestMatch == null || bestMatch.getTag().equals(ConfigurationNode.DEFAULT_TAG)) {
+    private ConfigurationValue resolveMatch(List<ConfigurationValue> values) {
+        ConfigurationValue bestMatch = null;
+        for (ConfigurationValue configurationNode : values) {
+            if (ConfigurationValue.DEFAULT_TAG.equals(configurationNode.tag())) {
+                if (bestMatch == null || bestMatch.tag().equals(ConfigurationValue.DEFAULT_TAG)) {
                     bestMatch = configurationNode;
                 }
-            } else if (currentTags.contains(configurationNode.getTag())) {
+            } else if (currentTags.contains(configurationNode.tag())) {
                 if (bestMatch == null) {
                     bestMatch = configurationNode;
                 } else {
                     int previousFoundPriority =
-                            ConfigurationNode.DEFAULT_TAG.equals(bestMatch.getTag()) ?
-                                    Integer.MAX_VALUE : currentTags.indexOf(bestMatch.getTag());
-                    if (currentTags.indexOf(configurationNode.getTag()) <= previousFoundPriority) {
+                            ConfigurationValue.DEFAULT_TAG.equals(bestMatch.tag()) ?
+                                    Integer.MAX_VALUE : currentTags.indexOf(bestMatch.tag());
+                    if (currentTags.indexOf(configurationNode.tag()) <= previousFoundPriority) {
                         bestMatch = configurationNode;
                     }
                 }
-            } else if (ConfigurationNode.ALL_TAG.equals(configurationNode.getTag())) {
+            } else if (ConfigurationValue.ALL_TAG.equals(configurationNode.tag())) {
                 bestMatch = configurationNode;
             }
         }
@@ -291,8 +279,8 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
                             }
                         }
                         if (hasValue(expression)) {
-                            ConfigurationNode node = findElementOrThrowException(expression);
-                            resolvedArguments[i] = processAndConvert(parameterTargetClass, node.getExpression());
+                            ConfigurationValue node = findElementOrThrowException(expression);
+                            resolvedArguments[i] = processAndConvert(parameterTargetClass, expression);
                         } else {
                             if (defaultValue != null || !required) {
                                 resolvedArguments[i] = defaultValue;
@@ -332,8 +320,8 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
                     field.setAccessible(true);
                     Class<?> fieldType = field.getType();
                     if (hasValue(expression)) {
-                        ConfigurationNode node = findElementOrThrowException(expression);
-                        field.set(objectToConfigure, processAndConvert(fieldType, node.getExpression()));
+                        ConfigurationValue node = findElementOrThrowException(expression);
+                        field.set(objectToConfigure, processAndConvert(fieldType, expression));
                     } else {
                         if (hasAnnotationDefaults(configurationAnnotation)) {
                             if (configurationAnnotation.defaultValueFactory().equals(Configuration.EmptyValueFactory.class)) {
@@ -367,9 +355,9 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
 
     private String processVariablesInProperty(final String expression, final Collection<String> visitedPlaceholders) {
         visitedPlaceholders.add(expression);
-        ConfigurationNode currentNode = findElementOrThrowException(expression);
+        ConfigurationValue currentNode = findElementOrThrowException(expression);
 
-        String value = currentNode.getValue();
+        String value = currentNode.value();
         if (valueNeedsVariableResolving(value)) {
             value = substituteVariablesinValue(value, visitedPlaceholders);
         }
@@ -383,7 +371,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
                 throw new ConstrettoException(
                         "A cyclic dependency found in a property");
             }
-            DefaultConstrettoConfiguration rootConfig = new DefaultConstrettoConfiguration(configuration.root(), currentTags);
+            DefaultConstrettoConfiguration rootConfig = new DefaultConstrettoConfiguration(configuration, currentTags);
 
             value = value.substring(0, expresionToLookup.startIndex)
                     + rootConfig.processVariablesInProperty(expresionToLookup.expression, visitedPlaceholders)

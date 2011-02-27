@@ -20,7 +20,7 @@ import org.constretto.ConfigurationStore;
 import org.constretto.internal.ConstrettoUtils;
 import org.constretto.annotation.ConfigurationSource;
 import org.constretto.exception.ConstrettoException;
-import org.constretto.model.ConfigurationNode;
+import org.constretto.model.ConfigurationValue;
 import org.constretto.model.TaggedPropertySet;
 
 import java.beans.PropertyDescriptor;
@@ -41,12 +41,12 @@ public class ObjectConfigurationStore implements ConfigurationStore {
         Map<String, TaggedPropertySet> propertySets = new HashMap<String, TaggedPropertySet>();
         for (Object configurationObject : configurationObjects) {
             TaggedPropertySet taggedPropertySet = createPropertySetForObject(configurationObject);
-            if (propertySets.containsKey(taggedPropertySet.getTag())) {
-                TaggedPropertySet orginialSet = propertySets.get(taggedPropertySet.getTag());
+            if (propertySets.containsKey(taggedPropertySet.tag())) {
+                TaggedPropertySet orginialSet = propertySets.get(taggedPropertySet.tag());
                 orginialSet.getProperties().putAll(taggedPropertySet.getProperties());
-                propertySets.put(taggedPropertySet.getTag(), orginialSet);
+                propertySets.put(taggedPropertySet.tag(), orginialSet);
             } else {
-                propertySets.put(taggedPropertySet.getTag(), taggedPropertySet);
+                propertySets.put(taggedPropertySet.tag(), taggedPropertySet);
             }
         }
 
@@ -54,14 +54,14 @@ public class ObjectConfigurationStore implements ConfigurationStore {
     }
 
     private TaggedPropertySet createPropertySetForObject(Object configurationObject) {
-        String tag = ConfigurationNode.DEFAULT_TAG;
+        String tag = ConfigurationValue.DEFAULT_TAG;
         String basePath = "";
         Map<String, String> properties = new HashMap<String, String>();
         if (configurationObject.getClass().isAnnotationPresent(ConfigurationSource.class)) {
             ConfigurationSource configurationAnnotation = configurationObject.getClass().getAnnotation(ConfigurationSource.class);
             tag = configurationAnnotation.tag();
             if (tag.equals("")) {
-                tag = ConfigurationNode.DEFAULT_TAG;
+                tag = ConfigurationValue.DEFAULT_TAG;
             }
             basePath = configurationAnnotation.basePath();
         }

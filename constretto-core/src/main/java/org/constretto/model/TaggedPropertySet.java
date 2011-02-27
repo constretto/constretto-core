@@ -28,7 +28,7 @@ public class TaggedPropertySet {
     private final Map<String, String> properties;
 
     public TaggedPropertySet(Map<String, String> properties, Class<? extends ConfigurationStore> storeClass) {
-        this.tag = ConfigurationNode.DEFAULT_TAG;
+        this.tag = ConfigurationValue.DEFAULT_TAG;
         this.properties = properties;
         this.storeClass = storeClass;
     }
@@ -46,7 +46,7 @@ public class TaggedPropertySet {
         return properties;
     }
 
-    public String getTag() {
+    public String tag() {
         return tag;
     }
 

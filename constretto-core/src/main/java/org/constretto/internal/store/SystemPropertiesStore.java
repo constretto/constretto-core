@@ -16,7 +16,7 @@
 package org.constretto.internal.store;
 
 import org.constretto.ConfigurationStore;
-import org.constretto.model.ConfigurationNode;
+import org.constretto.model.ConfigurationValue;
 import org.constretto.model.TaggedPropertySet;
 
 import static java.lang.System.getProperties;
@@ -42,7 +42,7 @@ public class SystemPropertiesStore implements ConfigurationStore {
 
         return new ArrayList<TaggedPropertySet>() {
             {
-                add(new TaggedPropertySet(ConfigurationNode.ALL_TAG, properties, SystemPropertiesStore.class));
+                add(new TaggedPropertySet(ConfigurationValue.ALL_TAG, properties, SystemPropertiesStore.class));
             }
         };
     }
