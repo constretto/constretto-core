@@ -19,6 +19,7 @@ import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
 import static org.constretto.util.StaticlyCachedConfiguration.cacheHits;
+import static org.constretto.util.StaticlyCachedConfiguration.cacheMiss;
 import static org.constretto.util.StaticlyCachedConfiguration.config;
 
 /**
@@ -31,9 +32,11 @@ public class StaticlyCachedConfigurationTest {
         String value = config("classpath:cache1.ini").evaluateToString("key1");
         assertEquals("value1", value);
         assertEquals(0, cacheHits());
+        assertEquals(1, cacheMiss());
         value = config("classpath:cache1.ini").evaluateToString("key1");
         assertEquals("value1", value);
         assertEquals(1, cacheHits());
+        assertEquals(1, cacheMiss());
     }
 
     @Test

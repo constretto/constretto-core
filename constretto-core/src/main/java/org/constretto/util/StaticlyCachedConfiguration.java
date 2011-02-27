@@ -24,43 +24,62 @@ import org.springframework.core.io.ResourceLoader;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  *         Based on a configurationfactory used, and donated by FinnTech.
  */
 public class StaticlyCachedConfiguration {
-    private static ResourceLoader resourceLoader = new DefaultResourceLoader(StaticlyCachedConfiguration.class.getClassLoader());
-    private static Map<CacheKey, ConstrettoConfiguration> cache = new HashMap<CacheKey, ConstrettoConfiguration>();
+    private final static ResourceLoader resourceLoader = new DefaultResourceLoader(StaticlyCachedConfiguration.class.getClassLoader());
+    private final static Map<CacheKey, ConstrettoConfiguration> cache = new HashMap<CacheKey, ConstrettoConfiguration>();
+    private final static ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     private static int cacheHits = 0;
+    private static int cacheMiss = 0;
 
-    public static ConstrettoConfiguration config(String... locations) {
+    public static synchronized ConstrettoConfiguration config(String... locations) {
         CacheKey key = new CacheKey(locations);
-        if (cache.containsKey(key)) {
-            cacheHits++;
-            return cache.get(key);
-        }
-        ConstrettoBuilder builder = new ConstrettoBuilder();
-        IniFileConfigurationStore iniFileConfigurationStore = new IniFileConfigurationStore();
-        PropertiesStore propertyFileConfigurationStore = new PropertiesStore();
-
-
-        for (String location : locations) {
-            if (location.toLowerCase().endsWith(".ini")) {
-                iniFileConfigurationStore.addResource(resourceLoader.getResource(location));
-            } else if (location.toLowerCase().endsWith(".properties")) {
-                propertyFileConfigurationStore.addResource(resourceLoader.getResource(location));
+        try {
+            lock.readLock().lock();
+            if (cache.containsKey(key)) {
+                cacheHits++;
+                return cache.get(key);
             }
+        } finally {
+            lock.readLock().unlock();
         }
-        builder = builder.addConfigurationStore(iniFileConfigurationStore);
-        builder = builder.addConfigurationStore(propertyFileConfigurationStore);
-        ConstrettoConfiguration configuration = builder.getConfiguration();
-        cache.put(key, configuration);
-        return configuration;
+
+        try {
+            lock.writeLock().lock();
+            cacheMiss++;
+            ConstrettoBuilder builder = new ConstrettoBuilder();
+            IniFileConfigurationStore iniFileConfigurationStore = new IniFileConfigurationStore();
+            PropertiesStore propertyFileConfigurationStore = new PropertiesStore();
+
+
+            for (String location : locations) {
+                if (location.toLowerCase().endsWith(".ini")) {
+                    iniFileConfigurationStore.addResource(resourceLoader.getResource(location));
+                } else if (location.toLowerCase().endsWith(".properties")) {
+                    propertyFileConfigurationStore.addResource(resourceLoader.getResource(location));
+                }
+            }
+            builder = builder.addConfigurationStore(iniFileConfigurationStore);
+            builder = builder.addConfigurationStore(propertyFileConfigurationStore);
+            ConstrettoConfiguration configuration = builder.getConfiguration();
+            cache.put(key, configuration);
+            return configuration;
+        } finally {
+            lock.writeLock().unlock();
+        }
     }
 
     public static int cacheHits() {
         return cacheHits;
+    }
+
+    public static int cacheMiss() {
+        return cacheMiss;
     }
 
     private static class CacheKey {
