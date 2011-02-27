@@ -37,7 +37,7 @@ public class StaticlyCachedConfiguration {
     private static int cacheHits = 0;
     private static int cacheMiss = 0;
 
-    public static synchronized ConstrettoConfiguration config(String... locations) {
+    public static ConstrettoConfiguration config(String... locations) {
         CacheKey key = new CacheKey(locations);
         try {
             lock.readLock().lock();
