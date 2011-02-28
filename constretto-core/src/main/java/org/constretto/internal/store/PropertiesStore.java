@@ -16,8 +16,8 @@
 package org.constretto.internal.store;
 
 import org.constretto.ConfigurationStore;
-import org.constretto.internal.ConstrettoUtils;
 import org.constretto.exception.ConstrettoException;
+import org.constretto.internal.ConstrettoUtils;
 import org.constretto.model.Resource;
 import org.constretto.model.TaggedPropertySet;
 
@@ -37,20 +37,22 @@ import static org.constretto.internal.ConstrettoUtils.mergePropertiesIntoMap;
  */
 public class PropertiesStore implements ConfigurationStore {
 
-    private static final String DEFAULT_TAG_PREFIX = "@";
+    private static final String TAG_PREFIX = "@";
     private static final String PROPERTY_CONTEXT_SEPARATOR = ".";
+    private final Map<String, String> properties;
 
-    private final Map<String, String> properties = new HashMap<String, String>();
-
-    private String tagPrefix;
 
     public PropertiesStore() {
-        this.tagPrefix = DEFAULT_TAG_PREFIX;
+        this.properties = new HashMap<String, String>();
+    }
+
+    private PropertiesStore(Map<String, String> properties) {
+        this.properties = properties;
     }
 
     public PropertiesStore addResource(Resource resource) {
         addResourcesAsProperties(resource);
-        return this;
+        return new PropertiesStore(properties);
     }
 
     public List<TaggedPropertySet> parseConfiguration() {
@@ -65,6 +67,7 @@ public class PropertiesStore implements ConfigurationStore {
 
     /**
      * Used by sublclasses
+     *
      * @param props the properties currently read
      * @return the argument
      */
@@ -114,7 +117,7 @@ public class PropertiesStore implements ConfigurationStore {
     }
 
     private boolean isTag(String key) {
-        return key.startsWith(tagPrefix);
+        return key.startsWith(TAG_PREFIX);
     }
 
     private Map<String, String> getPropertiesByTag(String nonPrefixedTag, Map<String, String> allProperties) {
@@ -168,17 +171,17 @@ public class PropertiesStore implements ConfigurationStore {
      */
     private String getTag(String key) {
         if (isTag(key)) {
-            return ConstrettoUtils.substringBetween(key, tagPrefix, PROPERTY_CONTEXT_SEPARATOR);
+            return ConstrettoUtils.substringBetween(key, TAG_PREFIX, PROPERTY_CONTEXT_SEPARATOR);
         } else {
             return null;
         }
     }
 
     private String prefixTag(String tag) {
-        return tagPrefix + tag;
+        return TAG_PREFIX + tag;
     }
 
     private String stripTag(String key, String tag) {
-        return ConstrettoUtils.substringAfter(key, tagPrefix + tag + PROPERTY_CONTEXT_SEPARATOR);
+        return ConstrettoUtils.substringAfter(key, TAG_PREFIX + tag + PROPERTY_CONTEXT_SEPARATOR);
     }
 }

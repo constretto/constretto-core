@@ -34,12 +34,11 @@ public class ConfigurationAnnotationsTest {
 
     @Before
     public void prepareTests() {
-        setProperty("datasources.customer.url", "jdbc://url");
-        setProperty("datasources.customer.username", "username");
-        setProperty("datasources.customer.password", "password");
-        setProperty("datasources.customer.vendor", "derby");
-        setProperty("datasources.vendor", "derby");
-        setProperty("datasources.customer.version", "10");
+        setProperty("url", "jdbc://url");
+        setProperty("username", "username");
+        setProperty("password", "password");
+        setProperty("vendor", "derby");
+        setProperty("version", "10");
 
         configuration = new ConstrettoBuilder().createSystemPropertiesStore().getConfiguration();
 
@@ -47,7 +46,7 @@ public class ConfigurationAnnotationsTest {
 
     @Test
     public void createNewAnnotatedConfigurationObject() {
-        DataSourceConfiguration customerDataSource = configuration.at("datasources.customer").as(DataSourceConfiguration.class);
+        DataSourceConfiguration customerDataSource = configuration.as(DataSourceConfiguration.class);
         assertEquals("jdbc://url", customerDataSource.getUrl());
         assertEquals("username", customerDataSource.getUsername());
         assertEquals("password", customerDataSource.getPassword());
@@ -58,7 +57,7 @@ public class ConfigurationAnnotationsTest {
     @Test
     public void applyConfigrationToAnnotatedConfigurationObject() {
         DataSourceConfiguration customerDataSource = new DataSourceConfiguration();
-        configuration.at("datasources").from("customer").on(customerDataSource);
+        configuration.on(customerDataSource);
         assertEquals("derby", customerDataSource.getVendor());
         assertEquals("username", customerDataSource.getUsername());
         assertEquals("jdbc://url", customerDataSource.getUrl());
@@ -69,7 +68,7 @@ public class ConfigurationAnnotationsTest {
     @Test
     public void applyConfigrationToAnnotatedConfigurationObjectUsingNativeTypes() {
         DataSourceConfigurationWithNatives customerDataSource = new DataSourceConfigurationWithNatives();
-        configuration.at("datasources").from("customer").on(customerDataSource);
+        configuration.on(customerDataSource);
         assertEquals(10, customerDataSource.getVersion());
         assertEquals(10, customerDataSource.getOtherVersion());
     }
@@ -77,14 +76,9 @@ public class ConfigurationAnnotationsTest {
     @Test
     public void applyConfigurationWithDefaultValues() {
         ConfiguredUsingDefaults configuredObject = new ConfiguredUsingDefaults();
-        configuration.at("datasources").from("customer").on(configuredObject);
-        assertEquals("username", configuredObject.getUsername());
-        assertEquals("password", configuredObject.getPassword());
-        assertEquals("derby", configuredObject.getVendor());
-        assertEquals(new Integer(10), configuredObject.getVersion());
 
-        configuration.from("datasources").on(configuredObject);
-        assertEquals("default-username", configuredObject.getUsername());
+        configuration.on(configuredObject);
+        assertEquals("default-username", configuredObject.getStrangeUserName());
         assertEquals("default-password", configuredObject.getPassword());
         assertEquals("derby", configuredObject.getVendor());
         assertEquals(new Integer(Integer.MIN_VALUE), configuredObject.getVersion());

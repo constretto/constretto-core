@@ -118,7 +118,7 @@ public class ConstrettoUtils {
 	 * @param props the Properties instance to merge (may be <code>null</code>)
 	 * @param map the target Map to merge the properties into
 	 */
-    @SuppressWarnings("uncheked")
+    @SuppressWarnings("unchecked")
 	public static void mergePropertiesIntoMap(Properties props, Map map) {
 		if (map == null) {
 			throw new IllegalArgumentException("Map must not be null");

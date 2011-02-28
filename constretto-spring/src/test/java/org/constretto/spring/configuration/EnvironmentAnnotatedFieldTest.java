@@ -10,7 +10,7 @@
  */
 package org.constretto.spring.configuration;
 
-import org.constretto.internal.provider.ConfigurationProvider;
+import org.constretto.internal.DefaultConstrettoConfiguration;
 import org.constretto.spring.ConfigurationAnnotationConfigurer;
 import org.constretto.spring.annotation.Environment;
 import org.constretto.spring.assembly.helper.AlwaysDevelopmentEnvironmentResolver;
@@ -28,7 +28,7 @@ public class EnvironmentAnnotatedFieldTest {
     public void givenClassWithEnvironmentAnnotatedPropertyThenInjectEnvironment() throws Exception {
         TestClazz testClazz = new TestClazz();
         ConfigurationAnnotationConfigurer annotationConfigurer = new ConfigurationAnnotationConfigurer(
-                new ConfigurationProvider().getConfiguration(), new AlwaysDevelopmentEnvironmentResolver());
+                new DefaultConstrettoConfiguration(null,null), new AlwaysDevelopmentEnvironmentResolver());
         annotationConfigurer.postProcessAfterInstantiation(testClazz, "testBean");
         Assert.assertTrue(testClazz.getEnvironments().contains("development"));
     }

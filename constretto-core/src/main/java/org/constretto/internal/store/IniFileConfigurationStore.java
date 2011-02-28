@@ -17,10 +17,9 @@ package org.constretto.internal.store;
 
 import org.constretto.ConfigurationStore;
 import org.constretto.exception.ConstrettoException;
-import org.constretto.model.ConfigurationNode;
+import org.constretto.model.ConfigurationValue;
 import org.constretto.model.Resource;
 import org.constretto.model.TaggedPropertySet;
-import org.ini4j.Ini;
 import org.ini4j.IniPreferences;
 
 import java.util.*;
@@ -38,13 +37,13 @@ public class IniFileConfigurationStore implements ConfigurationStore {
     public IniFileConfigurationStore() {
     }
 
-    public IniFileConfigurationStore(List<Resource> resources) {
+    private IniFileConfigurationStore(List<Resource> resources) {
         this.resources = resources;
     }
 
     public IniFileConfigurationStore addResource(Resource resource) {
-        this.resources.add(resource);
-        return this;
+        resources.add(resource);
+        return new IniFileConfigurationStore(resources);
     }
 
     public List<TaggedPropertySet> parseConfiguration() {
@@ -63,7 +62,7 @@ public class IniFileConfigurationStore implements ConfigurationStore {
                         properties.put(key, value);
                     }
                     if (tag.equals(DEFAULT_TAG)) {
-                        tag = ConfigurationNode.DEFAULT_TAG;
+                        tag = ConfigurationValue.DEFAULT_TAG;
                     }
                     TaggedPropertySet taggedPropertySet = new TaggedPropertySet(tag, properties, getClass());
                     taggedPropertySets.add(taggedPropertySet);

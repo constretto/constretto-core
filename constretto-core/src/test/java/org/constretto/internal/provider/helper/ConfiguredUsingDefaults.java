@@ -25,7 +25,7 @@ import org.constretto.annotation.Configure;
 public class ConfiguredUsingDefaults {
 
     @Configuration(defaultValue = "default-username")
-    private String username;
+    private String strangeUserName;
 
     @Configuration(defaultValue = "default-vendor")
     private String vendor;
@@ -36,15 +36,15 @@ public class ConfiguredUsingDefaults {
 
     @Configure
     public void configureMe(
-            @Configuration(defaultValue = "default-password") String password,
-            @Configuration(defaultValueFactory = VersionDefaultValueFactory.class) Integer version) {
-        this.password = password;
-        this.version = version;
+            @Configuration(defaultValue = "default-password") String strangePassword,
+            @Configuration(defaultValueFactory = VersionDefaultValueFactory.class) Integer strangeVersion) {
+        this.password = strangePassword;
+        this.version = strangeVersion;
     }
 
 
-    public String getUsername() {
-        return username;
+    public String getStrangeUserName() {
+        return strangeUserName;
     }
 
     public String getPassword() {

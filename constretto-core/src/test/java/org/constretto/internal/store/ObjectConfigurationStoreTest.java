@@ -72,23 +72,23 @@ public class ObjectConfigurationStoreTest extends AbstractConfigurationStoreTest
 
     @Test
     public void givenTagDevelopmentThenProviderChoosesDevelopmentValues() {
-        ConstrettoConfiguration configuration = new ConstrettoBuilder().addConfigurationStore(store).addCurrentTag("development")
-                .getConfiguration().at("datasources.customer");
-        assertEquals("development-url", configuration.evaluateToString("url"));
+        ConstrettoConfiguration configuration = new ConstrettoBuilder()
+                .addConfigurationStore(store).addCurrentTag("development")
+                .getConfiguration();
+        assertEquals("development-url", configuration.evaluateToString("datasources.customer.url"));
     }
 
     @Test
     public void givenNoTagThenProviderChoosesDefaultValues() {
-        ConstrettoConfiguration configuration = new ConstrettoBuilder().addConfigurationStore(store).getConfiguration().at(
-                "datasources.customer");
-        assertEquals("default-url", configuration.evaluateToString("url"));
+        ConstrettoConfiguration configuration = new ConstrettoBuilder().addConfigurationStore(store).getConfiguration();
+        assertEquals("default-url", configuration.evaluateToString("datasources.customer.url"));
     }
 
     @Test
     public void givenTagProductionThenProviderChoosesProductionValues() {
         ConstrettoConfiguration configuration = new ConstrettoBuilder().addConfigurationStore(store).addCurrentTag("production")
-                .getConfiguration().at("datasources.customer");
-        assertEquals("production-url", configuration.evaluateToString("url"));
+                .getConfiguration();
+        assertEquals("production-url", configuration.evaluateToString("datasources.customer.url"));
     }
 
     @Test

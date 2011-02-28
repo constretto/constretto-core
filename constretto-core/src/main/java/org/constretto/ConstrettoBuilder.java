@@ -15,15 +15,15 @@
  */
 package org.constretto;
 
-import org.constretto.internal.provider.ConfigurationProvider;
+import org.constretto.internal.DefaultConstrettoConfiguration;
 import org.constretto.internal.resolver.DefaultConfigurationContextResolver;
-import org.constretto.internal.store.EncryptedPropertiesStore;
-import org.constretto.internal.store.IniFileConfigurationStore;
-import org.constretto.internal.store.ObjectConfigurationStore;
-import org.constretto.internal.store.PropertiesStore;
-import org.constretto.internal.store.SystemPropertiesStore;
+import org.constretto.internal.store.*;
+import org.constretto.model.ConfigurationValue;
 import org.constretto.model.Resource;
+import org.constretto.model.TaggedPropertySet;
 import org.constretto.resolver.ConfigurationContextResolver;
+
+import java.util.*;
 
 /**
  * Provides a fluent Java api to build a constretto configuration object.
@@ -32,32 +32,59 @@ import org.constretto.resolver.ConfigurationContextResolver;
  */
 public class ConstrettoBuilder {
 
-    private final ConfigurationProvider configurationProvider = new ConfigurationProvider();
-    private final ConstrettoBuilder builder;
+    private final List<ConfigurationStore> configurationStores;
+    private final List<String> tags;
 
     public ConstrettoBuilder() {
         this(new DefaultConfigurationContextResolver());
     }
 
     public ConstrettoBuilder(ConfigurationContextResolver configurationContextResolver) {
-        this.builder = this;
+        this.configurationStores = new ArrayList<ConfigurationStore>();
+        this.tags = new ArrayList<String>();
         for (String tag : configurationContextResolver.getTags()) {
             addCurrentTag(tag);
         }
     }
 
+    private ConstrettoBuilder(List<ConfigurationStore> configurationStores, List<String> tags) {
+        this.configurationStores = configurationStores;
+        this.tags = tags;
+    }
+
     public ConstrettoConfiguration getConfiguration() {
-        return configurationProvider.getConfiguration();
+        Map<String, List<ConfigurationValue>> configuration = new HashMap<String, List<ConfigurationValue>>();
+        Collection<TaggedPropertySet> taggedPropertySets = loadPropertySets();
+        for (TaggedPropertySet taggedPropertySet : taggedPropertySets) {
+            Map<String, String> properties = taggedPropertySet.getProperties();
+            for (Map.Entry<String, String> entry : properties.entrySet()) {
+                if (configuration.containsKey(entry.getKey())) {
+                    List<ConfigurationValue> values = configuration.get(entry.getKey());
+                    if (values == null) {
+                        values = new ArrayList<ConfigurationValue>();
+                    }
+                    values.add(new ConfigurationValue(entry.getValue(), taggedPropertySet.tag()));
+                    configuration.put(entry.getKey(), values);
+
+                } else {
+                    List<ConfigurationValue> values = new ArrayList<ConfigurationValue>();
+                    values.add(new ConfigurationValue(entry.getValue(), taggedPropertySet.tag()));
+                    configuration.put(entry.getKey(), values);
+                }
+            }
+        }
+
+        return new DefaultConstrettoConfiguration(configuration, tags);
     }
 
     public ConstrettoBuilder addCurrentTag(String tag) {
-        configurationProvider.addTag(tag);
-        return this;
+        tags.add(tag);
+        return new ConstrettoBuilder(configurationStores, tags);
     }
 
     public ConstrettoBuilder addConfigurationStore(ConfigurationStore configurationStore) {
-        configurationProvider.addConfigurationStore(configurationStore);
-        return this;
+        configurationStores.add(configurationStore);
+        return new ConstrettoBuilder(configurationStores, tags);
     }
 
     public PropertiesStoreBuilder createPropertiesStore() {
@@ -73,12 +100,20 @@ public class ConstrettoBuilder {
     }
 
     public ConstrettoBuilder createSystemPropertiesStore() {
-        configurationProvider.addConfigurationStore(new SystemPropertiesStore());
-        return this;
+        configurationStores.add(new SystemPropertiesStore());
+        return new ConstrettoBuilder(configurationStores, tags);
     }
 
     public ObjectConfigurationStoreBuilder createObjectConfigurationStore() {
         return new ObjectConfigurationStoreBuilder();
+    }
+
+    private Collection<TaggedPropertySet> loadPropertySets() {
+        List<TaggedPropertySet> taggedPropertySets = new ArrayList<TaggedPropertySet>();
+        for (ConfigurationStore configurationStore : configurationStores) {
+            taggedPropertySets.addAll(configurationStore.parseConfiguration());
+        }
+        return taggedPropertySets;
     }
 
 
@@ -91,16 +126,24 @@ public class ConstrettoBuilder {
     }
 
     public class PropertiesStoreBuilder implements StoreBuilder {
-        private final PropertiesStore store = new PropertiesStore();
+        private final PropertiesStore store;
+
+        public PropertiesStoreBuilder() {
+            this.store = new PropertiesStore();
+        }
+
+        private PropertiesStoreBuilder(PropertiesStore store) {
+            this.store = store;
+        }
 
         public PropertiesStoreBuilder addResource(Resource resource) {
             store.addResource(resource);
-            return this;
+            return new PropertiesStoreBuilder(store);
         }
 
         public ConstrettoBuilder done() {
-            configurationProvider.addConfigurationStore(store);
-            return builder;
+            configurationStores.add(store);
+            return new ConstrettoBuilder(configurationStores, tags);
         }
     }
 
@@ -111,42 +154,62 @@ public class ConstrettoBuilder {
             store = new EncryptedPropertiesStore(passwordProperty);
         }
 
+        private EncryptedPropertiesStoreBuilder(EncryptedPropertiesStore store) {
+            this.store = store;
+        }
+
         public EncryptedPropertiesStoreBuilder addResource(Resource resource) {
             store.addResource(resource);
-            return this;
+            return new EncryptedPropertiesStoreBuilder(store);
         }
 
         public ConstrettoBuilder done() {
-            configurationProvider.addConfigurationStore(store);
-            return builder;
+            configurationStores.add(store);
+            return new ConstrettoBuilder(configurationStores, tags);
         }
     }
 
     public class IniFileConfigurationStoreBuilder implements StoreBuilder {
-        private final IniFileConfigurationStore store = new IniFileConfigurationStore();
+        private final IniFileConfigurationStore store;
+
+        public IniFileConfigurationStoreBuilder() {
+            store = new IniFileConfigurationStore();
+        }
+
+        public IniFileConfigurationStoreBuilder(IniFileConfigurationStore store) {
+            this.store = store;
+        }
 
         public IniFileConfigurationStoreBuilder addResource(Resource resource) {
             store.addResource(resource);
-            return this;
+            return new IniFileConfigurationStoreBuilder(store);
         }
 
         public ConstrettoBuilder done() {
-            configurationProvider.addConfigurationStore(store);
-            return builder;
+            configurationStores.add(store);
+            return new ConstrettoBuilder(configurationStores, tags);
         }
     }
 
     public class ObjectConfigurationStoreBuilder implements StoreBuilder {
-        private final ObjectConfigurationStore store = new ObjectConfigurationStore();
+        private final ObjectConfigurationStore store;
+
+        public ObjectConfigurationStoreBuilder() {
+            store = new ObjectConfigurationStore();
+        }
+
+        public ObjectConfigurationStoreBuilder(ObjectConfigurationStore store) {
+            this.store = store;
+        }
 
         public ObjectConfigurationStoreBuilder addObject(Object object) {
             store.addObject(object);
-            return this;
+            return new ObjectConfigurationStoreBuilder(store);
         }
 
         public ConstrettoBuilder done() {
-            configurationProvider.addConfigurationStore(store);
-            return builder;
+            configurationStores.add(store);
+            return new ConstrettoBuilder(configurationStores, tags);
         }
     }
 
