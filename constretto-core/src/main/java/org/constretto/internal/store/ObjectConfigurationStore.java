@@ -17,9 +17,9 @@ package org.constretto.internal.store;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.constretto.ConfigurationStore;
-import org.constretto.internal.ConstrettoUtils;
 import org.constretto.annotation.ConfigurationSource;
 import org.constretto.exception.ConstrettoException;
+import org.constretto.internal.ConstrettoUtils;
 import org.constretto.model.ConfigurationValue;
 import org.constretto.model.TaggedPropertySet;
 
@@ -30,11 +30,19 @@ import java.util.*;
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class ObjectConfigurationStore implements ConfigurationStore {
-    private final List<Object> configurationObjects = new ArrayList<Object>();
+    private final List<Object> configurationObjects;
+
+    public ObjectConfigurationStore() {
+        configurationObjects = new ArrayList<Object>();
+    }
+
+    private ObjectConfigurationStore(List<Object> configurationObjects) {
+        this.configurationObjects = configurationObjects;
+    }
 
     public ObjectConfigurationStore addObject(Object configurationObject) {
         configurationObjects.add(configurationObject);
-        return this;
+        return new ObjectConfigurationStore(configurationObjects);
     }
 
     public Collection<TaggedPropertySet> parseConfiguration() {

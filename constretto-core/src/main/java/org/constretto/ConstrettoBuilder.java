@@ -126,11 +126,19 @@ public class ConstrettoBuilder {
     }
 
     public class PropertiesStoreBuilder implements StoreBuilder {
-        private final PropertiesStore store = new PropertiesStore();
+        private final PropertiesStore store;
+
+        public PropertiesStoreBuilder() {
+            this.store = new PropertiesStore();
+        }
+
+        private PropertiesStoreBuilder(PropertiesStore store) {
+            this.store = store;
+        }
 
         public PropertiesStoreBuilder addResource(Resource resource) {
             store.addResource(resource);
-            return this;
+            return new PropertiesStoreBuilder(store);
         }
 
         public ConstrettoBuilder done() {
@@ -146,9 +154,13 @@ public class ConstrettoBuilder {
             store = new EncryptedPropertiesStore(passwordProperty);
         }
 
+        private EncryptedPropertiesStoreBuilder(EncryptedPropertiesStore store) {
+            this.store = store;
+        }
+
         public EncryptedPropertiesStoreBuilder addResource(Resource resource) {
             store.addResource(resource);
-            return this;
+            return new EncryptedPropertiesStoreBuilder(store);
         }
 
         public ConstrettoBuilder done() {
@@ -158,11 +170,19 @@ public class ConstrettoBuilder {
     }
 
     public class IniFileConfigurationStoreBuilder implements StoreBuilder {
-        private final IniFileConfigurationStore store = new IniFileConfigurationStore();
+        private final IniFileConfigurationStore store;
+
+        public IniFileConfigurationStoreBuilder() {
+            store = new IniFileConfigurationStore();
+        }
+
+        public IniFileConfigurationStoreBuilder(IniFileConfigurationStore store) {
+            this.store = store;
+        }
 
         public IniFileConfigurationStoreBuilder addResource(Resource resource) {
             store.addResource(resource);
-            return this;
+            return new IniFileConfigurationStoreBuilder(store);
         }
 
         public ConstrettoBuilder done() {
@@ -172,11 +192,19 @@ public class ConstrettoBuilder {
     }
 
     public class ObjectConfigurationStoreBuilder implements StoreBuilder {
-        private final ObjectConfigurationStore store = new ObjectConfigurationStore();
+        private final ObjectConfigurationStore store;
+
+        public ObjectConfigurationStoreBuilder() {
+            store = new ObjectConfigurationStore();
+        }
+
+        public ObjectConfigurationStoreBuilder(ObjectConfigurationStore store) {
+            this.store = store;
+        }
 
         public ObjectConfigurationStoreBuilder addObject(Object object) {
             store.addObject(object);
-            return this;
+            return new ObjectConfigurationStoreBuilder(store);
         }
 
         public ConstrettoBuilder done() {

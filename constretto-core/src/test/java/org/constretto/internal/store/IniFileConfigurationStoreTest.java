@@ -17,10 +17,6 @@ package org.constretto.internal.store;
 
 import org.constretto.ConfigurationStore;
 import org.constretto.model.ClassPathResource;
-import org.constretto.model.Resource;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author <a href="mailto:kristoffer.moum@arktekk.no">Kristoffer Moum</a>
@@ -29,9 +25,7 @@ public class IniFileConfigurationStoreTest extends AbstractConfigurationStoreTes
 
     @Override
     protected ConfigurationStore getStore() {
-        List<Resource> resources = new ArrayList<Resource>();
-        resources.add(new ClassPathResource("test.ini"));
-        return new IniFileConfigurationStore(resources);
+        return new IniFileConfigurationStore().addResource(new ClassPathResource("test.ini"));
     }
 
 }

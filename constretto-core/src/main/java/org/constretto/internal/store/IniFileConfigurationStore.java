@@ -37,13 +37,13 @@ public class IniFileConfigurationStore implements ConfigurationStore {
     public IniFileConfigurationStore() {
     }
 
-    public IniFileConfigurationStore(List<Resource> resources) {
+    private IniFileConfigurationStore(List<Resource> resources) {
         this.resources = resources;
     }
 
     public IniFileConfigurationStore addResource(Resource resource) {
-        this.resources.add(resource);
-        return this;
+        resources.add(resource);
+        return new IniFileConfigurationStore(resources);
     }
 
     public List<TaggedPropertySet> parseConfiguration() {
