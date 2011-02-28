@@ -49,8 +49,4 @@ public class TaggedPropertySet {
     public String tag() {
         return tag;
     }
-
-    public Class<? extends ConfigurationStore> getStoreClass() {
-        return storeClass;
-    }
 }
