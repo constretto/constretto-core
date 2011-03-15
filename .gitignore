@@ -6,4 +6,8 @@ target
 .settings
 .project
 bin
+<<<<<<< HEAD
 .clover
+=======
+.clover/coverage.db
+>>>>>>> master

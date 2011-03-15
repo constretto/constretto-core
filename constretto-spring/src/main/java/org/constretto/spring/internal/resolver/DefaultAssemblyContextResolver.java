@@ -27,11 +27,12 @@ import java.util.List;
  * current sprint context.
  * <p/>
  * <p/>
- * It looks for a system property called ASSEMBLY_ENV, and if that is not found tries to find the variable in the system
+ * It looks for a system property called CONSTRETTO_ENV, and if that is not found tries to find the variable in the system
  * environment.
  * <p/>
  * <p/>
- * If no system property or system environment variable found, it default to Enviroment.DEVELOPMENT.
+ * If no system property or system environment variable found, it will for the xml support fall back to the default bean, and
+ * When autowiring remove all constretto tagged beans as autowire candidates.
  *
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */

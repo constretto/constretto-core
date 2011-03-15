@@ -18,6 +18,9 @@ package org.constretto.annotation;
 import java.lang.annotation.*;
 
 /**
+ * This annotation is picked up by Constretto, and applies to public methods, including
+ * annotated methods inherited from superclasses. 
+ *  
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 @Target({ElementType.METHOD})

@@ -24,6 +24,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
@@ -48,6 +49,8 @@ public class ValueConverterRegistry {
             put(String.class, new StringValueConverter());
             put(File.class, new FileValueConverter());
             put(Locale.class, new LocaleValueConverter());
+            put(Properties.class, new PropertyFileValueConverter());
+            put(InputStreamValueConverter.class, new InputStreamValueConverter());
             put(InetAddress.class, new InetAddressValueConverter());
             put(URL.class, new UrlValueConverter());
         }

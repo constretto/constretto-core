@@ -20,6 +20,9 @@ import org.constretto.ConfigurationDefaultValueFactory;
 import java.lang.annotation.*;
 
 /**
+ * This annotation is picked up by Constretto, and applies to fields that are declared as private, public or default,
+ * including those inherited from superclasses.
+ *
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 @Target({ElementType.PARAMETER, ElementType.FIELD})
