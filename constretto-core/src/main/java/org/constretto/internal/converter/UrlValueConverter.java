@@ -13,18 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.constretto.annotation;
+package org.constretto.internal.converter;
 
-import java.lang.annotation.*;
+import org.constretto.exception.ConstrettoConversionException;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
- * This annotation is picked up by Constretto, and applies to public methods, including
- * annotated methods inherited from superclasses. 
- *  
- * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
+ * @author trygvis
  */
-@Target({ElementType.METHOD})
-@Retention(RetentionPolicy.RUNTIME)
-@Inherited
-public @interface Configure {
+public class UrlValueConverter implements ValueConverter<URL> {
+    public URL fromString(String value) throws ConstrettoConversionException {
+        try {
+            return new URL(value);
+        } catch (MalformedURLException e) {
+            throw new ConstrettoConversionException(value, URL.class, e.getMessage());
+        }
+    }
 }

@@ -13,18 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.constretto.annotation;
+package org.constretto.internal.converter;
 
-import java.lang.annotation.*;
+import org.constretto.exception.ConstrettoConversionException;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
- * This annotation is picked up by Constretto, and applies to public methods, including
- * annotated methods inherited from superclasses. 
- *  
- * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
+ * @author trygvis
  */
-@Target({ElementType.METHOD})
-@Retention(RetentionPolicy.RUNTIME)
-@Inherited
-public @interface Configure {
+public class InetAddressValueConverter implements ValueConverter<InetAddress> {
+
+    public InetAddress fromString(String value) throws ConstrettoConversionException {
+        try {
+            return InetAddress.getByName(value);
+        } catch (UnknownHostException e) {
+            throw new ConstrettoConversionException(value, InetAddress.class, e);
+        }
+    }
 }
