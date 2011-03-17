@@ -125,7 +125,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         return configuration.containsKey(expression);
     }
 
-    public void addTag(String... newtags) {
+    public void appendTag(String... newtags) {
         currentTags.addAll(Arrays.asList(newtags));
         reconfigure();
     }
