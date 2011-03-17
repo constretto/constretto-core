@@ -36,6 +36,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
+import static java.util.Arrays.asList;
+
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
@@ -46,12 +48,18 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     private final Paranamer paranamer = new BytecodeReadingParanamer();
 
     private final Map<String, List<ConfigurationValue>> configuration;
-    private Set<WeakReference<Object>> configuredObjects = new HashSet<WeakReference<Object>>();
-    private List<String> currentTags;
+    private final Set<WeakReference<Object>> configuredObjects = new HashSet<WeakReference<Object>>();
+    private final List<String> originalTags = new ArrayList<String>();
+    private final List<String> currentTags = new ArrayList<String>();
 
-    public DefaultConstrettoConfiguration(Map<String, List<ConfigurationValue>> configuration, List<String> currentTags) {
+    public DefaultConstrettoConfiguration(Map<String, List<ConfigurationValue>> configuration, List<String> originalTags) {
         this.configuration = configuration;
-        this.currentTags = currentTags;
+        this.originalTags.addAll(originalTags);
+        this.currentTags.addAll(originalTags);
+    }
+
+    public DefaultConstrettoConfiguration(Map<String, List<ConfigurationValue>> configuration) {
+        this.configuration = configuration;
     }
 
     @SuppressWarnings("unchecked")
@@ -125,8 +133,25 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         return configuration.containsKey(expression);
     }
 
-    public void addTag(String... newtags) {
-        currentTags.addAll(Arrays.asList(newtags));
+    public void appendTag(String... newtags) {
+        currentTags.addAll(asList(newtags));
+        reconfigure();
+    }
+
+    public void prependTag(String... newtags) {
+        currentTags.addAll(0, asList(newtags));
+        reconfigure();
+    }
+
+    public void resetTags() {
+        currentTags.clear();
+        currentTags.addAll(originalTags);
+        reconfigure();
+    }
+
+    public void clearTags() {
+        currentTags.clear();
+        originalTags.clear();
         reconfigure();
     }
 
@@ -306,23 +331,23 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
 
         do {
             Field[] fields = objectToConfigureClass.getDeclaredFields();
-        for (Field field : fields) {
-            try {
-                if (field.isAnnotationPresent(Configuration.class)) {
-                    Configuration configurationAnnotation = field.getAnnotation(Configuration.class);
-                    String expression = "".equals(configurationAnnotation.expression()) ? field.getName() : configurationAnnotation.expression();
-                    field.setAccessible(true);
-                    Class<?> fieldType = field.getType();
-                    if (hasValue(expression)) {
-                        ConfigurationValue node = findElementOrThrowException(expression);
-                        field.set(objectToConfigure, processAndConvert(fieldType, expression));
-                    } else {
-                        if (hasAnnotationDefaults(configurationAnnotation)) {
-                            if (configurationAnnotation.defaultValueFactory().equals(Configuration.EmptyValueFactory.class)) {
-                                field.set(objectToConfigure, ValueConverterRegistry.convert(fieldType, configurationAnnotation.defaultValue()));
-                            } else {
-                                ConfigurationDefaultValueFactory valueFactory = configurationAnnotation.defaultValueFactory().newInstance();
-                                field.set(objectToConfigure, valueFactory.getDefaultValue());
+            for (Field field : fields) {
+                try {
+                    if (field.isAnnotationPresent(Configuration.class)) {
+                        Configuration configurationAnnotation = field.getAnnotation(Configuration.class);
+                        String expression = "".equals(configurationAnnotation.expression()) ? field.getName() : configurationAnnotation.expression();
+                        field.setAccessible(true);
+                        Class<?> fieldType = field.getType();
+                        if (hasValue(expression)) {
+                            ConfigurationValue node = findElementOrThrowException(expression);
+                            field.set(objectToConfigure, processAndConvert(fieldType, expression));
+                        } else {
+                            if (hasAnnotationDefaults(configurationAnnotation)) {
+                                if (configurationAnnotation.defaultValueFactory().equals(Configuration.EmptyValueFactory.class)) {
+                                    field.set(objectToConfigure, ValueConverterRegistry.convert(fieldType, configurationAnnotation.defaultValue()));
+                                } else {
+                                    ConfigurationDefaultValueFactory valueFactory = configurationAnnotation.defaultValueFactory().newInstance();
+                                    field.set(objectToConfigure, valueFactory.getDefaultValue());
                                 }
                             } else if (configurationAnnotation.required()) {
                                 throw new ConstrettoException("Missing value or default value for expression [" + expression + "] for field [" + field.getName() + "], in class [" + objectToConfigure.getClass().getName() + "] with tags " + currentTags + ".");

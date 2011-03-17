@@ -26,26 +26,71 @@ public class DynamicReconfiguringTagsTest {
     }
 
     @Test
-    public void whenSettingTagsRuntimeVariablesShouldBeResolvedCorrectlyWhenUsingJavaApi() {
+    public void whenAppendingTagsRuntimeVariablesShouldBeResolvedCorrectlyWhenUsingJavaApi() {
         assertEquals("default value", config.evaluateToString("stagedKey"));
-        config.addTag("test");
+        config.appendTag("test");
+        assertEquals("test value", config.evaluateToString("stagedKey"));
+        config.appendTag("prod");
         assertEquals("test value", config.evaluateToString("stagedKey"));
     }
 
+
     @Test
-    public void whenSettingTagsRuntimeObjectsInjectedWithConfigurationShouldBeResolvedCorrectly() throws InterruptedException {
+    public void whenPrependingTagsRuntimeVariablesShouldBeResolvedCorrectlyWhenUsingJavaApi() {
+        assertEquals("default value", config.evaluateToString("stagedKey"));
+        config.prependTag("test");
+        assertEquals("test value", config.evaluateToString("stagedKey"));
+        config.prependTag("prod");
+        assertEquals("prod value", config.evaluateToString("stagedKey"));
+    }
+
+    @Test
+    public void whenResetingTagsItResolvesBackToOriginalTags() {
+        ConstrettoConfiguration configuration = new ConstrettoBuilder()
+                .createPropertiesStore().addResource(new ClassPathResource("dynamic.properties")).done()
+                .addCurrentTag("test")
+                .getConfiguration();
+        assertEquals("test value", configuration.evaluateToString("stagedKey"));
+        configuration.prependTag("prod");
+        assertEquals("prod value", configuration.evaluateToString("stagedKey"));
+        configuration.resetTags();
+        assertEquals("test value", configuration.evaluateToString("stagedKey"));
+    }
+
+
+    @Test
+    public void whenClearingTagsItResolvesBackToDefaultValues() {
+        ConstrettoConfiguration configuration = new ConstrettoBuilder()
+                .createPropertiesStore().addResource(new ClassPathResource("dynamic.properties")).done()
+                .addCurrentTag("test")
+                .getConfiguration();
+        assertEquals("test value", configuration.evaluateToString("stagedKey"));
+        configuration.prependTag("prod");
+        assertEquals("prod value", configuration.evaluateToString("stagedKey"));
+        configuration.clearTags();
+        assertEquals("default value", configuration.evaluateToString("stagedKey"));
+    }
+
+    @Test
+    public void whenAppendingTagsRuntimeObjectsInjectedWithConfigurationShouldBeResolvedCorrectly() throws InterruptedException {
         ConfiguredClass configuredClass = new ConfiguredClass();
         config.on(configuredClass);
         assertEquals("default value", configuredClass.stagedKey);
         assertEquals("default", configuredClass.stagedVariable);
-        config.addTag("test");
+        config.appendTag("test");
+        assertEquals("test value", configuredClass.stagedKey);
+        assertEquals("test", configuredClass.stagedVariable);
+        config.appendTag("prod");
         assertEquals("test value", configuredClass.stagedKey);
         assertEquals("test", configuredClass.stagedVariable);
         config.removeTag("test");
+        assertEquals("prod value", configuredClass.stagedKey);
+        assertEquals("prod", configuredClass.stagedVariable);
+        config.removeTag("prod");
         assertEquals("default value", configuredClass.stagedKey);
         assertEquals("default", configuredClass.stagedVariable);
         configuredClass = null;
-        config.addTag("linux");
+        config.appendTag("linux");
         Assert.assertNull(configuredClass);
     }
 
