@@ -28,7 +28,7 @@ public class EnvironmentAnnotatedFieldTest {
     public void givenClassWithEnvironmentAnnotatedPropertyThenInjectEnvironment() throws Exception {
         TestClazz testClazz = new TestClazz();
         ConfigurationAnnotationConfigurer annotationConfigurer = new ConfigurationAnnotationConfigurer(
-                new DefaultConstrettoConfiguration(null,null), new AlwaysDevelopmentEnvironmentResolver());
+                new DefaultConstrettoConfiguration(null), new AlwaysDevelopmentEnvironmentResolver());
         annotationConfigurer.postProcessAfterInstantiation(testClazz, "testBean");
         Assert.assertTrue(testClazz.getEnvironments().contains("development"));
     }

@@ -58,6 +58,10 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         this.currentTags.addAll(originalTags);
     }
 
+    public DefaultConstrettoConfiguration(Map<String, List<ConfigurationValue>> configuration) {
+        this.configuration = configuration;
+    }
+
     @SuppressWarnings("unchecked")
     public <K> K evaluateTo(String expression, K defaultValue) {
         if (!hasValue(expression)) {
@@ -135,7 +139,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     }
 
     public void prependTag(String... newtags) {
-        currentTags.addAll(0,asList(newtags));
+        currentTags.addAll(0, asList(newtags));
         reconfigure();
     }
 
@@ -327,23 +331,23 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
 
         do {
             Field[] fields = objectToConfigureClass.getDeclaredFields();
-        for (Field field : fields) {
-            try {
-                if (field.isAnnotationPresent(Configuration.class)) {
-                    Configuration configurationAnnotation = field.getAnnotation(Configuration.class);
-                    String expression = "".equals(configurationAnnotation.expression()) ? field.getName() : configurationAnnotation.expression();
-                    field.setAccessible(true);
-                    Class<?> fieldType = field.getType();
-                    if (hasValue(expression)) {
-                        ConfigurationValue node = findElementOrThrowException(expression);
-                        field.set(objectToConfigure, processAndConvert(fieldType, expression));
-                    } else {
-                        if (hasAnnotationDefaults(configurationAnnotation)) {
-                            if (configurationAnnotation.defaultValueFactory().equals(Configuration.EmptyValueFactory.class)) {
-                                field.set(objectToConfigure, ValueConverterRegistry.convert(fieldType, configurationAnnotation.defaultValue()));
-                            } else {
-                                ConfigurationDefaultValueFactory valueFactory = configurationAnnotation.defaultValueFactory().newInstance();
-                                field.set(objectToConfigure, valueFactory.getDefaultValue());
+            for (Field field : fields) {
+                try {
+                    if (field.isAnnotationPresent(Configuration.class)) {
+                        Configuration configurationAnnotation = field.getAnnotation(Configuration.class);
+                        String expression = "".equals(configurationAnnotation.expression()) ? field.getName() : configurationAnnotation.expression();
+                        field.setAccessible(true);
+                        Class<?> fieldType = field.getType();
+                        if (hasValue(expression)) {
+                            ConfigurationValue node = findElementOrThrowException(expression);
+                            field.set(objectToConfigure, processAndConvert(fieldType, expression));
+                        } else {
+                            if (hasAnnotationDefaults(configurationAnnotation)) {
+                                if (configurationAnnotation.defaultValueFactory().equals(Configuration.EmptyValueFactory.class)) {
+                                    field.set(objectToConfigure, ValueConverterRegistry.convert(fieldType, configurationAnnotation.defaultValue()));
+                                } else {
+                                    ConfigurationDefaultValueFactory valueFactory = configurationAnnotation.defaultValueFactory().newInstance();
+                                    field.set(objectToConfigure, valueFactory.getDefaultValue());
                                 }
                             } else if (configurationAnnotation.required()) {
                                 throw new ConstrettoException("Missing value or default value for expression [" + expression + "] for field [" + field.getName() + "], in class [" + objectToConfigure.getClass().getName() + "] with tags " + currentTags + ".");
