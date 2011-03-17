@@ -36,6 +36,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
+import static java.util.Arrays.asList;
+
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
@@ -126,7 +128,12 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     }
 
     public void appendTag(String... newtags) {
-        currentTags.addAll(Arrays.asList(newtags));
+        currentTags.addAll(asList(newtags));
+        reconfigure();
+    }
+
+    public void prependTag(String... newtags) {
+        currentTags.addAll(0,asList(newtags));
         reconfigure();
     }
 

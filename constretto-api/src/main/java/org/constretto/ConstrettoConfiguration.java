@@ -76,6 +76,8 @@ public interface ConstrettoConfiguration extends Iterable<Property> {
 
     void appendTag(String... newtag) throws ConstrettoException;
 
+    void prependTag(String... newtag) throws ConstrettoException;
+
     void removeTag(String... newTag) throws ConstrettoException;
 
 }
