@@ -34,6 +34,16 @@ public class DynamicReconfiguringTagsTest {
         assertEquals("test value", config.evaluateToString("stagedKey"));
     }
 
+
+    @Test
+    public void whenPrependingTagsRuntimeVariablesShouldBeResolvedCorrectlyWhenUsingJavaApi() {
+        assertEquals("default value", config.evaluateToString("stagedKey"));
+        config.prependTag("test");
+        assertEquals("test value", config.evaluateToString("stagedKey"));
+        config.prependTag("prod");
+        assertEquals("prod value", config.evaluateToString("stagedKey"));
+    }
+
     @Test
     public void whenAppendingTagsRuntimeObjectsInjectedWithConfigurationShouldBeResolvedCorrectly() throws InterruptedException {
         ConfiguredClass configuredClass = new ConfiguredClass();
