@@ -80,4 +80,20 @@ public interface ConstrettoConfiguration extends Iterable<Property> {
 
     void removeTag(String... newTag) throws ConstrettoException;
 
+    /**
+     * Resets all tags in Constretto to the ones originally
+     * configured either with a ConfigurationContextResolver, or
+     * by the ConstrettoBuilder class.
+     */
+    void resetTags();
+
+    /**
+     * Clears all tags in Constretto including the ones originally
+     * configured either with a ConfigurationContextResolver, or
+     * by the ConstrettoBuilder class. Resulting in Constretto having
+     * no configuration tags registered.
+     * <p/>
+     * This is a non recoverable operation and after use you will need to build your tags from scratch.
+     */
+    void clearTags();
 }

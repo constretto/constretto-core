@@ -48,12 +48,14 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     private final Paranamer paranamer = new BytecodeReadingParanamer();
 
     private final Map<String, List<ConfigurationValue>> configuration;
-    private Set<WeakReference<Object>> configuredObjects = new HashSet<WeakReference<Object>>();
-    private List<String> currentTags;
+    private final Set<WeakReference<Object>> configuredObjects = new HashSet<WeakReference<Object>>();
+    private final List<String> originalTags = new ArrayList<String>();
+    private final List<String> currentTags = new ArrayList<String>();
 
-    public DefaultConstrettoConfiguration(Map<String, List<ConfigurationValue>> configuration, List<String> currentTags) {
+    public DefaultConstrettoConfiguration(Map<String, List<ConfigurationValue>> configuration, List<String> originalTags) {
         this.configuration = configuration;
-        this.currentTags = currentTags;
+        this.originalTags.addAll(originalTags);
+        this.currentTags.addAll(originalTags);
     }
 
     @SuppressWarnings("unchecked")
@@ -134,6 +136,18 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
 
     public void prependTag(String... newtags) {
         currentTags.addAll(0,asList(newtags));
+        reconfigure();
+    }
+
+    public void resetTags() {
+        currentTags.clear();
+        currentTags.addAll(originalTags);
+        reconfigure();
+    }
+
+    public void clearTags() {
+        currentTags.clear();
+        originalTags.clear();
         reconfigure();
     }
 
