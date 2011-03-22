@@ -143,16 +143,18 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         reconfigure();
     }
 
-    public void resetTags() {
+    public void resetTags(boolean reconfigure) {
         currentTags.clear();
         currentTags.addAll(originalTags);
-        reconfigure();
+        if (reconfigure)
+            reconfigure();
     }
 
-    public void clearTags() {
+    public void clearTags(boolean reconfigure) {
         currentTags.clear();
         originalTags.clear();
-        reconfigure();
+        if (reconfigure)
+            reconfigure();
     }
 
     public void removeTag(String... newTags) {
@@ -171,6 +173,19 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         return properties.iterator();
     }
 
+    public void reconfigure() {
+        WeakReference[] references = configuredObjects.toArray(new WeakReference[configuredObjects.size()]);
+        for (WeakReference reference : references) {
+            if (reference != null && reference.get() != null) {
+                on(reference.get());
+            }
+        }
+    }
+
+
+    //
+    // Helper methods
+    //
     private Map<String, String> asMap() {
         Map<String, String> properties = new HashMap<String, String>();
         for (String key : configuration.keySet()) {
@@ -180,20 +195,6 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
             }
         }
         return properties;
-    }
-
-
-    //
-    // Helper methods
-    //
-
-    private void reconfigure() {
-        WeakReference[] references = configuredObjects.toArray(new WeakReference[configuredObjects.size()]);
-        for (WeakReference reference : references) {
-            if (reference != null && reference.get() != null) {
-                on(reference.get());
-            }
-        }
     }
 
     private ConfigurationValue findElementOrThrowException(String expression) {

@@ -53,7 +53,7 @@ public class DynamicReconfiguringTagsTest {
         assertEquals("test value", configuration.evaluateToString("stagedKey"));
         configuration.prependTag("prod");
         assertEquals("prod value", configuration.evaluateToString("stagedKey"));
-        configuration.resetTags();
+        configuration.resetTags(true);
         assertEquals("test value", configuration.evaluateToString("stagedKey"));
     }
 
@@ -67,7 +67,7 @@ public class DynamicReconfiguringTagsTest {
         assertEquals("test value", configuration.evaluateToString("stagedKey"));
         configuration.prependTag("prod");
         assertEquals("prod value", configuration.evaluateToString("stagedKey"));
-        configuration.clearTags();
+        configuration.clearTags(true);
         assertEquals("default value", configuration.evaluateToString("stagedKey"));
     }
 
