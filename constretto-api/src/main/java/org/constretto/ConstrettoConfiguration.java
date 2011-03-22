@@ -84,8 +84,12 @@ public interface ConstrettoConfiguration extends Iterable<Property> {
      * Resets all tags in Constretto to the ones originally
      * configured either with a ConfigurationContextResolver, or
      * by the ConstrettoBuilder class.
+     *
+     * @param reconfigure if set constretto will run the reconfigure() method after the reset.
+     * Note this may result in exceptions from constretto if default values does not exist for all keys
+     * injected in methods or fields annotated with @Configure or @Configuration
      */
-    void resetTags();
+    void resetTags(boolean reconfigure) throws ConstrettoException;
 
     /**
      * Clears all tags in Constretto including the ones originally
@@ -94,6 +98,16 @@ public interface ConstrettoConfiguration extends Iterable<Property> {
      * no configuration tags registered.
      * <p/>
      * This is a non recoverable operation and after use you will need to build your tags from scratch.
+     *
+     * @param reconfigure if set constretto will run the reconfigure() method after clearing.
+     * Note this may result in exceptions from constretto if default values does not exist for all keys
+     * injected in methods or fields annotated with @Configure or @Configuration
      */
-    void clearTags();
+    void clearTags(boolean reconfigure) throws ConstrettoException;
+
+    /**
+     * Will rerun all @Configure annotated methods with the current configuration.
+     */
+    void reconfigure() throws ConstrettoException;
+
 }
