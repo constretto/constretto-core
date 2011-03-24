@@ -20,6 +20,7 @@ import org.springframework.core.io.Resource;
 
 import java.io.File;
 import java.net.InetAddress;
+import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Locale;
@@ -53,6 +54,7 @@ public class ValueConverterRegistry {
             put(Properties.class, new PropertyFileValueConverter());
             put(InputStreamValueConverter.class, new InputStreamValueConverter());
             put(InetAddress.class, new InetAddressValueConverter());
+            put(URI.class, new UriValueConverter());
             put(URL.class, new UrlValueConverter());
         }
     };
