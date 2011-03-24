@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,11 +21,41 @@ import org.constretto.exception.ConstrettoConversionException;
 import java.io.File;
 
 /**
- * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
+ * @author trygvis
  */
 public class FileValueConverter implements ValueConverter<File> {
 
+    private final File basedir;
+    private final boolean convertToAbsolute;
+
+    public FileValueConverter() {
+        this(null);
+    }
+
+    public FileValueConverter(File basedir) {
+        this(basedir, false);
+    }
+
+    public FileValueConverter(File basedir, boolean convertToAbsolute) {
+        this.basedir = basedir;
+        this.convertToAbsolute = convertToAbsolute;
+    }
+
     public File fromString(String value) throws ConstrettoConversionException {
-        return new File(value);
+        File f = new File(value);
+
+        if (basedir == null) {
+            return convertToAbsolute(f);
+        }
+
+        if (f.isAbsolute()) {
+            return f;
+        }
+
+        return convertToAbsolute(new File(basedir, value));
+    }
+
+    private File convertToAbsolute(File f) {
+        return convertToAbsolute ? f.getAbsoluteFile() : f;
     }
 }
