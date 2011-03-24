@@ -16,6 +16,7 @@
 package org.constretto.internal.converter;
 
 import org.constretto.ValueConverter;
+import org.constretto.exception.ConstrettoConversionException;
 import org.constretto.exception.ConstrettoException;
 
 import java.io.File;
@@ -64,10 +65,21 @@ public class ValueConverterRegistry {
     public static <T> T convert(Class<T> clazz, String value) throws ConstrettoException {
 
         if (!converters.containsKey(clazz)) {
-            throw new ConstrettoException("No converter found for class: " + clazz.getName());
+            if (!Enum.class.isAssignableFrom(clazz)) {
+                throw new ConstrettoException("No converter found for class: " + clazz.getName());
+            }
+
+            return (T) convertEnum((Class) clazz, value);
         }
         ValueConverter<?> converter = converters.get(clazz);
         return (T) converter.fromString(value);
     }
 
+    private static <T extends Enum<T>> T convertEnum(Class<T> clazz, String value) {
+        try {
+            return Enum.valueOf(clazz, value);
+        } catch (IllegalArgumentException e) {
+            throw new ConstrettoConversionException(value, clazz, e);
+        }
+    }
 }
