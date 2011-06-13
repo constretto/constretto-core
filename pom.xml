@@ -11,7 +11,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.constretto</groupId>
     <artifactId>constretto</artifactId>
-    <version>1.1.1</version>
+    <version>1.1.2</version>
     <name>Constretto :: Parent - ${project.version}</name>
     <inceptionYear>2008</inceptionYear>
     <url>http://constretto.org</url>
@@ -31,19 +31,15 @@
     </modules>
 
     <scm>
-        <developerConnection>scm:git:git://github.com/constretto/constretto-core.git</developerConnection>
+        <connection>scm:git:git@github.com:constretto/constretto-core.git</connection>	
+        <developerConnection>scm:git:git@github.com:constretto/constretto-core.git</developerConnection>
         <url>http://github.com/constretto/constretto-core</url>
     </scm>
 
     <issueManagement>
-        <system>lighthouse</system>
-        <url>http://constretto.lighthouseapp.com/projects/30709-constretto-core</url>
+        <system>jira</system>
+        <url>http://constretto.jira.com/browse/CC</url>
     </issueManagement>
-
-    <ciManagement>
-        <system>hudson</system>
-        <url>http://ci.constretto.org</url>
-    </ciManagement>
 
     <developers>
         <developer>
@@ -89,11 +85,19 @@
         </license>
     </licenses>
 
+    <properties>
+	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
     <profiles>
         <profile>
             <id>spring2.x</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
+				<property>
+  		            <name>performRelease</name>
+		            <value>true</value>
+		      </property>
             </activation>
             <properties>
                 <spring.version>2.5.6</spring.version>
@@ -103,10 +107,63 @@
         <profile>
             <id>spring3.x</id>
             <properties>
-                <spring.version>3.0.0.RELEASE</spring.version>
+                <spring.version>3.0.5.RELEASE</spring.version>
                 <junit.version>4.5</junit.version>
             </properties>
         </profile>
+		<profile> 
+			<id>sonatype-oss-release</id> 
+			<activation>
+		      <property>
+		        <name>performRelease</name>
+		        <value>true</value>
+		      </property>
+		    </activation>
+			<build> 
+				<plugins> 
+					<plugin> 
+						<groupId>org.apache.maven.plugins</groupId> 
+						<artifactId>maven-source-plugin</artifactId> 
+						<version>2.1.2</version> 
+						<executions> 
+							<execution> 
+								<id>attach-sources</id> 
+								<goals> 
+									<goal>jar-no-fork</goal> 
+								</goals> 
+							</execution> 
+						</executions> 
+					</plugin> 
+					<plugin> 
+						<groupId>org.apache.maven.plugins</groupId> 
+						<artifactId>maven-javadoc-plugin</artifactId> 
+						<version>2.7</version> 
+						<executions> 
+							<execution> 
+								<id>attach-javadocs</id> 
+								<goals> 
+									<goal>jar</goal> 
+								</goals> 
+							</execution> 
+						</executions> 
+					</plugin> 
+					<plugin> 
+						<groupId>org.apache.maven.plugins</groupId> 
+						<artifactId>maven-gpg-plugin</artifactId> 
+						<version>1.1</version> 
+						<executions> 
+							<execution> 
+								<id>sign-artifacts</id> 
+								<phase>verify</phase> 
+								<goals> 
+									<goal>sign</goal> 
+								</goals> 
+							</execution> 
+						</executions> 
+					</plugin> 
+				</plugins> 
+			</build> 
+		</profile>
     </profiles>
 
 
@@ -250,27 +307,54 @@
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
+            <plugin> 
+				<groupId>org.apache.maven.plugins</groupId> 
+				<artifactId>maven-enforcer-plugin</artifactId> 
+				<version>1.0</version> 
+				<executions> 
+					<execution> 
+						<id>enforce-maven</id> 
+						<goals> 
+							<goal>enforce</goal> 
+						</goals> 
+						<configuration> 
+							<rules> 
+								<requireMavenVersion> 
+									<version>(,2.1.0),(2.1.0,2.2.0),(2.2.0,)</version> 
+									<message>Maven 2.1.0 and 2.2.0 produce incorrect GPG signatures and checksums respectively.</message> 
+								</requireMavenVersion> 
+							</rules> 
+						</configuration> 
+					</execution> 
+				</executions> 
+			</plugin>
         </plugins>
+        <pluginManagement> 
+			<plugins> 
+				<plugin> 
+					<groupId>org.apache.maven.plugins</groupId> 
+					<artifactId>maven-release-plugin</artifactId> 
+					<version>2.1</version> 
+					<configuration> 
+						<mavenExecutorId>forked-path</mavenExecutorId> 
+						<useReleaseProfile>false</useReleaseProfile> 
+						<arguments>-Psonatype-oss-release,spring2.x</arguments> 
+					</configuration> 
+				</plugin> 
+			</plugins> 
+		</pluginManagement>
     </build>
 
-    <repositories>
-        <repository>
-            <id>constretto.org</id>
-            <name>Constretto public maven repository</name>
-            <url>http://repo.constretto.org/content/groups/public</url>
-        </repository>
-    </repositories>
-
-    <distributionManagement>
-        <repository>
-            <id>constretto.org</id>
-            <name>Constretto release repository</name>
-            <url>http://repo.constretto.org/content/repositories/releases</url>
-        </repository>
-        <snapshotRepository>
-            <id>constretto.org</id>
-            <name>Constretto snapshot repository</name>
-            <url>http://repo.constretto.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
+    <distributionManagement> 
+		<snapshotRepository> 
+			<id>sonatype-nexus-snapshots</id> 
+			<name>Sonatype Nexus Snapshots</name> 
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url> 
+		</snapshotRepository> 
+		<repository> 
+			<id>sonatype-nexus-staging</id> 
+			<name>Nexus Release Repository</name> 
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url> 
+		</repository> 
+	</distributionManagement>
 </project>
