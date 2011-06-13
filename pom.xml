@@ -31,8 +31,8 @@
     </modules>
 
     <scm>
-        <connection>scm:git:git://github.com/constretto/constretto-core.git</connection>	
-        <developerConnection>scm:git:git://github.com/constretto/constretto-core.git</developerConnection>
+        <connection>scm:git:git@github.com:constretto/constretto-core.git</connection>	
+        <developerConnection>scm:git:git@github.com:constretto/constretto-core.git</developerConnection>
         <url>http://github.com/constretto/constretto-core</url>
     </scm>
 
