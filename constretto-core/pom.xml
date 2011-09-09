@@ -11,7 +11,7 @@
   <parent>
     <artifactId>constretto</artifactId>
     <groupId>org.constretto</groupId>
-    <version>1.1.2</version>
+    <version>1.1.3</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>constretto-core</artifactId>
