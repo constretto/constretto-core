@@ -15,18 +15,22 @@
  */
 package org.constretto.internal.provider;
 
-import static junit.framework.Assert.assertEquals;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.constretto.ConstrettoBuilder;
 import org.constretto.ConstrettoConfiguration;
+import org.constretto.ValueConverter;
 import org.constretto.exception.ConstrettoConversionException;
 import org.constretto.exception.ConstrettoException;
-import org.constretto.ValueConverter;
 import org.constretto.internal.converter.ValueConverterRegistry;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.lang.reflect.Type;
+import java.util.*;
+
 import static java.lang.System.setProperty;
-import java.util.Locale;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
@@ -49,6 +53,9 @@ public class ValueConversionTest {
         setProperty("custom.data", "Some data");
         setProperty("locale.valid", "en_US");
         setProperty("locale.invalid", "no_PO");
+        setProperty("array.of.strings", "[\"one\",\"two\",\"three\"]");
+        setProperty("array.of.ints", "[\"1\",\"2\",\"3\"]");
+        setProperty("map.of.int.float", "{\"1\":\"10\",\"2\":\"20\"}");
         configuration = new ConstrettoBuilder().createSystemPropertiesStore().getConfiguration();
     }
 
@@ -187,12 +194,57 @@ public class ValueConversionTest {
         CustomData customData = new CustomData("Some data");
         ValueConverterRegistry.registerCustomConverter(CustomData.class, new CustomDataValueConverter());
         assertEquals(customData, configuration.evaluateTo(CustomData.class, "custom.data"));
+    }
 
+    @Test
+    public void evaluateStringArray() {
+        List<String> expected = new ArrayList<String>() {{
+            add("one");
+            add("two");
+            add("three");
+        }};
+        List<String> result = configuration.evaluateToArray(String.class, "array.of.strings");
+        assertList(expected, result);
+    }
+
+    @Test
+    public void evaluateIntegerArray() {
+        List<Integer> expected = new ArrayList<Integer>() {{
+            add(1);
+            add(2);
+            add(3);
+        }};
+        List<Integer> result = configuration.evaluateToArray(Integer.class, "array.of.ints");
+        assertList(expected, result);
+    }
+
+    @Test
+    public void evaluateMapOfSimpleTypes() {
+        Map<Integer, Float> expected = new HashMap<Integer, Float>() {{
+            put(1, 10f);
+            put(2, 20f);
+        }};
+        Map<Integer, Float> result = configuration.evaluateToMap(Integer.class, Float.class, "map.of.int.float");
+        assertMap(expected, result);
     }
 
     //
     // Helper methods
     //
+    private void assertList(List<?> expected, List<?> result) {
+        assertEquals(expected.size(), result.size());
+        for (int i = 0; i < result.size(); i++) {
+            assertEquals(expected.get(i), result.get(i));
+        }
+    }
+
+    private void assertMap(Map<?, ?> expected, Map<?, ?> result) {
+        assertEquals(expected.size(), result.size());
+        for (Object key : expected.keySet()) {
+            assertEquals(expected.get(key), result.get(key));
+        }
+    }
+
     private void assertException(Class<? extends Throwable> expectedException, Guard guard) {
         try {
             guard.operation();
@@ -234,9 +286,21 @@ public class ValueConversionTest {
     }
 
     private class CustomDataValueConverter implements ValueConverter<CustomData> {
+        private final Type listType = new TypeToken<List<CustomData>>() {
+        }.getType();
+        private final Gson gson = new Gson();
 
         public CustomData fromString(String value) throws ConstrettoConversionException {
             return new CustomData(value);
+        }
+
+        public List<CustomData> fromStrings(String value) throws ConstrettoConversionException {
+            List<CustomData> customDatas = new ArrayList<CustomData>();
+            List<String> strings = gson.fromJson(value, listType);
+            for (String string : strings) {
+                customDatas.add(fromString(string));
+            }
+            return customDatas;
         }
 
         public String toString(CustomData value) {

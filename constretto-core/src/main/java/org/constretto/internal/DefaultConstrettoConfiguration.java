@@ -15,6 +15,8 @@
  */
 package org.constretto.internal;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.thoughtworks.paranamer.BytecodeReadingParanamer;
 import com.thoughtworks.paranamer.Paranamer;
 import org.constretto.ConfigurationDefaultValueFactory;
@@ -34,10 +36,12 @@ import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import static java.util.Arrays.asList;
+import static org.constretto.internal.GenericCollectionTypeResolver.*;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
@@ -47,6 +51,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     private static final String VARIABLE_PREFIX = "#{";
     private static final String VARIABLE_SUFFIX = "}";
     private final Paranamer paranamer = new BytecodeReadingParanamer();
+    private final Gson gson = new Gson();
 
     private final Map<String, List<ConfigurationValue>> configuration;
     private Set<WeakReference<Object>> configuredObjects = new CopyOnWriteArraySet<WeakReference<Object>>();
@@ -75,6 +80,22 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
             value = null;
         }
         return null != value ? value : defaultValue;
+    }
+
+    public <K> List<K> evaluateToArray(Class<K> targetClass, String expression) {
+        return processAndConvertArray(targetClass, expression);
+    }
+
+    public <K, V> Map<K, V> evaluateToMap(Class<K> keyClass, Class<V> valueClass, String expression) {
+        Map<K, V> result = new HashMap<K, V>();
+        String parsedValue = processVariablesInProperty(expression, new ArrayList<String>());
+        Type mapType = new TypeToken<Map<String, String>>() {
+        }.getType();
+        Map<String, String> map = gson.fromJson(parsedValue, mapType);
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            result.put(ValueConverterRegistry.convert(keyClass, entry.getKey()), ValueConverterRegistry.convert(valueClass, entry.getValue()));
+        }
+        return result;
     }
 
     public <K> K evaluateTo(Class<K> targetClass, String expression) throws ConstrettoExpressionException {
@@ -215,6 +236,11 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         return ValueConverterRegistry.convert(clazz, parsedValue);
     }
 
+    private <T> List<T> processAndConvertArray(Class<T> clazz, String expression) throws ConstrettoException {
+        String parsedValue = processVariablesInProperty(expression, new ArrayList<String>());
+        return ValueConverterRegistry.convertArray(clazz, parsedValue);
+    }
+
     private ConfigurationValue resolveMatch(List<ConfigurationValue> values) {
         ConfigurationValue bestMatch = null;
         for (ConfigurationValue configurationNode : values) {
@@ -297,8 +323,17 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
                             }
                         }
                         if (hasValue(expression)) {
-                            ConfigurationValue node = findElementOrThrowException(expression);
-                            resolvedArguments[i] = processAndConvert(parameterTargetClass, expression);
+                            if (parameterTargetClass.isAssignableFrom(List.class)) {
+                                Class<?> collectionParameterType = getCollectionParameterType(new MethodParameter(method, i));
+                                resolvedArguments[i] = evaluateToArray(collectionParameterType, expression);
+                            } else if (parameterTargetClass.isAssignableFrom(Map.class)) {
+                                Class<?> mapKeyType = getMapKeyParameterType(new MethodParameter(method, i));
+                                Class<?> mapValueType = getMapValueParameterType(new MethodParameter(method, i));
+                                resolvedArguments[i] = evaluateToMap(mapKeyType, mapValueType, expression);
+                            } else {
+                                resolvedArguments[i] = processAndConvert(parameterTargetClass, expression);
+                            }
+
                         } else {
                             if (defaultValue != null || !required) {
                                 resolvedArguments[i] = defaultValue;
@@ -342,7 +377,13 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
                         Class<?> fieldType = field.getType();
                         if (hasValue(expression)) {
                             ConfigurationValue node = findElementOrThrowException(expression);
-                            field.set(objectToConfigure, processAndConvert(fieldType, expression));
+                            if (fieldType.isAssignableFrom(List.class)) {
+                                field.set(objectToConfigure, evaluateToArray(getCollectionFieldType(field), expression));
+                            } else if (fieldType.isAssignableFrom(Map.class)) {
+                                field.set(objectToConfigure, evaluateToMap(getMapKeyFieldType(field), getMapValueFieldType(field), expression));
+                            } else {
+                                field.set(objectToConfigure, processAndConvert(fieldType, expression));
+                            }
                         } else {
                             if (hasAnnotationDefaults(configurationAnnotation)) {
                                 if (configurationAnnotation.defaultValueFactory().equals(Configuration.EmptyValueFactory.class)) {
@@ -369,6 +410,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
             }
         } while ((objectToConfigureClass = objectToConfigureClass.getSuperclass()) != null);
     }
+
 
     private boolean hasAnnotationDefaults(Configuration configurationAnnotation) {
         return !("N/A".equals(configurationAnnotation.defaultValue()) && configurationAnnotation.defaultValueFactory().equals(Configuration.EmptyValueFactory.class));

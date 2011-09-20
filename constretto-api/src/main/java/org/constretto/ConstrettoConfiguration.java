@@ -20,6 +20,7 @@ import org.constretto.exception.ConstrettoException;
 import org.constretto.exception.ConstrettoExpressionException;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Client interface.
@@ -68,6 +69,10 @@ public interface ConstrettoConfiguration extends Iterable<Property> {
 
     Byte evaluateToByte(String expression) throws ConstrettoException;
 
+    <K> List<K> evaluateToArray(Class<K> targetClass, String expression);
+
+    <K, V> Map<K, V> evaluateToMap(Class<K> keyClass, Class<V> valueClass, String expression);
+
     <T> T as(Class<T> configurationClass) throws ConstrettoException;
 
     <T> T on(T objectToConfigure) throws ConstrettoException;
@@ -86,8 +91,8 @@ public interface ConstrettoConfiguration extends Iterable<Property> {
      * by the ConstrettoBuilder class.
      *
      * @param reconfigure if set constretto will run the reconfigure() method after the reset.
-     * Note this may result in exceptions from constretto if default values does not exist for all keys
-     * injected in methods or fields annotated with @Configure or @Configuration
+     *                    Note this may result in exceptions from constretto if default values does not exist for all keys
+     *                    injected in methods or fields annotated with @Configure or @Configuration
      */
     void resetTags(boolean reconfigure) throws ConstrettoException;
 
@@ -100,8 +105,8 @@ public interface ConstrettoConfiguration extends Iterable<Property> {
      * This is a non recoverable operation and after use you will need to build your tags from scratch.
      *
      * @param reconfigure if set constretto will run the reconfigure() method after clearing.
-     * Note this may result in exceptions from constretto if default values does not exist for all keys
-     * injected in methods or fields annotated with @Configure or @Configuration
+     *                    Note this may result in exceptions from constretto if default values does not exist for all keys
+     *                    injected in methods or fields annotated with @Configure or @Configuration
      */
     void clearTags(boolean reconfigure) throws ConstrettoException;
 
@@ -109,5 +114,6 @@ public interface ConstrettoConfiguration extends Iterable<Property> {
      * Will rerun all @Configure annotated methods with the current configuration.
      */
     void reconfigure() throws ConstrettoException;
+
 
 }

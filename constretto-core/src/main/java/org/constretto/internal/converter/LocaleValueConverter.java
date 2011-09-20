@@ -15,16 +15,23 @@
  */
 package org.constretto.internal.converter;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.constretto.ValueConverter;
 import org.constretto.exception.ConstrettoConversionException;
 import org.constretto.internal.ConstrettoUtils;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class LocaleValueConverter implements ValueConverter<Locale> {
+    private final Type listType = new TypeToken<List<String>>() {}.getType();
+    private final Gson gson = new Gson();
 
     public Locale fromString(String value) throws ConstrettoConversionException {
         try {
@@ -32,5 +39,14 @@ public class LocaleValueConverter implements ValueConverter<Locale> {
         } catch (IllegalArgumentException e) {
             throw new ConstrettoConversionException(value, Locale.class, e);
         }
+    }
+
+    public List<Locale> fromStrings(String value) throws ConstrettoConversionException {
+        List<Locale> locales = new ArrayList<Locale>();
+        List<String> localeNames = gson.fromJson(value,listType);
+        for (String localeName : localeNames) {
+            locales.add(fromString(localeName));
+        }
+        return locales;
     }
 }

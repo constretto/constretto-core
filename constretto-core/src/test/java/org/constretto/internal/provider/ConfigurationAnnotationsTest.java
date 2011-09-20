@@ -15,16 +15,22 @@
  */
 package org.constretto.internal.provider;
 
-import static junit.framework.Assert.assertEquals;
 import org.constretto.ConstrettoBuilder;
 import org.constretto.ConstrettoConfiguration;
 import org.constretto.internal.provider.helper.ConfiguredUsingDefaults;
+import org.constretto.internal.provider.helper.ConfiguredUsingListsAndMaps;
 import org.constretto.internal.provider.helper.DataSourceConfiguration;
 import org.constretto.internal.provider.helper.DataSourceConfigurationWithNatives;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import static java.lang.System.setProperty;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
@@ -39,7 +45,8 @@ public class ConfigurationAnnotationsTest {
         setProperty("password", "password");
         setProperty("vendor", "derby");
         setProperty("version", "10");
-
+        setProperty("array", "[\"one\",\"two\",\"three\"]");
+        setProperty("map", "{\"1\":\"10\",\"2\":\"20\"}");
         configuration = new ConstrettoBuilder().createSystemPropertiesStore().getConfiguration();
 
     }
@@ -82,5 +89,38 @@ public class ConfigurationAnnotationsTest {
         assertEquals("default-password", configuredObject.getPassword());
         assertEquals("derby", configuredObject.getVendor());
         assertEquals(new Integer(Integer.MIN_VALUE), configuredObject.getVersion());
+    }
+
+    @Test
+    public void listsShouldBeSupportedInAnnotations() {
+        List<String> expectedList = new ArrayList<String>() {{
+            add("one");
+            add("two");
+            add("three");
+        }};
+        Map<String, String> expectedMap = new HashMap<String, String>() {{
+            put("1", "10");
+            put("2", "20");
+        }};
+        ConfiguredUsingListsAndMaps configuredObject = new ConfiguredUsingListsAndMaps();
+        configuration.on(configuredObject);
+        assertList(expectedList,configuredObject.arrayFromField);
+        assertList(expectedList,configuredObject.arrayFromMethod);
+        assertMap(expectedMap,configuredObject.mapFromField);
+        assertMap(expectedMap,configuredObject.mapFromMethod);
+    }
+
+    private void assertList(List<?> expected, List<?> result) {
+        assertEquals(expected.size(), result.size());
+        for (int i = 0; i < result.size(); i++) {
+            assertEquals(expected.get(i), result.get(i));
+        }
+    }
+
+    private void assertMap(Map<?, ?> expected, Map<?, ?> result) {
+        assertEquals(expected.size(), result.size());
+        for (Object key : expected.keySet()) {
+            assertEquals(expected.get(key), result.get(key));
+        }
     }
 }

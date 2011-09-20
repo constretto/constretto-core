@@ -15,22 +15,39 @@
  */
 package org.constretto.internal.converter;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.constretto.ValueConverter;
 import org.constretto.exception.ConstrettoConversionException;
 
+import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:tom.palmer@whiteonesugar.com">Tom Palmer</a>
  */
 public class UriValueConverter implements ValueConverter<URI> {
-  public URI fromString(String value) throws ConstrettoConversionException {
-    try {
-      return new URI(value);
-    } catch (URISyntaxException e) {
-      throw new ConstrettoConversionException(value, URL.class, e.getMessage());
+    private final Type listType = new TypeToken<List<String>>() {}.getType();
+    private final Gson gson = new Gson();
+
+    public URI fromString(String value) throws ConstrettoConversionException {
+        try {
+            return new URI(value);
+        } catch (URISyntaxException e) {
+            throw new ConstrettoConversionException(value, URL.class, e.getMessage());
+        }
     }
-  }
+
+    public List<URI> fromStrings(String value) throws ConstrettoConversionException {
+        List<URI> uris = new ArrayList<URI>();
+        List<String> names = gson.fromJson(value, listType);
+        for (String name : names) {
+            uris.add(fromString(name));
+        }
+        return uris;
+    }
 }

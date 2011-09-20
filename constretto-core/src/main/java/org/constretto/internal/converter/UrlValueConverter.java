@@ -15,21 +15,38 @@
  */
 package org.constretto.internal.converter;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.constretto.ValueConverter;
 import org.constretto.exception.ConstrettoConversionException;
 
+import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author trygvis
  */
 public class UrlValueConverter implements ValueConverter<URL> {
+    private final Type listType = new TypeToken<List<String>>() {}.getType();
+    private final Gson gson = new Gson();
+
     public URL fromString(String value) throws ConstrettoConversionException {
         try {
             return new URL(value);
         } catch (MalformedURLException e) {
             throw new ConstrettoConversionException(value, URL.class, e.getMessage());
         }
+    }
+
+    public List<URL> fromStrings(String value) throws ConstrettoConversionException {
+        List<URL> urls = new ArrayList<URL>();
+        List<String> names = gson.fromJson(value, listType);
+        for (String name : names) {
+            urls.add(fromString(name));
+        }
+        return urls;
     }
 }

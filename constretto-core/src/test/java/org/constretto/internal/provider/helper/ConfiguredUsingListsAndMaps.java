@@ -13,28 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.constretto.internal.converter;
+package org.constretto.internal.provider.helper;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import org.constretto.ValueConverter;
-import org.constretto.exception.ConstrettoConversionException;
+import org.constretto.ConfigurationDefaultValueFactory;
+import org.constretto.annotation.Configuration;
+import org.constretto.annotation.Configure;
 
-import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
-public class StringValueConverter implements ValueConverter<String> {
-    private final Type listType = new TypeToken<List<String>>() {}.getType();
-    private final Gson gson = new Gson();
+public class ConfiguredUsingListsAndMaps {
 
-    public String fromString(String value) throws ConstrettoConversionException {
-        return value;
-    }
+    @Configuration("map")
+    public Map<String, String> mapFromField;
+    @Configuration("array")
+    public List<String> arrayFromField;
 
-    public List<String> fromStrings(String value) throws ConstrettoConversionException {
-        return gson.fromJson(value,listType);
+    public Map<String, String> mapFromMethod;
+    public List<String> arrayFromMethod;
+
+
+    @Configure
+    public void configureMe(
+            @Configuration Map<String, String> map,
+            @Configuration List<String> array) {
+        this.arrayFromMethod = array;
+        this.mapFromMethod = map;
     }
 }

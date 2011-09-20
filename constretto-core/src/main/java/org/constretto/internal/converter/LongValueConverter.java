@@ -15,13 +15,20 @@
  */
 package org.constretto.internal.converter;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.constretto.ValueConverter;
 import org.constretto.exception.ConstrettoConversionException;
+
+import java.lang.reflect.Type;
+import java.util.List;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class LongValueConverter implements ValueConverter<Long> {
+    private final Type listType = new TypeToken<List<Long>>() {}.getType();
+    private final Gson gson = new Gson();
 
     public Long fromString(String value) throws ConstrettoConversionException {
         try {
@@ -29,5 +36,9 @@ public class LongValueConverter implements ValueConverter<Long> {
         } catch (NumberFormatException e) {
             throw new ConstrettoConversionException(value, Long.class, e);
         }
+    }
+
+    public List<Long> fromStrings(String value) throws ConstrettoConversionException {
+        return gson.fromJson(value,listType);
     }
 }

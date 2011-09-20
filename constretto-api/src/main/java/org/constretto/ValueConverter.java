@@ -17,10 +17,14 @@ package org.constretto;
 
 import org.constretto.exception.ConstrettoConversionException;
 
+import java.util.List;
+
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public interface ValueConverter<T> {
 
     T fromString(String value) throws ConstrettoConversionException;
+
+    List<T> fromStrings(String value) throws ConstrettoConversionException;
 }

@@ -23,10 +23,7 @@ import java.io.File;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
@@ -75,6 +72,15 @@ public class ValueConverterRegistry {
         }
         ValueConverter<?> converter = converters.get(clazz);
         return (T) converter.fromString(value);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> List<T> convertArray(Class<T> clazz, String value) throws ConstrettoException {
+        if (!converters.containsKey(clazz)) {
+            throw new ConstrettoException("No converter found for class: " + clazz.getName());
+        }
+        ValueConverter<?> converter = converters.get(clazz);
+        return (List<T>) converter.fromStrings(value);
     }
 
     private static <T extends Enum<T>> T convertEnum(Class<T> clazz, String value) {

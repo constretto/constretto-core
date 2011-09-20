@@ -15,17 +15,34 @@
  */
 package org.constretto.spring.internal.converter;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.constretto.ValueConverter;
 import org.constretto.exception.ConstrettoConversionException;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class SpringResourceValueConverter implements ValueConverter<Resource> {
+    private final Type listType = new TypeToken<List<String>>() {}.getType();
+    private final Gson gson = new Gson();
 
     public Resource fromString(String value) throws ConstrettoConversionException {
         return new DefaultResourceLoader(this.getClass().getClassLoader()).getResource(value);
+    }
+
+    public List<Resource> fromStrings(String value) throws ConstrettoConversionException {
+        List<Resource> resources = new ArrayList<Resource>();
+        List<String> strings = gson.fromJson(value,listType);
+        for (String string : strings) {
+            resources.add(fromString(string));
+        }
+        return resources;
     }
 }
