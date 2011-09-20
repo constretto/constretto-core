@@ -35,7 +35,7 @@ public @interface Configuration {
      * <p/>
      * It is important that environment prefixes is not used in this attribute
      */
-    String expression() default "";
+    String value() default "";
 
     /**
      * A description of the usage of the property. Not directly used in the runtime environment, but may be
@@ -45,7 +45,7 @@ public @interface Configuration {
 
     /**
      * States the default value to be injected if no value found associated for the expression specified in the
-     * expression attribute.
+     * value attribute.
      * <p/>
      * When a default value is set, the required attribute will be ignored.
      */
@@ -53,7 +53,7 @@ public @interface Configuration {
 
     /**
      * Use when more complex default values needs to be injected of no value found associated with the expression
-     * specified in the expression attribute
+     * specified in the value attribute
      */
     Class<? extends ConfigurationDefaultValueFactory<?>> defaultValueFactory() default EmptyValueFactory.class;
 

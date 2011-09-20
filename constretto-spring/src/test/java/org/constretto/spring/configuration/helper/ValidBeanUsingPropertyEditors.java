@@ -24,11 +24,11 @@ import java.io.File;
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class ValidBeanUsingPropertyEditors {
-    @Configuration(expression = "long")
+    @Configuration("long")
     private Long longProperty;
-    @Configuration(expression = "resource")
+    @Configuration("resource")
     private Resource resourceProperty;
-    @Configuration(expression = "file")
+    @Configuration("file")
     private File fileProperty;
 
     public Long getLongProperty() {

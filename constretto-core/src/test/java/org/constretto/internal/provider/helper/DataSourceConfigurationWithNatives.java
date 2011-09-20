@@ -25,7 +25,7 @@ public class DataSourceConfigurationWithNatives {
 
     private int version;
 
-    @Configuration(expression = "version")
+    @Configuration("version")
     private int otherVersion;
 
 

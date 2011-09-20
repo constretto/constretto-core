@@ -21,7 +21,7 @@ import org.constretto.annotation.Configuration;
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class ValidBeanThatAllowsNull {
-    @Configuration(expression = "wrongKey", required = false)
+    @Configuration(value="wrongKey", required = false)
     private String url;
 
     public String getUrl() {

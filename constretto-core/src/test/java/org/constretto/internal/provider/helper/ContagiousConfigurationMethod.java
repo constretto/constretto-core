@@ -28,9 +28,9 @@ public class ContagiousConfigurationMethod {
     private String valueWithDefault;
 
     @Configure
-    public void configure(@Configuration(expression = "missing-value", required = false) String missingValue,
-                          @Configuration(expression = "i-have-default", defaultValue = "default-value") String valueWithDefault,
-                          @Configuration(expression = "other-missing-value", required = false) String otherMissingValue) {
+    public void configure(@Configuration(value = "missing-value", required = false) String missingValue,
+                          @Configuration(value = "i-have-default", defaultValue = "default-value") String valueWithDefault,
+                          @Configuration(value = "other-missing-value", required = false) String otherMissingValue) {
         this.missingValue = missingValue;
         this.valueWithDefault = valueWithDefault;
         this.otherMissingValue = otherMissingValue;
