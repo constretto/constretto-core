@@ -36,7 +36,12 @@ public class StaticlyCachedConfiguration {
     private static int cacheMiss = 0;
 
     public static ConstrettoConfiguration config(String... locations) {
-        CacheKey key = new CacheKey(locations);
+        return config(false, locations);
+    }
+
+
+    public static ConstrettoConfiguration config(boolean includeSystemProperties, String... locations) {
+        CacheKey key = new CacheKey(locations, includeSystemProperties);
         try {
             lock.readLock().lock();
             if (cache.containsKey(key)) {
@@ -63,6 +68,9 @@ public class StaticlyCachedConfiguration {
             }
             builder = builder.addConfigurationStore(iniFileConfigurationStore);
             builder = builder.addConfigurationStore(propertyFileConfigurationStore);
+            if(includeSystemProperties){
+                builder = builder.createSystemPropertiesStore();
+            }
             ConstrettoConfiguration configuration = builder.getConfiguration();
             cache.put(key, configuration);
             return configuration;
@@ -82,11 +90,12 @@ public class StaticlyCachedConfiguration {
     private static class CacheKey {
         String key;
 
-        public CacheKey(String[] locations) {
+        public CacheKey(String[] locations, boolean includeSystemProperties) {
             key = "";
             for (String location : locations) {
                 key += location;
             }
+            key += "includeSystemProperties=" + includeSystemProperties;
         }
 
         public boolean equals(Object o) {

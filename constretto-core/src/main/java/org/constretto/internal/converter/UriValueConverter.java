@@ -15,21 +15,22 @@
  */
 package org.constretto.internal.converter;
 
+import org.constretto.ValueConverter;
+import org.constretto.exception.ConstrettoConversionException;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-
-import org.constretto.exception.ConstrettoConversionException;
 
 /**
  * @author <a href="mailto:tom.palmer@whiteonesugar.com">Tom Palmer</a>
  */
 public class UriValueConverter implements ValueConverter<URI> {
-    public URI fromString(String value) throws ConstrettoConversionException {
-        try {
-            return new URI(value);
-        } catch (URISyntaxException e) {
-            throw new ConstrettoConversionException(value, URL.class, e.getMessage());
-        }
+  public URI fromString(String value) throws ConstrettoConversionException {
+    try {
+      return new URI(value);
+    } catch (URISyntaxException e) {
+      throw new ConstrettoConversionException(value, URL.class, e.getMessage());
     }
+  }
 }

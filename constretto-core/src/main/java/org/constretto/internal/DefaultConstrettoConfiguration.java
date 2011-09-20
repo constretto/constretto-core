@@ -35,6 +35,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import static java.util.Arrays.asList;
 
@@ -48,7 +49,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     private final Paranamer paranamer = new BytecodeReadingParanamer();
 
     private final Map<String, List<ConfigurationValue>> configuration;
-    private final Set<WeakReference<Object>> configuredObjects = new HashSet<WeakReference<Object>>();
+    private Set<WeakReference<Object>> configuredObjects = new CopyOnWriteArraySet<WeakReference<Object>>();
     private final List<String> originalTags = new ArrayList<String>();
     private final List<String> currentTags = new ArrayList<String>();
 
