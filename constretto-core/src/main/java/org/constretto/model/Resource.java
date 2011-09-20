@@ -12,10 +12,7 @@ package org.constretto.model;
 
 import org.constretto.exception.ConstrettoException;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -25,19 +22,18 @@ import java.net.URL;
 public class Resource {
     public static final String CLASSPATH_PREFIX = "classpath:";
     public static final String FILE_PREFIX = "file:";
-    private final InputStream inputStream;
-
+    final String path;
 
     public Resource(String path) {
-        inputStream = loadResource(path);
+        this.path = path;
     }
 
     public boolean exists() {
-        return inputStream != null;
+        return loadResource(path) != null;
     }
 
     public InputStream getInputStream() {
-        return inputStream;
+        return loadResource(path);
     }
 
     private InputStream loadResource(String path) {
@@ -57,9 +53,9 @@ public class Resource {
 
     private InputStream loadFromURL(URL url) {
         try {
-            return new FileInputStream(url.getFile());
-        } catch (FileNotFoundException e) {
-            throw new ConstrettoException("Could not load resource: " + url.toString(), e);
+            return url.openStream();
+        } catch (IOException e) {
+            throw new ConstrettoException("Could not read file from url: " + url);
         }
     }
 
@@ -73,10 +69,8 @@ public class Resource {
         try {
             return new FileInputStream(new File(fileName));
         } catch (FileNotFoundException e) {
-            throw new ConstrettoException("Unsupported resource type. Registered types are 'classpath:', 'file:', and things that can be loaded with java.net.URL");
+            throw new ConstrettoException("Could not read file from path: " + path);
         }
-
-
     }
 
     private InputStream loadFromClassPath(String path) {
