@@ -23,7 +23,7 @@ import java.util.Locale;
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class ValidBeanWithComplexDefault {
-    @Configuration(expression = "wrongKey", defaultValueFactory = DefaultLocaleFactory.class)
+    @Configuration(value="wrongKey", defaultValueFactory = DefaultLocaleFactory.class)
     private Locale locale;
 
     public Locale getLocale() {

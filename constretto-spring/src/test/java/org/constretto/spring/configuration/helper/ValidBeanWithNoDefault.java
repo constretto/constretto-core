@@ -21,7 +21,7 @@ import org.constretto.annotation.Configuration;
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class ValidBeanWithNoDefault {
-    @Configuration(expression = "aCoolUrl")
+    @Configuration("aCoolUrl")
     private String url;
 
     public String getUrl() {

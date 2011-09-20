@@ -273,7 +273,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
                             for (Annotation parameterAnnotation : parameterAnnotations) {
                                 if (parameterAnnotation.annotationType() == Configuration.class) {
                                     Configuration configurationAnnotation = (Configuration) parameterAnnotation;
-                                    expression = configurationAnnotation.expression();
+                                    expression = configurationAnnotation.value();
                                     required = configurationAnnotation.required();
                                     if (hasAnnotationDefaults(configurationAnnotation)) {
                                         if (configurationAnnotation.defaultValueFactory().equals(Configuration.EmptyValueFactory.class)) {
@@ -290,7 +290,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
                             if (parameterNames == null) {
                                 throw new ConstrettoException("Could not resolve the expression of the property to look up. " +
                                         "The cause of this could be that the class is compiled without debug enabled. " +
-                                        "when a class is compiled without debug, the @Configuration with a expression attribute is required " +
+                                        "when a class is compiled without debug, the @Configuration with a value attribute is required " +
                                         "to correctly resolve the property expression.");
                             } else {
                                 expression = parameterNames[i];
@@ -337,7 +337,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
                 try {
                     if (field.isAnnotationPresent(Configuration.class)) {
                         Configuration configurationAnnotation = field.getAnnotation(Configuration.class);
-                        String expression = "".equals(configurationAnnotation.expression()) ? field.getName() : configurationAnnotation.expression();
+                        String expression = "".equals(configurationAnnotation.value()) ? field.getName() : configurationAnnotation.value();
                         field.setAccessible(true);
                         Class<?> fieldType = field.getType();
                         if (hasValue(expression)) {

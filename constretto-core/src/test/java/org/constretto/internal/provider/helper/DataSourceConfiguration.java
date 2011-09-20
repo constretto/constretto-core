@@ -30,12 +30,12 @@ public class DataSourceConfiguration {
     @Configuration
     private String vendor;
 
-    @Configuration(expression = "username")
+    @Configuration("username")
     private String myUsername;
 
 
     @Configure
-    public void configureMe(@Configuration String url, @Configuration(expression = "password") String secret) {
+    public void configureMe(@Configuration String url, @Configuration("password") String secret) {
         this.myUrl = url;
         this.myPassword = secret;
     }

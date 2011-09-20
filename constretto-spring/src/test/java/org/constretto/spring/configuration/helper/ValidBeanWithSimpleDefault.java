@@ -21,7 +21,7 @@ import org.constretto.annotation.Configuration;
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class ValidBeanWithSimpleDefault {
-    @Configuration(expression = "wrongKey", defaultValue = "http://arktekk.no")
+    @Configuration(value = "wrongKey", defaultValue = "http://arktekk.no")
     private String url;
 
     public String getUrl() {

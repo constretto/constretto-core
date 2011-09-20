@@ -21,7 +21,7 @@ import org.constretto.annotation.Configuration;
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class InvalidBean {
-    @Configuration(expression = "wrongKey")
+    @Configuration("wrongKey")
     private String url;
 
     public String getUrl() {
