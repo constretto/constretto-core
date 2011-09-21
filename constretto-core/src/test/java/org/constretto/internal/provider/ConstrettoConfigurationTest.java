@@ -22,7 +22,7 @@ public class ConstrettoConfigurationTest {
 
     @Before
     public void loadConfiguration() {
-        constrettoConfiguration = new ConstrettoBuilder()
+        constrettoConfiguration = new ConstrettoBuilder(false)
                 .addCurrentTag("production")
                 .createPropertiesStore()
                 .addResource(new Resource("classpath:test.properties"))

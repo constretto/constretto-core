@@ -119,7 +119,7 @@ public class ConstrettoNamespaceHandler extends NamespaceHandlerSupport {
 
         @SuppressWarnings("unchecked")
         private ConstrettoConfiguration buildConfig(Element element, ConfigurationContextResolver configurationContextResolver) {
-            ConstrettoBuilder builder = new ConstrettoBuilder(configurationContextResolver);
+            ConstrettoBuilder builder = new ConstrettoBuilder(configurationContextResolver, true);
             Element storeElement = DomUtils.getChildElementByTagName(element, "stores");
             if (storeElement != null) {
                 List<Element> stores = getAllChildElements(storeElement);

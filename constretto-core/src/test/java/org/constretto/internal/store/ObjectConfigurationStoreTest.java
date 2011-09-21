@@ -93,7 +93,7 @@ public class ObjectConfigurationStoreTest extends AbstractConfigurationStoreTest
 
     @Test
     public void givenNoTagAndFromRootThenProviderChoosesGenericValues() {
-        ConstrettoConfiguration configuration = new ConstrettoBuilder().addConfigurationStore(store).getConfiguration();
+        ConstrettoConfiguration configuration = new ConstrettoBuilder(false).addConfigurationStore(store).getConfiguration();
         assertEquals("generic-url", configuration.evaluateToString("url"));
     }
 

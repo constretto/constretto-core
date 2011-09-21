@@ -34,20 +34,30 @@ public class ConstrettoBuilder {
 
     private final List<ConfigurationStore> configurationStores;
     private final List<String> tags;
+    private final boolean enableSystemProps;
 
     public ConstrettoBuilder() {
-        this(new DefaultConfigurationContextResolver());
+        this(new DefaultConfigurationContextResolver(), true);
     }
 
-    public ConstrettoBuilder(ConfigurationContextResolver configurationContextResolver) {
+    public ConstrettoBuilder(boolean enableSystemProps) {
+        this(new DefaultConfigurationContextResolver(), enableSystemProps);
+    }
+
+    public ConstrettoBuilder(ConfigurationContextResolver configurationContextResolver, boolean enableSystemProps) {
         this.configurationStores = new ArrayList<ConfigurationStore>();
         this.tags = new ArrayList<String>();
+        this.enableSystemProps = enableSystemProps;
         for (String tag : configurationContextResolver.getTags()) {
             addCurrentTag(tag);
         }
+        if (enableSystemProps){
+            configurationStores.add(new SystemPropertiesStore());
+        }
     }
 
-    private ConstrettoBuilder(List<ConfigurationStore> configurationStores, List<String> tags) {
+    private ConstrettoBuilder(List<ConfigurationStore> configurationStores, List<String> tags, boolean enableSystemProps) {
+        this.enableSystemProps = enableSystemProps;
         this.configurationStores = configurationStores;
         this.tags = tags;
     }
@@ -79,12 +89,12 @@ public class ConstrettoBuilder {
 
     public ConstrettoBuilder addCurrentTag(String tag) {
         tags.add(tag);
-        return new ConstrettoBuilder(configurationStores, tags);
+        return new ConstrettoBuilder(configurationStores, tags, enableSystemProps);
     }
 
     public ConstrettoBuilder addConfigurationStore(ConfigurationStore configurationStore) {
         configurationStores.add(configurationStore);
-        return new ConstrettoBuilder(configurationStores, tags);
+        return new ConstrettoBuilder(configurationStores, tags, enableSystemProps);
     }
 
     public PropertiesStoreBuilder createPropertiesStore() {
@@ -101,7 +111,7 @@ public class ConstrettoBuilder {
 
     public ConstrettoBuilder createSystemPropertiesStore() {
         configurationStores.add(new SystemPropertiesStore());
-        return new ConstrettoBuilder(configurationStores, tags);
+        return new ConstrettoBuilder(configurationStores, tags, enableSystemProps);
     }
 
     public ObjectConfigurationStoreBuilder createObjectConfigurationStore() {
@@ -143,7 +153,7 @@ public class ConstrettoBuilder {
 
         public ConstrettoBuilder done() {
             configurationStores.add(store);
-            return new ConstrettoBuilder(configurationStores, tags);
+            return new ConstrettoBuilder(configurationStores, tags, enableSystemProps);
         }
     }
 
@@ -165,7 +175,7 @@ public class ConstrettoBuilder {
 
         public ConstrettoBuilder done() {
             configurationStores.add(store);
-            return new ConstrettoBuilder(configurationStores, tags);
+            return new ConstrettoBuilder(configurationStores, tags, enableSystemProps);
         }
     }
 
@@ -187,7 +197,7 @@ public class ConstrettoBuilder {
 
         public ConstrettoBuilder done() {
             configurationStores.add(store);
-            return new ConstrettoBuilder(configurationStores, tags);
+            return new ConstrettoBuilder(configurationStores, tags, enableSystemProps);
         }
     }
 
@@ -209,7 +219,7 @@ public class ConstrettoBuilder {
 
         public ConstrettoBuilder done() {
             configurationStores.add(store);
-            return new ConstrettoBuilder(configurationStores, tags);
+            return new ConstrettoBuilder(configurationStores, tags, enableSystemProps);
         }
     }
 
