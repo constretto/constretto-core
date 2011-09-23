@@ -27,8 +27,6 @@ import java.util.List;
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class DoubleValueConverter implements ValueConverter<Double> {
-    private final Type listType = new TypeToken<List<Double>>() {}.getType();
-    private final Gson gson = new Gson();
 
     public Double fromString(String value) throws ConstrettoConversionException {
         try {
@@ -36,9 +34,5 @@ public class DoubleValueConverter implements ValueConverter<Double> {
         } catch (NumberFormatException e) {
             throw new ConstrettoConversionException(value, Double.class, e);
         }
-    }
-
-    public List<Double> fromStrings(String value) throws ConstrettoConversionException {
-        return gson.fromJson(value,listType);
     }
 }

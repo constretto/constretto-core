@@ -31,8 +31,6 @@ import java.util.List;
  * @author <a href="mailto:tom.palmer@whiteonesugar.com">Tom Palmer</a>
  */
 public class UriValueConverter implements ValueConverter<URI> {
-    private final Type listType = new TypeToken<List<String>>() {}.getType();
-    private final Gson gson = new Gson();
 
     public URI fromString(String value) throws ConstrettoConversionException {
         try {
@@ -42,12 +40,4 @@ public class UriValueConverter implements ValueConverter<URI> {
         }
     }
 
-    public List<URI> fromStrings(String value) throws ConstrettoConversionException {
-        List<URI> uris = new ArrayList<URI>();
-        List<String> names = gson.fromJson(value, listType);
-        for (String name : names) {
-            uris.add(fromString(name));
-        }
-        return uris;
-    }
 }

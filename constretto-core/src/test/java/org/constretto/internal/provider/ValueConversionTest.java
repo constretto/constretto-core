@@ -22,6 +22,8 @@ import org.constretto.ConstrettoConfiguration;
 import org.constretto.ValueConverter;
 import org.constretto.exception.ConstrettoConversionException;
 import org.constretto.exception.ConstrettoException;
+import org.constretto.internal.converter.IntegerValueConverter;
+import org.constretto.internal.converter.ListValueConverter;
 import org.constretto.internal.converter.ValueConverterRegistry;
 import org.junit.Before;
 import org.junit.Test;
@@ -197,24 +199,24 @@ public class ValueConversionTest {
     }
 
     @Test
-    public void evaluateStringArray() {
+    public void evaluateListOfStrings() {
         List<String> expected = new ArrayList<String>() {{
             add("one");
             add("two");
             add("three");
         }};
-        List<String> result = configuration.evaluateToArray(String.class, "array.of.strings");
+        List<String> result = configuration.evaluateToList(String.class, "array.of.strings");
         assertList(expected, result);
     }
 
     @Test
-    public void evaluateIntegerArray() {
+    public void evaluateListOfIntegers() {
         List<Integer> expected = new ArrayList<Integer>() {{
             add(1);
             add(2);
             add(3);
         }};
-        List<Integer> result = configuration.evaluateToArray(Integer.class, "array.of.ints");
+        List<Integer> result = configuration.evaluateToList(Integer.class, "array.of.ints");
         assertList(expected, result);
     }
 

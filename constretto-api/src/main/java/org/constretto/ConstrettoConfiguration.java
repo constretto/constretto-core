@@ -69,7 +69,7 @@ public interface ConstrettoConfiguration extends Iterable<Property> {
 
     Byte evaluateToByte(String expression) throws ConstrettoException;
 
-    <K> List<K> evaluateToArray(Class<K> targetClass, String expression);
+    <K> List<K> evaluateToList(Class<K> targetClass, String expression);
 
     <K, V> Map<K, V> evaluateToMap(Class<K> keyClass, Class<V> valueClass, String expression);
 

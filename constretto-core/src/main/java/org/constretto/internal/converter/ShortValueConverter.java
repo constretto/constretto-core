@@ -27,8 +27,6 @@ import java.util.List;
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class ShortValueConverter implements ValueConverter<Short> {
-    private final Type listType = new TypeToken<List<Short>>() {}.getType();
-    private final Gson gson = new Gson();
 
     public Short fromString(String value) throws ConstrettoConversionException {
         try {
@@ -36,9 +34,5 @@ public class ShortValueConverter implements ValueConverter<Short> {
         } catch (NumberFormatException e) {
             throw new ConstrettoConversionException(value, Short.class, e);
         }
-    }
-
-    public List<Short> fromStrings(String value) throws ConstrettoConversionException {
-        return gson.fromJson(value,listType);
     }
 }

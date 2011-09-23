@@ -27,14 +27,8 @@ import java.util.List;
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class StringValueConverter implements ValueConverter<String> {
-    private final Type listType = new TypeToken<List<String>>() {}.getType();
-    private final Gson gson = new Gson();
 
     public String fromString(String value) throws ConstrettoConversionException {
         return value;
-    }
-
-    public List<String> fromStrings(String value) throws ConstrettoConversionException {
-        return gson.fromJson(value,listType);
     }
 }

@@ -25,6 +25,4 @@ import java.util.List;
 public interface ValueConverter<T> {
 
     T fromString(String value) throws ConstrettoConversionException;
-
-    List<T> fromStrings(String value) throws ConstrettoConversionException;
 }

@@ -27,8 +27,6 @@ import java.util.List;
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class ByteValueConverter implements ValueConverter<Byte> {
-    private final Type listType = new TypeToken<List<Byte>>() {}.getType();
-    private final Gson gson = new Gson();
 
     public Byte fromString(String value) throws ConstrettoConversionException {
         try {
@@ -36,9 +34,5 @@ public class ByteValueConverter implements ValueConverter<Byte> {
         } catch (NumberFormatException e) {
             throw new ConstrettoConversionException(value, Byte.class, e);
         }
-    }
-
-    public List<Byte> fromStrings(String value) throws ConstrettoConversionException {
-        return gson.fromJson(value,listType);
     }
 }

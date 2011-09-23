@@ -30,8 +30,6 @@ import java.util.List;
  * @author trygvis
  */
 public class InetAddressValueConverter implements ValueConverter<InetAddress> {
-    private final Type listType = new TypeToken<List<String>>() {}.getType();
-    private final Gson gson = new Gson();
 
     public InetAddress fromString(String value) throws ConstrettoConversionException {
         try {
@@ -39,14 +37,5 @@ public class InetAddressValueConverter implements ValueConverter<InetAddress> {
         } catch (UnknownHostException e) {
             throw new ConstrettoConversionException(value, InetAddress.class, e);
         }
-    }
-
-    public List<InetAddress> fromStrings(String value) throws ConstrettoConversionException {
-        List<InetAddress> inetAddresses = new ArrayList<InetAddress>();
-        List<String> inetAddrStrings = gson.fromJson(value,listType);
-        for (String inetAddrString : inetAddrStrings) {
-            inetAddresses.add(fromString(inetAddrString));
-        }
-        return inetAddresses;
     }
 }

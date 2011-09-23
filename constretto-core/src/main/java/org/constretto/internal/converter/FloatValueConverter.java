@@ -27,8 +27,6 @@ import java.util.List;
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class FloatValueConverter implements ValueConverter<Float> {
-    private final Type listType = new TypeToken<List<Float>>() {}.getType();
-    private final Gson gson = new Gson();
 
     public Float fromString(String value) throws ConstrettoConversionException {
         try {
@@ -38,7 +36,4 @@ public class FloatValueConverter implements ValueConverter<Float> {
         }
     }
 
-    public List<Float> fromStrings(String value) throws ConstrettoConversionException {
-        return gson.fromJson(value,listType);
-    }
 }

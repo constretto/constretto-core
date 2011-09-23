@@ -30,8 +30,6 @@ import java.util.List;
  * @author trygvis
  */
 public class UrlValueConverter implements ValueConverter<URL> {
-    private final Type listType = new TypeToken<List<String>>() {}.getType();
-    private final Gson gson = new Gson();
 
     public URL fromString(String value) throws ConstrettoConversionException {
         try {
@@ -41,12 +39,4 @@ public class UrlValueConverter implements ValueConverter<URL> {
         }
     }
 
-    public List<URL> fromStrings(String value) throws ConstrettoConversionException {
-        List<URL> urls = new ArrayList<URL>();
-        List<String> names = gson.fromJson(value, listType);
-        for (String name : names) {
-            urls.add(fromString(name));
-        }
-        return urls;
-    }
 }

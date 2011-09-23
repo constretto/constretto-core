@@ -80,7 +80,7 @@ public class ValueConverterRegistry {
             throw new ConstrettoException("No converter found for class: " + clazz.getName());
         }
         ValueConverter<?> converter = converters.get(clazz);
-        return (List<T>) converter.fromStrings(value);
+        return new ListValueConverter(converter).fromString(value);
     }
 
     private static <T extends Enum<T>> T convertEnum(Class<T> clazz, String value) {

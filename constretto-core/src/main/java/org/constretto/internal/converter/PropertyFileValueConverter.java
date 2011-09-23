@@ -17,8 +17,6 @@ import java.util.Properties;
  * @author <a href="mailto:thor.aage.eldby@arktekk.no">Thor Åge Eldby (teldby)</a>
  */
 public class PropertyFileValueConverter implements ValueConverter<Properties> {
-    private final Type listType = new TypeToken<List<String>>() {}.getType();
-    private final Gson gson = new Gson();
 
     public Properties fromString(String resourceName) throws ConstrettoConversionException {
         try {
@@ -34,14 +32,4 @@ public class PropertyFileValueConverter implements ValueConverter<Properties> {
             throw new ConstrettoConversionException(resourceName, Properties.class, e);
         }
     }
-
-    public List<Properties> fromStrings(String value) throws ConstrettoConversionException {
-        List<Properties> propertieses = new ArrayList<Properties>();
-        List<String> names = gson.fromJson(value,listType);
-        for (String name : names) {
-            propertieses.add(fromString(name));
-        }
-        return propertieses;
-    }
-
 }

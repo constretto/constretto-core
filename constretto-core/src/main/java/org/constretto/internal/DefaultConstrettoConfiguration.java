@@ -82,7 +82,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         return null != value ? value : defaultValue;
     }
 
-    public <K> List<K> evaluateToArray(Class<K> targetClass, String expression) {
+    public <K> List<K> evaluateToList(Class<K> targetClass, String expression) {
         return processAndConvertArray(targetClass, expression);
     }
 
@@ -325,7 +325,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
                         if (hasValue(expression)) {
                             if (parameterTargetClass.isAssignableFrom(List.class)) {
                                 Class<?> collectionParameterType = getCollectionParameterType(new MethodParameter(method, i));
-                                resolvedArguments[i] = evaluateToArray(collectionParameterType, expression);
+                                resolvedArguments[i] = evaluateToList(collectionParameterType, expression);
                             } else if (parameterTargetClass.isAssignableFrom(Map.class)) {
                                 Class<?> mapKeyType = getMapKeyParameterType(new MethodParameter(method, i));
                                 Class<?> mapValueType = getMapValueParameterType(new MethodParameter(method, i));
@@ -378,7 +378,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
                         if (hasValue(expression)) {
                             ConfigurationValue node = findElementOrThrowException(expression);
                             if (fieldType.isAssignableFrom(List.class)) {
-                                field.set(objectToConfigure, evaluateToArray(getCollectionFieldType(field), expression));
+                                field.set(objectToConfigure, evaluateToList(getCollectionFieldType(field), expression));
                             } else if (fieldType.isAssignableFrom(Map.class)) {
                                 field.set(objectToConfigure, evaluateToMap(getMapKeyFieldType(field), getMapValueFieldType(field), expression));
                             } else {

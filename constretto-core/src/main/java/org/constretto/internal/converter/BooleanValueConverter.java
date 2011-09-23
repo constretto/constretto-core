@@ -29,8 +29,6 @@ import java.util.Set;
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class BooleanValueConverter implements ValueConverter<Boolean> {
-    private final Type listType = new TypeToken<List<Boolean>>() {}.getType();
-    private final Gson gson = new Gson();
 
     private static Set<String> validStrings = new HashSet<String>() {{
         add("true");
@@ -42,9 +40,5 @@ public class BooleanValueConverter implements ValueConverter<Boolean> {
             throw new ConstrettoConversionException(value, Boolean.class, "valid values are \"true\" and \"false\" ignoring case.");
         }
         return Boolean.valueOf(value);
-    }
-
-    public List<Boolean> fromStrings(String value) throws ConstrettoConversionException {
-        return gson.fromJson(value, listType);
     }
 }
