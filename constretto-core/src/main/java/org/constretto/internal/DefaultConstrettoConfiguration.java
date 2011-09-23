@@ -83,7 +83,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     }
 
     public <K> List<K> evaluateToList(Class<K> targetClass, String expression) {
-        return processAndConvertArray(targetClass, expression);
+        return processAndConvertList(targetClass, expression);
     }
 
     public <K, V> Map<K, V> evaluateToMap(Class<K> keyClass, Class<V> valueClass, String expression) {
@@ -236,9 +236,14 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         return ValueConverterRegistry.convert(clazz, parsedValue);
     }
 
-    private <T> List<T> processAndConvertArray(Class<T> clazz, String expression) throws ConstrettoException {
+    private <T> List<T> processAndConvertList(Class<T> clazz, String expression) throws ConstrettoException {
         String parsedValue = processVariablesInProperty(expression, new ArrayList<String>());
-        return ValueConverterRegistry.convertArray(clazz, parsedValue);
+        return ValueConverterRegistry.convertList(clazz, parsedValue);
+    }
+
+    private <K,V> Map<K,V> processAndConvertMap(Class<K> keyClazz, Class<V> valueClazz, String expression) throws ConstrettoException {
+        String parsedValue = processVariablesInProperty(expression, new ArrayList<String>());
+        return ValueConverterRegistry.convertMap(keyClazz,valueClazz, parsedValue);
     }
 
     private ConfigurationValue resolveMatch(List<ConfigurationValue> values) {

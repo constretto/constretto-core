@@ -18,6 +18,7 @@ package org.constretto.internal.converter;
 import org.constretto.ValueConverter;
 import org.constretto.exception.ConstrettoConversionException;
 import org.constretto.exception.ConstrettoException;
+import sun.security.krb5.internal.KdcErrException;
 
 import java.io.File;
 import java.net.InetAddress;
@@ -75,12 +76,25 @@ public class ValueConverterRegistry {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> List<T> convertArray(Class<T> clazz, String value) throws ConstrettoException {
+    public static <T> List<T> convertList(Class<T> clazz, String value) throws ConstrettoException {
         if (!converters.containsKey(clazz)) {
             throw new ConstrettoException("No converter found for class: " + clazz.getName());
         }
-        ValueConverter<?> converter = converters.get(clazz);
-        return new ListValueConverter(converter).fromString(value);
+        ValueConverter<T> converter = (ValueConverter<T>) converters.get(clazz);
+        return new ListValueConverter<T>(converter).fromString(value);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <K,V> Map<K,V> convertMap(Class<K> keyClazz, Class<V> valueClazz, String value) throws ConstrettoException {
+        if (!converters.containsKey(keyClazz)) {
+            throw new ConstrettoException("No converter found for class: " + keyClazz.getName());
+        }
+        if (!converters.containsKey(valueClazz)) {
+            throw new ConstrettoException("No converter found for class: " + valueClazz.getName());
+        }
+        ValueConverter<K> keyConverter = (ValueConverter<K>) converters.get(keyClazz);
+        ValueConverter<V> valueConverter = (ValueConverter<V>) converters.get(valueClazz);
+        return new MapValueConverter<K,V>(keyConverter,valueConverter).fromString(value);
     }
 
     private static <T extends Enum<T>> T convertEnum(Class<T> clazz, String value) {

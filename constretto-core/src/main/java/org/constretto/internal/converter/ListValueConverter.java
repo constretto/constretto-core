@@ -13,8 +13,7 @@ import java.util.List;
  * @author <a href="mailto:kaare.nilsen@arktekk.no">Kaare Nilsen</a>
  */
 public class ListValueConverter<T> implements ValueConverter<List<T>>{
-
-    private ValueConverter<T> converter;
+    private final ValueConverter<T> converter;
     private final Type listType = new TypeToken<List<String>>() {}.getType();
     private final Gson gson = new Gson();
 
@@ -29,9 +28,5 @@ public class ListValueConverter<T> implements ValueConverter<List<T>>{
             converted.add(converter.fromString(s));
         }
         return converted;
-    }
-
-    public List<List<T>> fromStrings(String value) throws ConstrettoConversionException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }
