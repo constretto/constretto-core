@@ -53,10 +53,10 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     private final Paranamer paranamer = new BytecodeReadingParanamer();
     private final Gson gson = new Gson();
 
-    private final Map<String, List<ConfigurationValue>> configuration;
+    protected final Map<String, List<ConfigurationValue>> configuration;
     private Set<WeakReference<Object>> configuredObjects = new CopyOnWriteArraySet<WeakReference<Object>>();
     private final List<String> originalTags = new ArrayList<String>();
-    private final List<String> currentTags = new ArrayList<String>();
+    protected final List<String> currentTags = new ArrayList<String>();
 
     public DefaultConstrettoConfiguration(Map<String, List<ConfigurationValue>> configuration, List<String> originalTags) {
         this.configuration = configuration;
@@ -219,7 +219,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         return properties;
     }
 
-    private ConfigurationValue findElementOrThrowException(String expression) {
+    protected ConfigurationValue findElementOrThrowException(String expression) {
         if (!configuration.containsKey(expression)) {
             throw new ConstrettoExpressionException(expression, currentTags);
         }
@@ -231,7 +231,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         return resolvedNode;
     }
 
-    private <T> T processAndConvert(Class<T> clazz, String expression) throws ConstrettoException {
+    protected <T> T processAndConvert(Class<T> clazz, String expression) throws ConstrettoException {
         String parsedValue = processVariablesInProperty(expression, new ArrayList<String>());
         return ValueConverterRegistry.convert(clazz, parsedValue);
     }
@@ -421,7 +421,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         return !("N/A".equals(configurationAnnotation.defaultValue()) && configurationAnnotation.defaultValueFactory().equals(Configuration.EmptyValueFactory.class));
     }
 
-    private String processVariablesInProperty(final String expression, final Collection<String> visitedPlaceholders) {
+    protected String processVariablesInProperty(final String expression, final Collection<String> visitedPlaceholders) {
         visitedPlaceholders.add(expression);
         ConfigurationValue currentNode = findElementOrThrowException(expression);
 
@@ -432,7 +432,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         return value;
     }
 
-    private String substituteVariablesinValue(String value, final Collection<String> visitedPlaceholders) {
+    protected String substituteVariablesinValue(String value, final Collection<String> visitedPlaceholders) {
         while (valueNeedsVariableResolving(value)) {
             ConfigurationVariable expresionToLookup = extractConfigurationVariable(value);
             if (visitedPlaceholders.contains(expresionToLookup.expression)) {
@@ -448,21 +448,21 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         return value;
     }
 
-    private ConfigurationVariable extractConfigurationVariable(String expression) {
+    protected ConfigurationVariable extractConfigurationVariable(String expression) {
         int startIndex = expression.indexOf(VARIABLE_PREFIX);
         int endindex = expression.indexOf(VARIABLE_SUFFIX, startIndex);
         String parsedExpression = expression.substring(startIndex + 2, endindex);
         return new ConfigurationVariable(startIndex, endindex, parsedExpression);
     }
 
-    private boolean valueNeedsVariableResolving(String value) {
+    protected boolean valueNeedsVariableResolving(String value) {
         return null != value && value.contains(VARIABLE_PREFIX) && value.contains(VARIABLE_SUFFIX);
     }
 
-    private static class ConfigurationVariable {
-        private final int startIndex;
-        private final int endIndex;
-        private final String expression;
+    protected static class ConfigurationVariable {
+        final int startIndex;
+        final int endIndex;
+        final String expression;
 
         public ConfigurationVariable(int startIndex, int endIndex, String expression) {
             this.startIndex = startIndex;

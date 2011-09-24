@@ -16,6 +16,7 @@
 package org.constretto;
 
 import org.constretto.internal.DefaultConstrettoConfiguration;
+import org.constretto.internal.ScalaWrapperConstrettoConfiguration;
 import org.constretto.internal.resolver.DefaultConfigurationContextResolver;
 import org.constretto.internal.store.*;
 import org.constretto.model.ConfigurationValue;
@@ -51,7 +52,7 @@ public class ConstrettoBuilder {
         for (String tag : configurationContextResolver.getTags()) {
             addCurrentTag(tag);
         }
-        if (enableSystemProps){
+        if (enableSystemProps) {
             configurationStores.add(new SystemPropertiesStore());
         }
     }
@@ -62,7 +63,12 @@ public class ConstrettoBuilder {
         this.tags = tags;
     }
 
+
     public ConstrettoConfiguration getConfiguration() {
+        return getConfiguration(false);
+    }
+
+    public ConstrettoConfiguration getConfiguration(boolean scalaWrapper) {
         Map<String, List<ConfigurationValue>> configuration = new HashMap<String, List<ConfigurationValue>>();
         Collection<TaggedPropertySet> taggedPropertySets = loadPropertySets();
         for (TaggedPropertySet taggedPropertySet : taggedPropertySets) {
@@ -83,8 +89,11 @@ public class ConstrettoBuilder {
                 }
             }
         }
-
-        return new DefaultConstrettoConfiguration(configuration, tags);
+        if (scalaWrapper) {
+            return new ScalaWrapperConstrettoConfiguration(configuration,tags);
+        } else {
+            return new DefaultConstrettoConfiguration(configuration, tags);
+        }
     }
 
     public ConstrettoBuilder addCurrentTag(String tag) {
