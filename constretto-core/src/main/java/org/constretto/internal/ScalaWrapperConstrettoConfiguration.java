@@ -35,34 +35,5 @@ public class ScalaWrapperConstrettoConfiguration extends DefaultConstrettoConfig
         super(configuration);
     }
 
-    @Override
-    protected String processVariablesInProperty(final String expression, final Collection<String> visitedPlaceholders) {
-        visitedPlaceholders.add(expression);
-        ConfigurationValue currentNode = findElementOrThrowException(expression);
-
-        String value = currentNode.value();
-        if (valueNeedsVariableResolving(value)) {
-            value = substituteVariablesinValue(value, visitedPlaceholders);
-        }
-        return value;
-    }
-
-    @Override
-    protected String substituteVariablesinValue(String value, final Collection<String> visitedPlaceholders) {
-        while (valueNeedsVariableResolving(value)) {
-            ConfigurationVariable expresionToLookup = extractConfigurationVariable(value);
-            ScalaWrapperConstrettoConfiguration rootConfig = new ScalaWrapperConstrettoConfiguration(configuration, currentTags);
-            String v = rootConfig.processVariablesInProperty(expresionToLookup.expression, visitedPlaceholders);
-            int start = 0;
-            int end = v.length();
-            if (v.startsWith("\"")) start = start + 1;
-            if (v.endsWith("\"")) end = end - 1;
-
-            value = value.substring(0, expresionToLookup.startIndex)
-                    + v.substring(start, end)
-                    + value.subSequence(expresionToLookup.endIndex + 1, value.length());
-        }
-        return value;
-    }
 
 }

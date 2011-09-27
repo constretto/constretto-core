@@ -15,8 +15,6 @@
  */
 package org.constretto.internal;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.thoughtworks.paranamer.BytecodeReadingParanamer;
 import com.thoughtworks.paranamer.Paranamer;
 import org.constretto.ConfigurationDefaultValueFactory;
@@ -29,6 +27,8 @@ import org.constretto.exception.ConstrettoConversionException;
 import org.constretto.exception.ConstrettoException;
 import org.constretto.exception.ConstrettoExpressionException;
 import org.constretto.internal.converter.ValueConverterRegistry;
+import org.constretto.model.CPrimitive;
+import org.constretto.model.CValue;
 import org.constretto.model.ConfigurationValue;
 
 import java.lang.annotation.Annotation;
@@ -36,7 +36,6 @@ import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -48,10 +47,8 @@ import static org.constretto.internal.GenericCollectionTypeResolver.*;
  */
 public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     private static final String NULL_STRING = "![![Null]!]!";
-    private static final String VARIABLE_PREFIX = "#{";
-    private static final String VARIABLE_SUFFIX = "}";
+
     private final Paranamer paranamer = new BytecodeReadingParanamer();
-    private final Gson gson = new Gson();
 
     protected final Map<String, List<ConfigurationValue>> configuration;
     private Set<WeakReference<Object>> configuredObjects = new CopyOnWriteArraySet<WeakReference<Object>>();
@@ -82,20 +79,16 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         return null != value ? value : defaultValue;
     }
 
+    @SuppressWarnings("unchecked")
     public <K> List<K> evaluateToList(Class<K> targetClass, String expression) {
-        return processAndConvertList(targetClass, expression);
+        ConfigurationValue value = findElementOrThrowException(expression);
+        return (List<K>) ValueConverterRegistry.convert(targetClass, targetClass, value.value());
     }
 
+    @SuppressWarnings("unchecked")
     public <K, V> Map<K, V> evaluateToMap(Class<K> keyClass, Class<V> valueClass, String expression) {
-        Map<K, V> result = new HashMap<K, V>();
-        String parsedValue = processVariablesInProperty(expression, new ArrayList<String>());
-        Type mapType = new TypeToken<Map<String, String>>() {
-        }.getType();
-        Map<String, String> map = gson.fromJson(parsedValue, mapType);
-        for (Map.Entry<String, String> entry : map.entrySet()) {
-            result.put(ValueConverterRegistry.convert(keyClass, entry.getKey()), ValueConverterRegistry.convert(valueClass, entry.getValue()));
-        }
-        return result;
+        ConfigurationValue value = findElementOrThrowException(expression);
+        return (Map<K, V>) ValueConverterRegistry.convert(valueClass, keyClass, value.value());
     }
 
     public <K> K evaluateTo(Class<K> targetClass, String expression) throws ConstrettoExpressionException {
@@ -219,7 +212,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         return properties;
     }
 
-    protected ConfigurationValue findElementOrThrowException(String expression) {
+    private ConfigurationValue findElementOrThrowException(String expression) {
         if (!configuration.containsKey(expression)) {
             throw new ConstrettoExpressionException(expression, currentTags);
         }
@@ -231,19 +224,22 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         return resolvedNode;
     }
 
-    protected <T> T processAndConvert(Class<T> clazz, String expression) throws ConstrettoException {
-        String parsedValue = processVariablesInProperty(expression, new ArrayList<String>());
-        return ValueConverterRegistry.convert(clazz, parsedValue);
+    @SuppressWarnings("unchecked")
+    private <T> T processAndConvert(Class<T> clazz, String expression) throws ConstrettoException {
+        ConfigurationValue value = findElementOrThrowException(expression);
+        return (T) ValueConverterRegistry.convert(clazz, clazz, value.value());
     }
 
+    @SuppressWarnings("unchecked")
     private <T> List<T> processAndConvertList(Class<T> clazz, String expression) throws ConstrettoException {
-        String parsedValue = processVariablesInProperty(expression, new ArrayList<String>());
-        return ValueConverterRegistry.convertList(clazz, parsedValue);
+        ConfigurationValue value = findElementOrThrowException(expression);
+        return (List<T>) ValueConverterRegistry.convert(clazz, clazz, value.value());
     }
 
-    private <K,V> Map<K,V> processAndConvertMap(Class<K> keyClazz, Class<V> valueClazz, String expression) throws ConstrettoException {
-        String parsedValue = processVariablesInProperty(expression, new ArrayList<String>());
-        return ValueConverterRegistry.convertMap(keyClazz,valueClazz, parsedValue);
+    @SuppressWarnings("unchecked")
+    private <K, V> Map<K, V> processAndConvertMap(Class<K> keyClazz, Class<V> valueClazz, String expression) throws ConstrettoException {
+        ConfigurationValue value = findElementOrThrowException(expression);
+        return (Map<K, V>) ValueConverterRegistry.convert(valueClazz, keyClazz, value.value());
     }
 
     private ConfigurationValue resolveMatch(List<ConfigurationValue> values) {
@@ -308,7 +304,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
                                     required = configurationAnnotation.required();
                                     if (hasAnnotationDefaults(configurationAnnotation)) {
                                         if (configurationAnnotation.defaultValueFactory().equals(Configuration.EmptyValueFactory.class)) {
-                                            defaultValue = ValueConverterRegistry.convert(parameterTargetClass, configurationAnnotation.defaultValue());
+                                            defaultValue = ValueConverterRegistry.convert(parameterTargetClass, parameterTargetClass, new CPrimitive(configurationAnnotation.defaultValue()));
                                         } else {
                                             ConfigurationDefaultValueFactory valueFactory = configurationAnnotation.defaultValueFactory().newInstance();
                                             defaultValue = valueFactory.getDefaultValue();
@@ -392,7 +388,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
                         } else {
                             if (hasAnnotationDefaults(configurationAnnotation)) {
                                 if (configurationAnnotation.defaultValueFactory().equals(Configuration.EmptyValueFactory.class)) {
-                                    field.set(objectToConfigure, ValueConverterRegistry.convert(fieldType, configurationAnnotation.defaultValue()));
+                                    field.set(objectToConfigure, ValueConverterRegistry.convert(fieldType, fieldType, new CPrimitive(configurationAnnotation.defaultValue())));
                                 } else {
                                     ConfigurationDefaultValueFactory valueFactory = configurationAnnotation.defaultValueFactory().newInstance();
                                     field.set(objectToConfigure, valueFactory.getDefaultValue());
@@ -419,44 +415,6 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
 
     private boolean hasAnnotationDefaults(Configuration configurationAnnotation) {
         return !("N/A".equals(configurationAnnotation.defaultValue()) && configurationAnnotation.defaultValueFactory().equals(Configuration.EmptyValueFactory.class));
-    }
-
-    protected String processVariablesInProperty(final String expression, final Collection<String> visitedPlaceholders) {
-        visitedPlaceholders.add(expression);
-        ConfigurationValue currentNode = findElementOrThrowException(expression);
-
-        String value = currentNode.value();
-        if (valueNeedsVariableResolving(value)) {
-            value = substituteVariablesinValue(value, visitedPlaceholders);
-        }
-        return value;
-    }
-
-    protected String substituteVariablesinValue(String value, final Collection<String> visitedPlaceholders) {
-        while (valueNeedsVariableResolving(value)) {
-            ConfigurationVariable expresionToLookup = extractConfigurationVariable(value);
-            if (visitedPlaceholders.contains(expresionToLookup.expression)) {
-                throw new ConstrettoException(
-                        "A cyclic dependency found in a property");
-            }
-            DefaultConstrettoConfiguration rootConfig = new DefaultConstrettoConfiguration(configuration, currentTags);
-
-            value = value.substring(0, expresionToLookup.startIndex)
-                    + rootConfig.processVariablesInProperty(expresionToLookup.expression, visitedPlaceholders)
-                    + value.subSequence(expresionToLookup.endIndex + 1, value.length());
-        }
-        return value;
-    }
-
-    protected ConfigurationVariable extractConfigurationVariable(String expression) {
-        int startIndex = expression.indexOf(VARIABLE_PREFIX);
-        int endindex = expression.indexOf(VARIABLE_SUFFIX, startIndex);
-        String parsedExpression = expression.substring(startIndex + 2, endindex);
-        return new ConfigurationVariable(startIndex, endindex, parsedExpression);
-    }
-
-    protected boolean valueNeedsVariableResolving(String value) {
-        return null != value && value.contains(VARIABLE_PREFIX) && value.contains(VARIABLE_SUFFIX);
     }
 
     protected static class ConfigurationVariable {

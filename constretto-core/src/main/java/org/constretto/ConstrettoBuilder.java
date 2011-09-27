@@ -15,13 +15,12 @@
  */
 package org.constretto;
 
+import com.sun.org.apache.bcel.internal.generic.NEW;
 import org.constretto.internal.DefaultConstrettoConfiguration;
 import org.constretto.internal.ScalaWrapperConstrettoConfiguration;
 import org.constretto.internal.resolver.DefaultConfigurationContextResolver;
 import org.constretto.internal.store.*;
-import org.constretto.model.ConfigurationValue;
-import org.constretto.model.Resource;
-import org.constretto.model.TaggedPropertySet;
+import org.constretto.model.*;
 import org.constretto.resolver.ConfigurationContextResolver;
 
 import java.util.*;
@@ -36,6 +35,7 @@ public class ConstrettoBuilder {
     private final List<ConfigurationStore> configurationStores;
     private final List<String> tags;
     private final boolean enableSystemProps;
+    private final Parser parser = new GsonParser();
 
     public ConstrettoBuilder() {
         this(new DefaultConfigurationContextResolver(), true);
@@ -79,12 +79,12 @@ public class ConstrettoBuilder {
                     if (values == null) {
                         values = new ArrayList<ConfigurationValue>();
                     }
-                    values.add(new ConfigurationValue(entry.getValue(), taggedPropertySet.tag()));
+                    values.add(new ConfigurationValue(parser.parse(entry.getValue()), taggedPropertySet.tag()));
                     configuration.put(entry.getKey(), values);
 
                 } else {
                     List<ConfigurationValue> values = new ArrayList<ConfigurationValue>();
-                    values.add(new ConfigurationValue(entry.getValue(), taggedPropertySet.tag()));
+                    values.add(new ConfigurationValue(parser.parse(entry.getValue()), taggedPropertySet.tag()));
                     configuration.put(entry.getKey(), values);
                 }
             }

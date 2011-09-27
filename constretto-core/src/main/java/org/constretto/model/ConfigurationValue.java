@@ -21,22 +21,23 @@ package org.constretto.model;
 public class ConfigurationValue {
     public static final String DEFAULT_TAG = "[default-tag]";
     public static final String ALL_TAG = "[all-tag]";
-    private static final String ROOT_ELEMENT_NAME = "root-element";
+
+
     private final String tag;
-    private String value;
+    private CValue value;
 
 
-    public ConfigurationValue(String value, String tag) {
+    public ConfigurationValue(CValue value, String tag) {
         this.value = value;
         this.tag = tag;
     }
 
-    public ConfigurationValue(String value) {
+    public ConfigurationValue(CValue value) {
         this.value = value;
         this.tag = DEFAULT_TAG;
     }
 
-    public String value() {
+    public CValue value() {
         return value;
     }
 
@@ -44,23 +45,6 @@ public class ConfigurationValue {
         return tag;
     }
 
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ConfigurationValue that = (ConfigurationValue) o;
-
-        if (tag != null ? !tag.equals(that.tag) : that.tag != null) return false;
-        if (value != null ? !value.equals(that.value) : that.value != null) return false;
-
-        return true;
-    }
-
-    public int hashCode() {
-        int result = tag != null ? tag.hashCode() : 0;
-        result = 31 * result + (value != null ? value.hashCode() : 0);
-        return result;
-    }
 
     public String toString() {
         return "ConfigurationValue{" +

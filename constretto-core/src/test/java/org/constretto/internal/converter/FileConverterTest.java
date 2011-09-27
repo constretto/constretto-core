@@ -15,6 +15,7 @@
  */
 package org.constretto.internal.converter;
 
+import org.constretto.model.CPrimitive;
 import org.junit.Test;
 
 import java.io.File;
@@ -30,7 +31,7 @@ public class FileConverterTest {
     @Test
     public void simpleFileConversion() {
         File file = new File(".");
-        File convertedFile = convert(File.class, ".");
+        File convertedFile = (File) convert(File.class, File.class, new CPrimitive("."));
         assertEquals(file, convertedFile);
         assertTrue(convertedFile.isDirectory());
         assertTrue(convertedFile.canRead());

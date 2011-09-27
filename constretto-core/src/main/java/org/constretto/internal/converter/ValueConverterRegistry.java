@@ -18,7 +18,10 @@ package org.constretto.internal.converter;
 import org.constretto.ValueConverter;
 import org.constretto.exception.ConstrettoConversionException;
 import org.constretto.exception.ConstrettoException;
-import sun.security.krb5.internal.KdcErrException;
+import org.constretto.model.CArray;
+import org.constretto.model.CObject;
+import org.constretto.model.CPrimitive;
+import org.constretto.model.CValue;
 
 import java.io.File;
 import java.net.InetAddress;
@@ -62,39 +65,57 @@ public class ValueConverterRegistry {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> T convert(Class<T> clazz, String value) throws ConstrettoException {
+    public static <K, V> Object convert(Class<V> valueClazz, Class<K> keyClazz, CValue value) throws ConstrettoException {
+        if (value instanceof CPrimitive) {
+            return convertPrimitive(valueClazz, (CPrimitive) value);
+        } else if (value instanceof CArray) {
+            return convertList(valueClazz, (CArray) value);
+        } else if (value instanceof CObject) {
+            return convertMap(keyClazz, valueClazz, (CObject) value);
+        } else {
+            throw new ConstrettoException("ivalid datatype, parsing haz failed");
+        }
 
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> List<T> convertList(Class<T> clazz, CArray list) throws ConstrettoException {
+        if (!converters.containsKey(clazz)) {
+            throw new ConstrettoException("No converter found for class: " + clazz.getName());
+        }
+        List<T> result = new ArrayList<T>();
+        ValueConverter<T> converter = (ValueConverter<T>) converters.get(clazz);
+        for (CValue value : list.data()) {
+            result.add((T) convert(clazz, clazz, value));
+        }
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> T convertPrimitive(Class<T> clazz, CPrimitive value) throws ConstrettoException {
         if (!converters.containsKey(clazz)) {
             if (!Enum.class.isAssignableFrom(clazz)) {
                 throw new ConstrettoException("No converter found for class: " + clazz.getName());
             }
 
-            return (T) convertEnum((Class) clazz, value);
+            return (T) convertEnum((Class) clazz, value.value());
         }
         ValueConverter<?> converter = converters.get(clazz);
-        return (T) converter.fromString(value);
+        return (T) converter.fromString(value.value());
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> List<T> convertList(Class<T> clazz, String value) throws ConstrettoException {
-        if (!converters.containsKey(clazz)) {
-            throw new ConstrettoException("No converter found for class: " + clazz.getName());
-        }
-        ValueConverter<T> converter = (ValueConverter<T>) converters.get(clazz);
-        return new ListValueConverter<T>(converter).fromString(value);
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <K,V> Map<K,V> convertMap(Class<K> keyClazz, Class<V> valueClazz, String value) throws ConstrettoException {
-        if (!converters.containsKey(keyClazz)) {
-            throw new ConstrettoException("No converter found for class: " + keyClazz.getName());
-        }
+    public static <K, V> Map<K, V> convertMap(Class<K> keyClazz, Class<V> valueClazz, CObject value) throws ConstrettoException {
         if (!converters.containsKey(valueClazz)) {
             throw new ConstrettoException("No converter found for class: " + valueClazz.getName());
         }
+        Map<K, V> result = new HashMap<K, V>();
         ValueConverter<K> keyConverter = (ValueConverter<K>) converters.get(keyClazz);
-        ValueConverter<V> valueConverter = (ValueConverter<V>) converters.get(valueClazz);
-        return new MapValueConverter<K,V>(keyConverter,valueConverter).fromString(value);
+
+        for (Map.Entry<String, CValue> valueEntry : value.data().entrySet()) {
+            result.put(keyConverter.fromString(valueEntry.getKey()), (V) convert(valueClazz, keyClazz, valueEntry.getValue()));
+        }
+        return result;
     }
 
     private static <T extends Enum<T>> T convertEnum(Class<T> clazz, String value) {

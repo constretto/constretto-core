@@ -16,6 +16,7 @@
 package org.constretto.internal.converter;
 
 import org.constretto.exception.ConstrettoConversionException;
+import org.constretto.model.CPrimitive;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -27,13 +28,13 @@ public class EnumValueConverterRegistryTest {
 
     @Test
     public void conversionOfKnownEnumValue() throws Exception {
-        MockEnum value1 = ValueConverterRegistry.convert(MockEnum.class, "Value1");
+        MockEnum value1 = (MockEnum) ValueConverterRegistry.convert(MockEnum.class, MockEnum.class, new CPrimitive("Value1"));
         assertEquals("Wrong value.", value1, MockEnum.Value1);
     }
 
     @Test(expected = ConstrettoConversionException.class)
     public void conversionOfUnknownEnumValue() throws Exception {
-        ValueConverterRegistry.convert(MockEnum.class, "Unknown");
+        ValueConverterRegistry.convert(MockEnum.class, MockEnum.class,new CPrimitive("Unknown"));
     }
 
     private enum MockEnum {
