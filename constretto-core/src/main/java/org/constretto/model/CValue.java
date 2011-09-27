@@ -9,12 +9,8 @@ import java.util.Set;
  * @author <a href="mailto:kaare.nilsen@arktekk.no">Kaare Nilsen</a>
  */
 public abstract class CValue {
-    protected static final String VARIABLE_PREFIX = "#{";
-    protected static final String VARIABLE_SUFFIX = "}";
 
-    public Set<String> referencedKeys() {
-        return new HashSet<String>();
-    }
+    public abstract Set<String> referencedKeys();
 
     public boolean containsVariables() {
         return !referencedKeys().isEmpty();
@@ -32,5 +28,5 @@ public abstract class CValue {
         return this instanceof CPrimitive;
     }
 
-    public abstract void replace(String key, CValue cValue);
+    public abstract void replace(String key, String resolvedValue);
 }

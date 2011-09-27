@@ -1,6 +1,8 @@
 package org.constretto.model;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author <a href="mailto:kaare.nilsen@arktekk.no">Kaare Nilsen</a>
@@ -17,7 +19,16 @@ public class CObject extends CValue {
     }
 
     @Override
-    public void replace(String key, CValue resolvedValue) {
+    public Set<String> referencedKeys() {
+        Set<String> referencedKeys = new HashSet<String>();
+        for (CValue value : data.values()) {
+            referencedKeys.addAll(value.referencedKeys());
+        }
+        return referencedKeys;
+    }
+
+    @Override
+    public void replace(String key, String resolvedValue) {
         for (CValue value : data.values()) {
             value.replace(key, resolvedValue);
         }

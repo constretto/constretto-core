@@ -23,7 +23,6 @@ import org.constretto.ValueConverter;
 import org.constretto.exception.ConstrettoConversionException;
 import org.constretto.exception.ConstrettoException;
 import org.constretto.internal.converter.IntegerValueConverter;
-import org.constretto.internal.converter.ListValueConverter;
 import org.constretto.internal.converter.ValueConverterRegistry;
 import org.junit.Before;
 import org.junit.Test;

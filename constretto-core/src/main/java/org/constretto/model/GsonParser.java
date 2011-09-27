@@ -1,13 +1,15 @@
 package org.constretto.model;
 
 import com.google.gson.*;
-import com.sun.org.apache.bcel.internal.generic.RETURN;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.MatchResult;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author <a href="mailto:kaare.nilsen@arktekk.no">Kaare Nilsen</a>
@@ -50,14 +52,19 @@ public class GsonParser implements Parser {
     public CValue parse(String value) {
         try {
             CValue cValue = builder.create().fromJson(value, CValue.class);
-            if (cValue == null) return new CPrimitive(value); else return cValue;
+            if (cValue == null) return new CPrimitive(value);
+            else return cValue;
         } catch (Exception e) {
             return new CPrimitive(value);
         }
     }
 
     public static void main(String[] args) {
-        CValue parse = new GsonParser().parse("#{base-url}/child");
-        System.out.println("parse = " + parse);
+        Pattern p = Pattern.compile("#\\{(.*?)}");
+        Matcher m = p.matcher("#{base-url} dette er en #{variabel} sier nå jeg, for ikke å snakke om #{denne}");
+        while (m.find()){
+            String group = m.group(1);
+            System.out.println(group);
+        }
     }
 }

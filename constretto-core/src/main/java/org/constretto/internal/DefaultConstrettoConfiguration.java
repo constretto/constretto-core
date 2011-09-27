@@ -59,11 +59,26 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         this.configuration = configuration;
         this.originalTags.addAll(originalTags);
         this.currentTags.addAll(originalTags);
+        postProcess();
     }
 
     public DefaultConstrettoConfiguration(Map<String, List<ConfigurationValue>> configuration) {
         this.configuration = configuration;
+        postProcess();
     }
+
+    private void postProcess() {
+        for (Map.Entry<String, List<ConfigurationValue>> entry : configuration.entrySet()) {
+            for (ConfigurationValue value : entry.getValue()) {
+                if (value.value().containsVariables()){
+                    for (String key : value.value().referencedKeys()) {
+                        value.value().replace(key,evaluateToString(key));
+                    }
+                }
+            }
+        }
+    }
+
 
     @SuppressWarnings("unchecked")
     public <K> K evaluateTo(String expression, K defaultValue) {
