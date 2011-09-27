@@ -15,7 +15,6 @@
  */
 package org.constretto;
 
-import com.sun.org.apache.bcel.internal.generic.NEW;
 import org.constretto.internal.DefaultConstrettoConfiguration;
 import org.constretto.internal.ScalaWrapperConstrettoConfiguration;
 import org.constretto.internal.resolver.DefaultConfigurationContextResolver;
@@ -65,10 +64,14 @@ public class ConstrettoBuilder {
 
 
     public ConstrettoConfiguration getConfiguration() {
-        return getConfiguration(false);
+        return getConfiguration(true);
     }
 
-    public ConstrettoConfiguration getConfiguration(boolean scalaWrapper) {
+    public ScalaWrapperConstrettoConfiguration getConfigurationForScala() {
+        return (ScalaWrapperConstrettoConfiguration) getConfiguration(false);
+    }
+
+    private ConstrettoConfiguration getConfiguration(boolean isDefault) {
         Map<String, List<ConfigurationValue>> configuration = new HashMap<String, List<ConfigurationValue>>();
         Collection<TaggedPropertySet> taggedPropertySets = loadPropertySets();
         for (TaggedPropertySet taggedPropertySet : taggedPropertySets) {
@@ -89,10 +92,10 @@ public class ConstrettoBuilder {
                 }
             }
         }
-        if (scalaWrapper) {
-            return new ScalaWrapperConstrettoConfiguration(configuration,tags);
-        } else {
+        if (isDefault) {
             return new DefaultConstrettoConfiguration(configuration, tags);
+        } else {
+            return new ScalaWrapperConstrettoConfiguration(configuration, tags);
         }
     }
 
@@ -136,9 +139,9 @@ public class ConstrettoBuilder {
     }
 
 
-    //
-    // Store builders
-    //
+//
+// Store builders
+//
 
     private interface StoreBuilder {
         public ConstrettoBuilder done();

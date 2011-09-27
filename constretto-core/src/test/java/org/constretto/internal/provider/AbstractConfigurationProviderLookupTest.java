@@ -119,20 +119,6 @@ public abstract class AbstractConfigurationProviderLookupTest {
         assertEquals("it works when its at the end", constrettoConfiguration.evaluateToString("at-end"));
     }
 
-    @Test(expected = ConstrettoException.class)
-    @Ignore("will get this to work")
-    public void simpleLookupForKeyContainingDirectCircularReferencesToItSelf() {
-        ConstrettoConfiguration constrettoConfiguration = prepareTests();
-        System.out.println(constrettoConfiguration.evaluateToString("circular"));
-    }
-
-    @Test(expected = ConstrettoException.class)
-    @Ignore("will get this to work")
-    public void simpleLookupForKeyContainingTransitiveCircularReferencesToOtherKeys() {
-        ConstrettoConfiguration constrettoConfiguration = prepareTests();
-        constrettoConfiguration.evaluateToString("transitive");
-    }
-
     @Test
     public void taggedLookupForKeyContainingReferencesToOtherKeys() {
         ConstrettoConfiguration constrettoConfiguration = prepareTests();

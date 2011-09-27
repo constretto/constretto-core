@@ -16,6 +16,7 @@
 package org.constretto.internal;
 
 
+import org.constretto.model.CValue;
 import org.constretto.model.ConfigurationValue;
 
 import java.util.Collection;
@@ -33,6 +34,10 @@ public class ScalaWrapperConstrettoConfiguration extends DefaultConstrettoConfig
 
     public ScalaWrapperConstrettoConfiguration(Map<String, List<ConfigurationValue>> configuration) {
         super(configuration);
+    }
+
+    public CValue get(String expression){
+       return findElementOrThrowException(expression).value();
     }
 
 

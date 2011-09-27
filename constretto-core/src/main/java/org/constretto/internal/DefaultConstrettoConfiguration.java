@@ -58,28 +58,11 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         this.configuration = configuration;
         this.originalTags.addAll(originalTags);
         this.currentTags.addAll(originalTags);
-        postProcess();
     }
 
     public DefaultConstrettoConfiguration(Map<String, List<ConfigurationValue>> configuration) {
         this.configuration = configuration;
-        postProcess();
     }
-
-    private void postProcess() {
-        if (configuration != null) {
-            for (Map.Entry<String, List<ConfigurationValue>> entry : configuration.entrySet()) {
-                for (ConfigurationValue value : entry.getValue()) {
-                    if (value.value().containsVariables()) {
-                        for (String key : value.value().referencedKeys()) {
-                            value.value().replace(key, evaluateToString(key));
-                        }
-                    }
-                }
-            }
-        }
-    }
-
 
     @SuppressWarnings("unchecked")
     public <K> K evaluateTo(String expression, K defaultValue) {
@@ -213,7 +196,6 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         }
     }
 
-
     //
     // Helper methods
     //
@@ -228,7 +210,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         return properties;
     }
 
-    private ConfigurationValue findElementOrThrowException(String expression) {
+    protected ConfigurationValue findElementOrThrowException(String expression) {
         if (!configuration.containsKey(expression)) {
             throw new ConstrettoExpressionException(expression, currentTags);
         }
@@ -237,6 +219,11 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         if (resolvedNode == null) {
             throw new ConstrettoExpressionException(expression, currentTags);
         }
+        if (resolvedNode.value().containsVariables()){
+            for (String key : resolvedNode.value().referencedKeys()) {
+                resolvedNode.value().replace(key, evaluateToString(key));
+            }
+        }
         return resolvedNode;
     }
 
@@ -244,18 +231,6 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     private <T> T processAndConvert(Class<T> clazz, String expression) throws ConstrettoException {
         ConfigurationValue value = findElementOrThrowException(expression);
         return (T) ValueConverterRegistry.convert(clazz, clazz, value.value());
-    }
-
-    @SuppressWarnings("unchecked")
-    private <T> List<T> processAndConvertList(Class<T> clazz, String expression) throws ConstrettoException {
-        ConfigurationValue value = findElementOrThrowException(expression);
-        return (List<T>) ValueConverterRegistry.convert(clazz, clazz, value.value());
-    }
-
-    @SuppressWarnings("unchecked")
-    private <K, V> Map<K, V> processAndConvertMap(Class<K> keyClazz, Class<V> valueClazz, String expression) throws ConstrettoException {
-        ConfigurationValue value = findElementOrThrowException(expression);
-        return (Map<K, V>) ValueConverterRegistry.convert(valueClazz, keyClazz, value.value());
     }
 
     private ConfigurationValue resolveMatch(List<ConfigurationValue> values) {
@@ -428,25 +403,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         } while ((objectToConfigureClass = objectToConfigureClass.getSuperclass()) != null);
     }
 
-
     private boolean hasAnnotationDefaults(Configuration configurationAnnotation) {
         return !("N/A".equals(configurationAnnotation.defaultValue()) && configurationAnnotation.defaultValueFactory().equals(Configuration.EmptyValueFactory.class));
-    }
-
-    protected static class ConfigurationVariable {
-        final int startIndex;
-        final int endIndex;
-        final String expression;
-
-        public ConfigurationVariable(int startIndex, int endIndex, String expression) {
-            this.startIndex = startIndex;
-            this.endIndex = endIndex;
-            this.expression = expression;
-        }
-
-        @Override
-        public String toString() {
-            return expression + ", at: " + startIndex + " to: " + endIndex;
-        }
     }
 }
