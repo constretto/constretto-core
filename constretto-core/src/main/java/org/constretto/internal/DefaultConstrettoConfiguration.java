@@ -28,7 +28,6 @@ import org.constretto.exception.ConstrettoException;
 import org.constretto.exception.ConstrettoExpressionException;
 import org.constretto.internal.converter.ValueConverterRegistry;
 import org.constretto.model.CPrimitive;
-import org.constretto.model.CValue;
 import org.constretto.model.ConfigurationValue;
 
 import java.lang.annotation.Annotation;
@@ -68,11 +67,13 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     }
 
     private void postProcess() {
-        for (Map.Entry<String, List<ConfigurationValue>> entry : configuration.entrySet()) {
-            for (ConfigurationValue value : entry.getValue()) {
-                if (value.value().containsVariables()){
-                    for (String key : value.value().referencedKeys()) {
-                        value.value().replace(key,evaluateToString(key));
+        if (configuration != null) {
+            for (Map.Entry<String, List<ConfigurationValue>> entry : configuration.entrySet()) {
+                for (ConfigurationValue value : entry.getValue()) {
+                    if (value.value().containsVariables()) {
+                        for (String key : value.value().referencedKeys()) {
+                            value.value().replace(key, evaluateToString(key));
+                        }
                     }
                 }
             }
