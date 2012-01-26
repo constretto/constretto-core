@@ -25,6 +25,9 @@ public class Resource {
     final String path;
 
     public Resource(String path) {
+        if(path == null) {
+            throw new IllegalArgumentException("A null value for the 'path' argument is not allowed. ");
+        }
         this.path = path;
     }
 
