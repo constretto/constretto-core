@@ -12,7 +12,7 @@ import static org.junit.Assert.assertNull;
  */
 public class UrlResourceTest {
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = ConstrettoException.class)
     public void testUrlResourceForNullPath() throws Exception {
         UrlResource urlResource = new UrlResource(null);
     }

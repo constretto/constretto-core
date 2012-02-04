@@ -178,6 +178,10 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         reconfigure();
     }
 
+    public List<String> getCurrentTags() {
+        return currentTags;
+    }
+
     public Iterator<Property> iterator() {
         List<Property> properties = new ArrayList<Property>();
         Map<String, String> map = asMap();

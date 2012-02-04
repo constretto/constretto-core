@@ -26,7 +26,7 @@ public class Resource {
 
     public Resource(String path) {
         if(path == null) {
-            throw new IllegalArgumentException("A null value for the 'path' argument is not allowed. ");
+            throw new ConstrettoException("Resources with a null value for the 'path' argument is not allowed. ");
         }
         this.path = path;
     }

@@ -110,10 +110,11 @@ public interface ConstrettoConfiguration extends Iterable<Property> {
      */
     void clearTags(boolean reconfigure) throws ConstrettoException;
 
+    List<String> getCurrentTags();
+
+
     /**
      * Will rerun all @Configure annotated methods with the current configuration.
      */
     void reconfigure() throws ConstrettoException;
-
-
 }
