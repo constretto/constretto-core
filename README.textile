@@ -23,26 +23,26 @@ h3. Examples of the new json format
 	#
 	# Usage in java code : 
 	# List<String> strings = config.evaluateToList(String.class,"anArrayOfStrings")
-    #
+	#
 	anArrayOfStrings = ["one","two","three"]
 	
 	#
 	# Usage in java code : 
 	# List<Integer> ints = config.evaluateToList(Integer.class,"anArrayOfInts")
-    #
+	#
 	anArrayOfInts = [1,2,3]
 	
 	#
     # Usage in java code : 
 	# Map<String,Integer> map = config.evaluateToMap(String.class,Integer.class,"mapOfStringAndInt")
-    #
+	#
 	mapOfStringAndInt = {"keyOne":1,"keyTwo":2}
 	
 	#
 	# Usage in java code : 
 	# Person p = config.evaluateWith(new PersonConverter(),"aPerson")
 	# Where PersonConverter here is an implementation of GenericConverter
-    #
+	#
 	aPerson={"name":"Kaare",age:29,"adress",{"street":"somewhere","city":"over the rainbow"}} 
 
 </pre>
