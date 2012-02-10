@@ -53,6 +53,21 @@ public interface ConstrettoConfiguration extends Iterable<Property> {
      */
     <K> K evaluateTo(Class<K> targetClass, String expression) throws ConstrettoExpressionException, ConstrettoConversionException;
 
+    /**
+     * Looks up an expression in the configuration.
+     * <p/>
+     * Will then instead of using the more simple conversion rules defined
+     * for the other methods in the API, allow the client to supply
+     * it's own converter for the Data.
+     *
+     * @param converter  your own custom converter
+     * @param expression the expression to lookup
+     * @param <T>        the target type for conversion
+     * @return The converted value from the custom converter
+     * @since 2.0
+     */
+    <T> T evaluateWith(GenericConverter<T> converter, String expression) throws ConstrettoExpressionException, ConstrettoConversionException;
+
     String evaluateToString(String expression) throws ConstrettoException;
 
     Boolean evaluateToBoolean(String expression) throws ConstrettoException;
@@ -68,8 +83,6 @@ public interface ConstrettoConfiguration extends Iterable<Property> {
     Short evaluateToShort(String expression) throws ConstrettoException;
 
     Byte evaluateToByte(String expression) throws ConstrettoException;
-
-    <T> T evaluateWith(GenericConverter<T> converter, String expression);
 
     <K> List<K> evaluateToList(Class<K> targetClass, String expression);
 
