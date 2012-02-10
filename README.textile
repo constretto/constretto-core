@@ -6,9 +6,46 @@ It allows you to "tag" configuration values, so that Constretto could choose the
 It also works as a bridge between different configuration formats, and currently Java property files, Ini files, and Java Beans are
 supported.
 
+
+h2. What's new in 2.0
+
+* Json configuration support. You can now in your config files configure rich objects, arrays and maps
+* New GenericConverter interface allowing you to create custom parsing for rich objects
+* Spring dependencies for the core api and implementation is removed
+* You can now query constretto for the currently used configuration tags
+* Overriding configuration by using System properties and System env are now enabled by default.
+* Cursored navigation with the "at" method is removed. Will break any clients using this feature.
+* @Configuration now uses value instead of expression so that instead of writing @Configuration(expression="aKey") now you simply say @Configuration("aKey")
+
+h3. Examples of the new json format
+
+<pre>
+	#
+	# to use this in your code : List<String> strings = config.evaluateToList(String.class,"anArrayOfStrings")
+    #
+	anArrayOfStrings = ["one","two","three"]
+	
+	#
+	# to use this in your code : List<Integer> ints = config.evaluateToList(Integer.class,"anArrayOfInts")
+    #
+	anArrayOfInts = [1,2,3]
+	
+	#
+	# to use this in your code : Map<String,Integer> map = config.evaluateToMap(String.class,Integer.class,"mapOfStringAndInt")
+    #
+	mapOfStringAndInt = {"keyOne":1,"keyTwo":2}
+	
+	#
+	# to use this in your code : Person p = config.evaluateWith(new PersonConverter(),"aPerson")
+	# Where PersonConverter here is an implementation of GenericConverter
+    #
+	aPerson={"name":"Kaare",age:29,"adress",{"street":"somewhere","city":"over the rainbow"}} 
+</pre>
+	
+
 h2. How to Install?
 
-Constretto is built with maven, so if you are using maven, you can simply add Constretto as dependencies in your pom:
+Constretto is built with maven and deployed to the central maven repository, so if you are using maven, you can simply add Constretto as dependencies in your pom:
 
 <pre>
 	<dependencies>
@@ -121,10 +158,6 @@ Now that you've configured Constretto, by Java API or Spring, you may query your
 <pre>
 	// Simple lookup
 	String aDataSourceUrl = configuration.evaluateToString("datasources.customer.url");
-	
-	// Cursored lookup
-	ConstrettoConfiguration cursoredConfiguration = configuration.at("datasources").at("customer");
-	String sameDataSourceUrl = cursoredConfiguration.evaluateToString("url");
 	
 </pre>
 
