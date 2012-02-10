@@ -33,7 +33,7 @@ h3. Examples of the new json format
 	anArrayOfInts = [1,2,3]
 	
 	#
-    # Usage in java code : 
+	# Usage in java code : 
 	# Map<String,Integer> map = config.evaluateToMap(String.class,Integer.class,"mapOfStringAndInt")
 	#
 	mapOfStringAndInt = {"keyOne":1,"keyTwo":2}
