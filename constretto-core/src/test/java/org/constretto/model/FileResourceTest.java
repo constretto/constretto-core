@@ -4,7 +4,7 @@ import junit.framework.Assert;
 import org.constretto.exception.ConstrettoException;
 import org.junit.Test;
 
-import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.*;
 
 /**
  * @author <a href=mailto:zapodot@gmail.com>Sondre Eikanger Kval&oslash;</a>
@@ -21,6 +21,14 @@ public class FileResourceTest {
         final FileResource fileResource = new FileResource("devNullFile");
         assertFalse(fileResource.exists());
         fileResource.getInputStream();
+    }
+
+    @Test
+    public void checkThatFileResourceExists() throws Exception {
+        final FileResource nonExisting = new FileResource("devNullFile");
+        assertFalse(nonExisting.exists());
+        final FileResource existing = new FileResource("file:src/test/resources/cache1.ini");
+        assertTrue(existing.exists());
     }
 
     @Test(expected = ConstrettoException.class)

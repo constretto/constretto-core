@@ -25,14 +25,18 @@ public class Resource {
     final String path;
 
     public Resource(String path) {
-        if(path == null) {
+        if (path == null) {
             throw new ConstrettoException("Resources with a null value for the 'path' argument is not allowed. ");
         }
         this.path = path;
     }
 
     public boolean exists() {
-        return loadResource(path) != null;
+        if (path.startsWith(FILE_PREFIX) || this instanceof FileResource) {
+            return new File(extractFileNameFromFileResource(path)).exists();
+        } else {
+            return getInputStream() != null;
+        }
     }
 
     public InputStream getInputStream() {
@@ -63,17 +67,22 @@ public class Resource {
     }
 
     private InputStream loadFromFile(String path) {
+        String fileName = extractFileNameFromFileResource(path);
+        try {
+            return new FileInputStream(new File(fileName));
+        } catch (FileNotFoundException e) {
+            throw new ConstrettoException("Could not read file from path: " + path);
+        }
+    }
+
+    private String extractFileNameFromFileResource(String path) {
         String fileName;
         if (path.startsWith(FILE_PREFIX)) {
             fileName = path.substring(FILE_PREFIX.length(), path.length());
         } else {
             fileName = path;
         }
-        try {
-            return new FileInputStream(new File(fileName));
-        } catch (FileNotFoundException e) {
-            throw new ConstrettoException("Could not read file from path: " + path);
-        }
+        return fileName;
     }
 
     private InputStream loadFromClassPath(String path) {
