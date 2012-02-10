@@ -107,8 +107,7 @@ h2. How to configure Constretto?
 
 h3. Using Java API
 
-Constretto provides a fluent API to be used in any Java application. Its main interface is ConstrettoConfiguration, that supplies methods to query for values in your configuration.
-To initialize the ConstrettoConfiguration interface, use the supplied ConstrettoBuilder as shown in the example below:
+Constretto provides a fluent API to be used in any Java application. Its main interface is ConstrettoConfiguration, that supplies methods to query for values in your configuration. To initialize the ConstrettoConfiguration interface, use the supplied ConstrettoBuilder as shown in the example below:
 
 <pre>
 	ConstrettoConfiguration config = 
@@ -129,9 +128,7 @@ To initialize the ConstrettoConfiguration interface, use the supplied Constretto
 
 h3. Using Spring framework
 
-Constretto works very well in a Spring environment, It provides a namespace for Spring xml configuration files, to build a ConstrettoConfiguration object,
- and also provides a ProperyPlaceHolder to allow values in Spring xml files to be resolved from Constretto, and also a BeanPostProcessor that 
-enables ConfigurationInjection.
+Constretto works very well in a Spring environment, It provides a namespace for Spring xml configuration files, to build a ConstrettoConfiguration object, and also provides a ProperyPlaceHolder to allow values in Spring xml files to be resolved from Constretto, and also a BeanPostProcessor that enables ConfigurationInjection.
 
 To tell spring to use Constretto:
 
