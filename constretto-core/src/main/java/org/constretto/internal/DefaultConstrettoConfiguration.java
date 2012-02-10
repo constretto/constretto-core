@@ -17,9 +17,7 @@ package org.constretto.internal;
 
 import com.thoughtworks.paranamer.BytecodeReadingParanamer;
 import com.thoughtworks.paranamer.Paranamer;
-import org.constretto.ConfigurationDefaultValueFactory;
-import org.constretto.ConstrettoConfiguration;
-import org.constretto.Property;
+import org.constretto.*;
 import org.constretto.annotation.Configuration;
 import org.constretto.annotation.Configure;
 import org.constretto.annotation.Tags;
@@ -76,6 +74,11 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
             value = null;
         }
         return null != value ? value : defaultValue;
+    }
+
+    public <T> T evaluateWith(GenericConverter<T> converter, String expression) {
+        ConfigurationValue value = findElementOrThrowException(expression);
+        return converter.fromValue(value.value());
     }
 
     @SuppressWarnings("unchecked")

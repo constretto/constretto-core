@@ -13,31 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.constretto.internal;
+package org.constretto;
 
-
+import org.constretto.exception.ConstrettoConversionException;
 import org.constretto.model.CValue;
-import org.constretto.model.ConfigurationValue;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
-public class ScalaWrapperConstrettoConfiguration extends DefaultConstrettoConfiguration {
+public interface GenericConverter<T> {
 
-    public ScalaWrapperConstrettoConfiguration(Map<String, List<ConfigurationValue>> configuration, List<String> originalTags) {
-        super(configuration, originalTags);
-    }
-
-    public ScalaWrapperConstrettoConfiguration(Map<String, List<ConfigurationValue>> configuration) {
-        super(configuration);
-    }
-
-    public CValue get(String expression){
-       return findElementOrThrowException(expression).value();
-    }
-
-
+    T fromValue(CValue value) throws ConstrettoConversionException;
 }

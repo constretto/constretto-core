@@ -79,7 +79,7 @@ public class ValueConverterRegistry {
     }
 
     @SuppressWarnings("unchecked")
-    private static <T> List<T> convertList(Class<T> clazz, CArray list) throws ConstrettoException {
+    public static <T> List<T> convertList(Class<T> clazz, CArray list) throws ConstrettoException {
         if (!converters.containsKey(clazz)) {
             throw new ConstrettoException("No converter found for class: " + clazz.getName());
         }
@@ -92,7 +92,7 @@ public class ValueConverterRegistry {
     }
 
     @SuppressWarnings("unchecked")
-    private static <T> T convertPrimitive(Class<T> clazz, CPrimitive value) throws ConstrettoException {
+    public static <T> T convertPrimitive(Class<T> clazz, CPrimitive value) throws ConstrettoException {
         if (!converters.containsKey(clazz)) {
             if (!Enum.class.isAssignableFrom(clazz)) {
                 throw new ConstrettoException("No converter found for class: " + clazz.getName());
@@ -118,7 +118,7 @@ public class ValueConverterRegistry {
         return result;
     }
 
-    private static <T extends Enum<T>> T convertEnum(Class<T> clazz, String value) {
+    public static <T extends Enum<T>> T convertEnum(Class<T> clazz, String value) {
         try {
             return Enum.valueOf(clazz, value);
         } catch (IllegalArgumentException e) {

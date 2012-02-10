@@ -1,8 +1,5 @@
 package org.constretto.model;
 
-import com.sun.xml.internal.fastinfoset.algorithm.BooleanEncodingAlgorithm;
-
-import java.util.HashSet;
 import java.util.Set;
 
 /**
