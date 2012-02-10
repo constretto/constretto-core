@@ -26,6 +26,7 @@ import org.constretto.exception.ConstrettoException;
 import org.constretto.exception.ConstrettoExpressionException;
 import org.constretto.internal.converter.ValueConverterRegistry;
 import org.constretto.model.CPrimitive;
+import org.constretto.model.CValue;
 import org.constretto.model.ConfigurationValue;
 
 import java.lang.annotation.Annotation;
@@ -79,6 +80,10 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     public <T> T evaluateWith(GenericConverter<T> converter, String expression) {
         ConfigurationValue value = findElementOrThrowException(expression);
         return converter.fromValue(value.value());
+    }
+
+    public CValue evaluate(String expression) throws ConstrettoExpressionException {
+        return findElementOrThrowException(expression).value();
     }
 
     @SuppressWarnings("unchecked")
