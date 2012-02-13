@@ -7,7 +7,8 @@
   either express or implied. See the License for the specific language governing permissions and limitations under the
   License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.constretto</groupId>
     <artifactId>constretto</artifactId>
@@ -31,7 +32,7 @@
     </modules>
 
     <scm>
-        <connection>scm:git:git@github.com:constretto/constretto-core.git</connection>	
+        <connection>scm:git:git@github.com:constretto/constretto-core.git</connection>
         <developerConnection>scm:git:git@github.com:constretto/constretto-core.git</developerConnection>
         <url>http://github.com/constretto/constretto-core</url>
     </scm>
@@ -86,18 +87,18 @@
     </licenses>
 
     <properties>
-	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
     <profiles>
         <profile>
             <id>spring2.x</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
-				<property>
-  		            <name>performRelease</name>
-		            <value>true</value>
-		      </property>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
             </activation>
             <properties>
                 <spring.version>2.5.6</spring.version>
@@ -111,59 +112,59 @@
                 <junit.version>4.5</junit.version>
             </properties>
         </profile>
-		<profile> 
-			<id>sonatype-oss-release</id> 
-			<activation>
-		      <property>
-		        <name>performRelease</name>
-		        <value>true</value>
-		      </property>
-		    </activation>
-			<build> 
-				<plugins> 
-					<plugin> 
-						<groupId>org.apache.maven.plugins</groupId> 
-						<artifactId>maven-source-plugin</artifactId> 
-						<version>2.1.2</version> 
-						<executions> 
-							<execution> 
-								<id>attach-sources</id> 
-								<goals> 
-									<goal>jar-no-fork</goal> 
-								</goals> 
-							</execution> 
-						</executions> 
-					</plugin> 
-					<plugin> 
-						<groupId>org.apache.maven.plugins</groupId> 
-						<artifactId>maven-javadoc-plugin</artifactId> 
-						<version>2.7</version> 
-						<executions> 
-							<execution> 
-								<id>attach-javadocs</id> 
-								<goals> 
-									<goal>jar</goal> 
-								</goals> 
-							</execution> 
-						</executions> 
-					</plugin> 
-					<plugin> 
-						<groupId>org.apache.maven.plugins</groupId> 
-						<artifactId>maven-gpg-plugin</artifactId> 
-						<version>1.1</version> 
-						<executions> 
-							<execution> 
-								<id>sign-artifacts</id> 
-								<phase>verify</phase> 
-								<goals> 
-									<goal>sign</goal> 
-								</goals> 
-							</execution> 
-						</executions> 
-					</plugin> 
-				</plugins> 
-			</build> 
-		</profile>
+        <profile>
+            <id>sonatype-oss-release</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>2.1.2</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.7</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.1</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 
 
@@ -305,54 +306,56 @@
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
-            <plugin> 
-				<groupId>org.apache.maven.plugins</groupId> 
-				<artifactId>maven-enforcer-plugin</artifactId> 
-				<version>1.0</version> 
-				<executions> 
-					<execution> 
-						<id>enforce-maven</id> 
-						<goals> 
-							<goal>enforce</goal> 
-						</goals> 
-						<configuration> 
-							<rules> 
-								<requireMavenVersion> 
-									<version>(,2.1.0),(2.1.0,2.2.0),(2.2.0,)</version> 
-									<message>Maven 2.1.0 and 2.2.0 produce incorrect GPG signatures and checksums respectively.</message> 
-								</requireMavenVersion> 
-							</rules> 
-						</configuration> 
-					</execution> 
-				</executions> 
-			</plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>1.0</version>
+                <executions>
+                    <execution>
+                        <id>enforce-maven</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>(,2.1.0),(2.1.0,2.2.0),(2.2.0,)</version>
+                                    <message>Maven 2.1.0 and 2.2.0 produce incorrect GPG signatures and checksums
+                                        respectively.
+                                    </message>
+                                </requireMavenVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
-        <pluginManagement> 
-			<plugins> 
-				<plugin> 
-					<groupId>org.apache.maven.plugins</groupId> 
-					<artifactId>maven-release-plugin</artifactId> 
-					<version>2.1</version> 
-					<configuration> 
-						<mavenExecutorId>forked-path</mavenExecutorId> 
-						<useReleaseProfile>false</useReleaseProfile> 
-						<arguments>-Psonatype-oss-release,spring2.x</arguments> 
-					</configuration> 
-				</plugin> 
-			</plugins> 
-		</pluginManagement>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>2.1</version>
+                    <configuration>
+                        <mavenExecutorId>forked-path</mavenExecutorId>
+                        <useReleaseProfile>false</useReleaseProfile>
+                        <arguments>-Psonatype-oss-release,spring2.x</arguments>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 
-    <distributionManagement> 
-		<snapshotRepository> 
-			<id>sonatype-nexus-snapshots</id> 
-			<name>Sonatype Nexus Snapshots</name> 
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url> 
-		</snapshotRepository> 
-		<repository> 
-			<id>sonatype-nexus-staging</id>
-			<name>Nexus Release Repository</name> 
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url> 
-		</repository> 
-	</distributionManagement>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>sonatype-nexus-snapshots</id>
+            <name>Sonatype Nexus Snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>sonatype-nexus-staging</id>
+            <name>Nexus Release Repository</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+        </repository>
+    </distributionManagement>
 </project>

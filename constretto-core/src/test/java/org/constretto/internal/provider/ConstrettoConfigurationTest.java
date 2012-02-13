@@ -25,7 +25,7 @@ public class ConstrettoConfigurationTest {
         constrettoConfiguration = new ConstrettoBuilder(false)
                 .addCurrentTag("production")
                 .createPropertiesStore()
-                .addResource(new Resource("classpath:test.properties"))
+                .addResource(Resource.create("classpath:test.properties"))
                 .done()
                 .getConfiguration();
     }

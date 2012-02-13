@@ -10,11 +10,44 @@
  */
 package org.constretto.model;
 
+import org.constretto.exception.ConstrettoException;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class UrlResource extends Resource {
     public UrlResource(String path) {
         super(path);
+    }
+
+    @Override
+    public boolean exists() {
+        try {
+            HttpURLConnection.setFollowRedirects(true);
+            HttpURLConnection con = (HttpURLConnection) new URL(path).openConnection();
+            con.setRequestMethod("HEAD");
+            int responseCode = con.getResponseCode();
+            return (responseCode == HttpURLConnection.HTTP_OK);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public InputStream getInputStream() {
+        try {
+            URL url = new URL(path);
+            return url.openStream();
+        } catch (MalformedURLException ex) {
+            throw new ConstrettoException("Could not load URL. Path tried: [" + path + "]", ex);
+        } catch (IOException e) {
+            throw new ConstrettoException("Woot", e);
+        }
     }
 }

@@ -17,6 +17,6 @@ import java.util.List;
 public class InputStreamValueConverter implements ValueConverter<InputStream> {
 
     public InputStream fromString(String resourceName) throws ConstrettoConversionException {
-        return new Resource(resourceName).getInputStream();
+        return Resource.create(resourceName).getInputStream();
     }
 }

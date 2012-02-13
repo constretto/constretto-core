@@ -22,7 +22,7 @@ public class FieldAnnotationSubClassTest {
     public void before() {
         config = new ConstrettoBuilder()
                 .createPropertiesStore()
-                .addResource(new Resource("classpath:subClassData.properties"))
+                .addResource(Resource.create("classpath:subClassData.properties"))
                 .done()
                 .getConfiguration();
     }

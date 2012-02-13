@@ -21,7 +21,7 @@ public class PropertyFileValueConverter implements ValueConverter<Properties> {
     public Properties fromString(String resourceName) throws ConstrettoConversionException {
         try {
             Properties properties = new Properties();
-            InputStream stream = new Resource(resourceName).getInputStream();
+            InputStream stream = Resource.create(resourceName).getInputStream();
             if (resourceName.endsWith(".xml")) {
                 properties.loadFromXML(stream);
             } else {

@@ -19,7 +19,7 @@ public class EncryptedPropertiesLookupTest {
         ConstrettoBuilder constrettoBuilder = new ConstrettoBuilder();
         constrettoBuilder
                 .createEncryptedPropertiesStore(PASSWORD_PROPERTY)
-                .addResource(new Resource(("classpath:encrypted.properties")))
+                .addResource(Resource.create("classpath:encrypted.properties"))
                 .done();
         ConstrettoConfiguration config = constrettoBuilder.getConfiguration();
         assertEquals("Testing a property", config.evaluateToString("encrypted_property"));

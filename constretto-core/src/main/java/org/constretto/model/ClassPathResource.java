@@ -10,11 +10,30 @@
  */
 package org.constretto.model;
 
+import java.io.InputStream;
+
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class ClassPathResource extends Resource {
     public ClassPathResource(String path) {
         super(path);
+    }
+
+    @Override
+    public InputStream getInputStream() {
+        ClassLoader classLoader = this.getClass().getClassLoader();
+        String location;
+        if (path.startsWith(CLASSPATH_PREFIX)) {
+            location = path.substring(CLASSPATH_PREFIX.length(), path.length());
+        } else {
+            location = path;
+        }
+        return classLoader.getResourceAsStream(location);
+    }
+
+    @Override
+    public boolean exists() {
+        return getInputStream() != null;
     }
 }

@@ -19,80 +19,31 @@ import java.net.URL;
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
-public class Resource {
+public abstract class Resource {
     public static final String CLASSPATH_PREFIX = "classpath:";
     public static final String FILE_PREFIX = "file:";
     final String path;
 
-    public Resource(String path) {
+    protected Resource(String path) {
         if (path == null) {
             throw new ConstrettoException("Resources with a null value for the 'path' argument is not allowed. ");
         }
         this.path = path;
     }
 
-    public boolean exists() {
-        if (path.startsWith(FILE_PREFIX) || this instanceof FileResource) {
-            return new File(extractFileNameFromFileResource(path)).exists();
-        } else {
-            return getInputStream() != null;
-        }
-    }
 
-    public InputStream getInputStream() {
-        return loadResource(path);
-    }
-
-    private InputStream loadResource(String path) {
-        if (path.startsWith(CLASSPATH_PREFIX) || this instanceof ClassPathResource) {
-            return loadFromClassPath(path);
-        } else if (path.startsWith(FILE_PREFIX) || this instanceof FileResource) {
-            return loadFromFile(path);
-        } else {
-            try {
-                URL url = new URL(path);
-                return loadFromURL(url);
-            } catch (MalformedURLException ex) {
-                throw new ConstrettoException("Unsupported resource type. Registered types are 'classpath:', 'file:', and things that can be loaded with java.net.URL");
-            }
-        }
-    }
-
-    private InputStream loadFromURL(URL url) {
-        try {
-            return url.openStream();
-        } catch (IOException e) {
-            throw new ConstrettoException("Could not read file from url: " + url);
-        }
-    }
-
-    private InputStream loadFromFile(String path) {
-        String fileName = extractFileNameFromFileResource(path);
-        try {
-            return new FileInputStream(new File(fileName));
-        } catch (FileNotFoundException e) {
-            throw new ConstrettoException("Could not read file from path: " + path);
-        }
-    }
-
-    private String extractFileNameFromFileResource(String path) {
-        String fileName;
-        if (path.startsWith(FILE_PREFIX)) {
-            fileName = path.substring(FILE_PREFIX.length(), path.length());
-        } else {
-            fileName = path;
-        }
-        return fileName;
-    }
-
-    private InputStream loadFromClassPath(String path) {
-        ClassLoader classLoader = this.getClass().getClassLoader();
-        String location;
+    public static Resource create(String path) {
         if (path.startsWith(CLASSPATH_PREFIX)) {
-            location = path.substring(CLASSPATH_PREFIX.length(), path.length());
+            return new ClassPathResource(path);
+        } else if (path.startsWith(FILE_PREFIX)) {
+            return new FileResource(path);
         } else {
-            location = path;
+            return new UrlResource(path);
         }
-        return classLoader.getResourceAsStream(location);
     }
+
+    public abstract boolean exists();
+
+    public abstract InputStream getInputStream();
+
 }

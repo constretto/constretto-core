@@ -108,6 +108,10 @@ public class ConstrettoBuilder {
         return new IniFileConfigurationStoreBuilder();
     }
 
+    public JsonStoreBuilder createJsonConfigurationStore() {
+        return new JsonStoreBuilder();
+    }
+
     public ConstrettoBuilder createSystemPropertiesStore() {
         configurationStores.add(new SystemPropertiesStore());
         return new ConstrettoBuilder(configurationStores, tags, enableSystemProps);
@@ -155,6 +159,28 @@ public class ConstrettoBuilder {
             return new ConstrettoBuilder(configurationStores, tags, enableSystemProps);
         }
     }
+
+    public class JsonStoreBuilder implements StoreBuilder {
+        private final JsonStore store;
+
+        public JsonStoreBuilder() {
+            this.store = new JsonStore();
+        }
+
+        private JsonStoreBuilder(JsonStore store) {
+            this.store = store;
+        }
+
+        public JsonStoreBuilder addResource(Resource resource, String key, String... tags) {
+            return new JsonStoreBuilder(store.addResource(resource, key, tags));
+        }
+
+        public ConstrettoBuilder done() {
+            configurationStores.add(store);
+            return new ConstrettoBuilder(configurationStores, tags, enableSystemProps);
+        }
+    }
+
 
     public class EncryptedPropertiesStoreBuilder implements StoreBuilder {
         private final EncryptedPropertiesStore store;

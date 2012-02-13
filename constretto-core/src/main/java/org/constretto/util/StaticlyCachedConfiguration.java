@@ -61,9 +61,9 @@ public class StaticlyCachedConfiguration {
 
             for (String location : locations) {
                 if (location.toLowerCase().endsWith(".ini")) {
-                    iniFileConfigurationStore.addResource(new Resource(location));
+                    iniFileConfigurationStore.addResource(Resource.create(location));
                 } else if (location.toLowerCase().endsWith(".properties")) {
-                    propertyFileConfigurationStore.addResource(new Resource(location));
+                    propertyFileConfigurationStore.addResource(Resource.create(location));
                 }
             }
             builder = builder.addConfigurationStore(iniFileConfigurationStore);

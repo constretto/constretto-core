@@ -10,11 +10,43 @@
  */
 package org.constretto.model;
 
+import org.constretto.exception.ConstrettoException;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class FileResource extends Resource {
     public FileResource(String path) {
         super(path);
+    }
+
+    @Override
+    public boolean exists() {
+        return new File(extractFileNameFromFileResource(path)).exists();
+    }
+
+    @Override
+    public InputStream getInputStream() {
+        String fileName = extractFileNameFromFileResource(path);
+        try {
+            return new FileInputStream(new File(fileName));
+        } catch (FileNotFoundException e) {
+            throw new ConstrettoException("Could not read file from path: " + path);
+        }
+    }
+
+    private String extractFileNameFromFileResource(String path) {
+        String fileName;
+        if (path.startsWith(FILE_PREFIX)) {
+            fileName = path.substring(FILE_PREFIX.length(), path.length());
+        } else {
+            fileName = path;
+        }
+        return fileName;
     }
 }
