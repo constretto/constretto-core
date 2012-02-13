@@ -10,6 +10,7 @@ supported.
 h2. What's new in 2.0
 
 * Json configuration support. You can now in your config files configure rich objects, arrays and maps
+* JsonStore added. Now you are able to register a new file with complex json content, and register it on a key and list of tags
 * New GenericConverter interface allowing you to create custom parsing for rich objects
 * Spring dependencies for the core api and implementation is removed
 * You can now query constretto for the currently used configuration tags
