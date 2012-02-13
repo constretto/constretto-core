@@ -10,11 +10,11 @@ import org.constretto.model.CValue;
 import org.constretto.model.Resource;
 import org.junit.Test;
 
-import java.net.URL;
 import java.util.Map;
 
 import static org.constretto.internal.converter.ValueConverterRegistry.convertPrimitive;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 public class JsonStoreTest {
 

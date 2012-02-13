@@ -15,7 +15,6 @@
  */
 package org.constretto.internal.provider.helper;
 
-import org.constretto.ConfigurationDefaultValueFactory;
 import org.constretto.annotation.Configuration;
 import org.constretto.annotation.Configure;
 

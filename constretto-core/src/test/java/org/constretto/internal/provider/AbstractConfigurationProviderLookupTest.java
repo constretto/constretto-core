@@ -18,10 +18,9 @@ package org.constretto.internal.provider;
 import org.constretto.ConstrettoConfiguration;
 import org.constretto.exception.ConstrettoException;
 import org.junit.After;
-import static org.junit.Assert.assertEquals;
-
-import org.junit.Ignore;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author <a href="mailto:kristoffer.moum@arktekk.no">Kristoffer Moum</a>

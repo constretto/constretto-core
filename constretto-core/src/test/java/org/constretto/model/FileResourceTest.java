@@ -1,10 +1,10 @@
 package org.constretto.model;
 
-import junit.framework.Assert;
 import org.constretto.exception.ConstrettoException;
 import org.junit.Test;
 
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 
 /**
  * @author <a href=mailto:zapodot@gmail.com>Sondre Eikanger Kval&oslash;</a>

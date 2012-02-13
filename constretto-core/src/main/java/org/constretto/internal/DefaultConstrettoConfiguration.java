@@ -17,7 +17,10 @@ package org.constretto.internal;
 
 import com.thoughtworks.paranamer.BytecodeReadingParanamer;
 import com.thoughtworks.paranamer.Paranamer;
-import org.constretto.*;
+import org.constretto.ConfigurationDefaultValueFactory;
+import org.constretto.ConstrettoConfiguration;
+import org.constretto.GenericConverter;
+import org.constretto.Property;
 import org.constretto.annotation.Configuration;
 import org.constretto.annotation.Configure;
 import org.constretto.annotation.Tags;

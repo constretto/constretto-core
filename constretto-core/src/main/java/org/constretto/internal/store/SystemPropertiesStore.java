@@ -19,9 +19,10 @@ import org.constretto.ConfigurationStore;
 import org.constretto.model.ConfigurationValue;
 import org.constretto.model.TaggedPropertySet;
 
+import java.util.*;
+
 import static java.lang.System.getProperties;
 import static java.lang.System.getProperty;
-import java.util.*;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>

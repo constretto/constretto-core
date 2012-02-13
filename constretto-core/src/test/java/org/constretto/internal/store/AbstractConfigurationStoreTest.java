@@ -18,10 +18,11 @@ package org.constretto.internal.store;
 import org.constretto.ConfigurationStore;
 import org.constretto.model.ConfigurationValue;
 import org.constretto.model.TaggedPropertySet;
-import static org.junit.Assert.*;
 import org.junit.Test;
 
 import java.util.Collection;
+
+import static org.junit.Assert.*;
 
 /**
  * @author <a href="mailto:thor.aage.eldby@arktekk.no">Thor &Aring;ge Eldby</a>

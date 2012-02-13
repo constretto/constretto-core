@@ -15,7 +15,6 @@
  */
 package org.constretto.internal.store;
 
-import static junit.framework.Assert.assertEquals;
 import org.constretto.ConfigurationStore;
 import org.constretto.ConstrettoBuilder;
 import org.constretto.ConstrettoConfiguration;
@@ -29,6 +28,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Collection;
+
+import static junit.framework.Assert.assertEquals;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>

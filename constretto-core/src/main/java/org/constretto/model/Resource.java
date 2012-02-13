@@ -12,9 +12,7 @@ package org.constretto.model;
 
 import org.constretto.exception.ConstrettoException;
 
-import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.io.InputStream;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>

@@ -18,9 +18,7 @@ package org.constretto.internal.util;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
-import static org.constretto.util.StaticlyCachedConfiguration.cacheHits;
-import static org.constretto.util.StaticlyCachedConfiguration.cacheMiss;
-import static org.constretto.util.StaticlyCachedConfiguration.config;
+import static org.constretto.util.StaticlyCachedConfiguration.*;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>

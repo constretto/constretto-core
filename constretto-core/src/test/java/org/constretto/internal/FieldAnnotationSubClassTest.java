@@ -4,7 +4,6 @@ import org.constretto.ConstrettoBuilder;
 import org.constretto.ConstrettoConfiguration;
 import org.constretto.annotation.Configuration;
 import org.constretto.model.Resource;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 

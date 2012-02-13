@@ -5,7 +5,8 @@ import org.constretto.exception.ConstrettoException;
 import org.constretto.model.Resource;
 import org.constretto.model.TaggedPropertySet;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 import static java.util.Collections.addAll;
