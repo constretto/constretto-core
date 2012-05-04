@@ -28,6 +28,7 @@ import org.constretto.exception.ConstrettoConversionException;
 import org.constretto.exception.ConstrettoException;
 import org.constretto.exception.ConstrettoExpressionException;
 import org.constretto.internal.converter.ValueConverterRegistry;
+import org.constretto.model.CArray;
 import org.constretto.model.CPrimitive;
 import org.constretto.model.CValue;
 import org.constretto.model.ConfigurationValue;
@@ -216,11 +217,9 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     //
     private Map<String, String> asMap() {
         Map<String, String> properties = new HashMap<String, String>();
-        for (String key : configuration.keySet()) {
-            String value = evaluateTo(key, NULL_STRING);
-            if (!value.equals(NULL_STRING)) {
-                properties.put(key, value);
-            }
+        for (Map.Entry<String, List<ConfigurationValue>> entry : configuration.entrySet()) {
+            ConfigurationValue value = findElementOrThrowException(entry.getKey());
+            properties.put(entry.getKey(), value.value().toString());
         }
         return properties;
     }
@@ -234,7 +233,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         if (resolvedNode == null) {
             throw new ConstrettoExpressionException(expression, currentTags);
         }
-        if (resolvedNode.value().containsVariables()){
+        if (resolvedNode.value().containsVariables()) {
             for (String key : resolvedNode.value().referencedKeys()) {
                 resolvedNode.value().replace(key, evaluateToString(key));
             }

@@ -33,4 +33,16 @@ public class CObject extends CValue {
             value.replace(key, resolvedValue);
         }
     }
+
+    @Override
+    public String toString() {
+        String value = "{";
+        for (Map.Entry<String, CValue> entry : data.entrySet()) {
+            value += entry.getKey() + ":" + entry.getValue().toString() + ", ";
+        }
+        if (value.endsWith(", ")){
+            value = value.substring(0,value.length()-2);
+        }
+        return value + "}";
+    }
 }
