@@ -86,6 +86,34 @@ public class MethodParameter {
     }
 
     /**
+     * Create a new MethodParameter for the given constructor, with nesting level 1.
+     *
+     * @param constructor    the Constructor to specify a parameter for
+     * @param parameterIndex the index of the parameter
+     */
+    public MethodParameter(Constructor constructor, int parameterIndex) {
+        this(constructor, parameterIndex, 1);
+    }
+
+    /**
+     * Create a new MethodParameter for the given constructor.
+     *
+     * @param constructor    the Constructor to specify a parameter for
+     * @param parameterIndex the index of the parameter
+     * @param nestingLevel   the nesting level of the target type
+     *                       (typically 1; e.g. in case of a List of Lists, 1 would indicate the
+     *                       nested List, whereas 2 would indicate the element of the nested List)
+     */
+    public MethodParameter(Constructor constructor, int parameterIndex, int nestingLevel) {
+        if (constructor == null) {
+            throw new NullPointerException("Constructor must not be null");
+        }
+        this.constructor = constructor;
+        this.parameterIndex = parameterIndex;
+        this.nestingLevel = nestingLevel;
+    }
+
+    /**
      * Return the wrapped Method, if any.
      * <p>Note: Either Method or Constructor is available.
      *
