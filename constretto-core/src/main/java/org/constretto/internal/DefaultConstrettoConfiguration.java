@@ -218,8 +218,10 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     private Map<String, String> asMap() {
         Map<String, String> properties = new HashMap<String, String>();
         for (Map.Entry<String, List<ConfigurationValue>> entry : configuration.entrySet()) {
-            ConfigurationValue value = findElementOrThrowException(entry.getKey());
-            properties.put(entry.getKey(), value.value().toString());
+            ConfigurationValue value = findElementOrNull(entry.getKey());
+            if (value != null){
+                properties.put(entry.getKey(), value.value().toString());
+            }
         }
         return properties;
     }
