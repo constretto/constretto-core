@@ -156,7 +156,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     }
 
     public boolean hasValue(String expression) {
-        return configuration.containsKey(expression);
+        return findElementOrNull(expression) != null;
     }
 
     public void appendTag(String... newtags) {
@@ -232,6 +232,24 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         ConfigurationValue resolvedNode = resolveMatch(values);
         if (resolvedNode == null) {
             throw new ConstrettoExpressionException(expression, currentTags);
+        }
+        if (resolvedNode.value().containsVariables()) {
+            for (String key : resolvedNode.value().referencedKeys()) {
+                resolvedNode.value().replace(key, evaluateToString(key));
+            }
+        }
+        return resolvedNode;
+    }
+
+
+    protected ConfigurationValue findElementOrNull(String expression) {
+        if (!configuration.containsKey(expression)) {
+            return null;
+        }
+        List<ConfigurationValue> values = configuration.get(expression);
+        ConfigurationValue resolvedNode = resolveMatch(values);
+        if (resolvedNode == null) {
+            return null;
         }
         if (resolvedNode.value().containsVariables()) {
             for (String key : resolvedNode.value().referencedKeys()) {
