@@ -33,4 +33,17 @@ public class CArray extends CValue {
             value.replace(key, resolvedValue);
         }
     }
+
+    @Override
+    public String toString() {
+        String value = "[";
+        for (CValue cValue : data) {
+            value += cValue.toString() + ",";
+
+        }
+        if (value.endsWith(",")){
+            value = value.substring(0,value.length()-1);
+        }
+        return value + "]";
+    }
 }
