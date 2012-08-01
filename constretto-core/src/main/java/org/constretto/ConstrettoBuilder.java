@@ -30,6 +30,7 @@ import java.util.*;
  */
 public class ConstrettoBuilder {
 
+    public static final String OVERRIDES = "CONSTRETTO_OVERRIDES";
     private final List<ConfigurationStore> configurationStores;
     private final List<String> tags;
     private final boolean enableSystemProps;
@@ -63,6 +64,8 @@ public class ConstrettoBuilder {
 
 
     public ConstrettoConfiguration getConfiguration() {
+        addOverrideStores();
+
         Map<String, List<ConfigurationValue>> configuration = new HashMap<String, List<ConfigurationValue>>();
         Collection<TaggedPropertySet> taggedPropertySets = loadPropertySets();
         for (TaggedPropertySet taggedPropertySet : taggedPropertySets) {
@@ -84,6 +87,30 @@ public class ConstrettoBuilder {
             }
         }
         return new DefaultConstrettoConfiguration(configuration, tags);
+    }
+
+    private void addOverrideStores() {
+        String overrideValue = System.getProperty(OVERRIDES);
+
+        if (overrideValue != null) {
+            String[] locations = overrideValue.split(",");
+
+            for (String location : locations) {
+                addOverrideStore(location);
+            }
+        }
+    }
+
+    private void addOverrideStore(String location) {
+        if (location.endsWith(".properties")) {
+            PropertiesStoreBuilder propertiesBuilder = createPropertiesStore();
+            propertiesBuilder.addResource(Resource.create(location));
+            propertiesBuilder.done();
+        } else if (location.endsWith(".ini")) {
+            IniFileConfigurationStoreBuilder iniBuilder = createIniFileConfigurationStore();
+            iniBuilder.addResource(Resource.create(location));
+            iniBuilder.done();
+        }
     }
 
     public ConstrettoBuilder addCurrentTag(String tag) {
