@@ -34,12 +34,6 @@ public class ClassPathResource extends Resource {
 
     @Override
     public boolean exists() {
-        InputStream is = getInputStream();
-        boolean result = is != null;
-        try{
-            is.close();
-        } catch (Exception e) {
-        }
-        return result;
+        return getInputStream() != null;
     }
 }
