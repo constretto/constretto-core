@@ -95,8 +95,11 @@ public class PropertiesStore implements ConfigurationStore {
                 throw new ConstrettoException(e);
             } finally {
                 try {
-                    is.close();
+                    if (is != null) {
+                        is.close();
+                    }
                 } catch (Exception e){
+                    //We do not care if close does not work
                 }
             }
         }

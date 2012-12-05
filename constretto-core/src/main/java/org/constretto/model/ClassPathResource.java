@@ -37,8 +37,11 @@ public class ClassPathResource extends Resource {
         InputStream is = getInputStream();
         boolean result = is != null;
         try{
-            is.close();
+            if (is != null)  {
+                is.close();
+            }
         } catch (Exception e) {
+            // Do not care
         }
         return result;
     }
