@@ -9,7 +9,6 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.constretto</groupId>
     <artifactId>constretto-ldap</artifactId>
     <name>Constretto :: LDAP configuration store</name>
     <properties>

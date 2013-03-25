@@ -27,10 +27,6 @@ To use the LdapConfigurationStore:
     final ConfigurableType configurationObject = constrettoConfiguration.as(ConfigurableType.class);
     ...
 
-Plans for further development
------------------------------
-* merge project in to fork of the Constretto repository and create pull request to solve [CC-56](https://constretto.jira.com/browse/CC-56)
-
 Credits
 -------------
 * The [Constretto project](http://constretto.org/) is created and maintained by Kåre Nilsen and his colleagues at [Arktekk AS](http://www.arktekk.no).
