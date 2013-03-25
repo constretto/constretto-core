@@ -5,7 +5,6 @@ import com.sun.jndi.ldap.LdapCtxFactory;
 import org.constretto.ConstrettoBuilder;
 import org.constretto.ConstrettoConfiguration;
 import org.constretto.annotation.Configuration;
-import org.constretto.model.ConfigurationValue;
 import org.constretto.model.TaggedPropertySet;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,6 +17,7 @@ import javax.naming.directory.InitialDirContext;
 import javax.naming.ldap.LdapContext;
 import java.util.Collection;
 import java.util.Hashtable;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -66,11 +66,24 @@ public class LdapConfigurationStoreEmbeddedLdapTest {
         final Collection<TaggedPropertySet> propertySets = configurationStore.parseConfiguration();
         assertEquals(1, propertySets.size());
         dirContext.close();
-        ConstrettoConfiguration constrettoConfiguration = new ConstrettoBuilder(false).addConfigurationStore(
-                configurationStore).getConfiguration();
+        ConstrettoConfiguration constrettoConfiguration = createConfiguration(configurationStore);
         final ConfigurableType configurationObject = constrettoConfiguration.as(ConfigurableType.class);
         assertEquals("Kaare Nilsen", configurationObject.name);
         assertEquals("Jon-Anders Teigen", configurationObject.sideKickName);
+    }
+
+    @Test
+    public void testDsnMultiValue() throws Exception {
+
+        final InitialDirContext initialDirContext = new InitialDirContext(createLdapEnvironment());
+        final LdapConfigurationStore ldapConfigurationStore = LdapConfigurationStoreBuilder.usingDirContext(initialDirContext)
+                .addDsn("cn=role_developer,ou=groups,dc=constretto,dc=org")
+                .done();
+        final ConstrettoConfiguration configuration = createConfiguration(ldapConfigurationStore);
+        final List<String> members = configuration.evaluateToList(String.class, "uniquemember");
+        assertEquals(2, members.size());
+
+
     }
 
     @Test
@@ -89,6 +102,11 @@ public class LdapConfigurationStoreEmbeddedLdapTest {
                 .getConfiguration();
         assertEquals("Kaare Nilsen", configuration.evaluateToString("kaarenilsen.cn"));
 
+    }
+
+    private ConstrettoConfiguration createConfiguration(LdapConfigurationStore configurationStore) {
+        return new ConstrettoBuilder(false).addConfigurationStore(
+                configurationStore).getConfiguration();
     }
 
     private Hashtable<String, String> createLdapEnvironment() {
