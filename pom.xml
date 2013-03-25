@@ -26,6 +26,7 @@
     <modules>
         <module>constretto-api</module>
         <module>constretto-core</module>
+        <module>constretto-ldap</module>
         <module>constretto-spring</module>
         <module>constretto-test</module>
         <module>constretto-test-junit-4.5</module>
@@ -77,7 +78,17 @@
             <timezone>+1</timezone>
         </developer>
     </developers>
-
+    <contributors>
+        <contributor>
+            <email>zapodot@gmail.com</email>
+            <name>Sondre Eikanger Kvalø</name>
+            <organization>Sonat Consulting AS</organization>
+            <organizationUrl>http://www.sonat.no</organizationUrl>
+            <roles>
+                <role>Java Developer</role>
+            </roles>
+        </contributor>
+    </contributors>
     <licenses>
         <license>
             <name>ASF v2 License</name>
@@ -189,6 +200,12 @@
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>1.9.5</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
