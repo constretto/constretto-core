@@ -1,3 +1,10 @@
+version: 1
+
+dn: dc=constretto,dc=org
+objectClass: domain
+objectClass: top
+dc: constretto
+
 dn: ou=groups,dc=constretto,dc=org
 objectclass: top
 objectclass: organizationalUnit
