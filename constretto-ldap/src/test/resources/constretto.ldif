@@ -1,3 +1,10 @@
+version: 1
+
+dn: dc=constretto,dc=org
+objectClass: domain
+objectClass: top
+dc: constretto
+
 dn: ou=groups,dc=constretto,dc=org
 objectclass: top
 objectclass: organizationalUnit
@@ -14,7 +21,7 @@ dn: cn=contributors,ou=groups,dc=constretto,dc=org
 objectclass: top
 objectclass: groupOfUniqueNames
 cn: contributors
-uniqueMember: cn=Sondre Eikanger Kvalø,dc=sonat,c=no
+uniqueMember: cn=Sondre Eikanger Kvalo,dc=constretto,dc=org
 
 dn: cn=Kaare Nilsen,dc=constretto,dc=org
 objectclass: top
@@ -23,7 +30,8 @@ objectclass: organizationalPerson
 objectclass: inetOrgPerson
 uid: kaarenilsen
 userPassword: password
-cn: Kåre Nilsen
+cn: Kaare Nilsen
+cn:: S8OlcmUgTmlsc2Vu
 sn: Person
 description: Tech lead and framework hater :-)
 telephoneNumber: +47 22 00 00 00
@@ -40,14 +48,15 @@ sn: Person
 description: Developer
 telephoneNumber: +47 22 00 00 10
 
-dn: cn=Sondre Eikanger Kvalø,dc=sonat,c=no
+dn: cn=Sondre Eikanger Kvalo,dc=constretto,dc=org
 objectclass: top
 objectclass: person
 objectclass: organizationalPerson
 objectclass: inetOrgPerson
 uid: zapodot
 userPassword: password
-cn: Sondre Eikanger Kvalø
+cn: Sondre Eikanger Kvalo
+cn:: U29uZHJlIEVpa2FuZ2VyIEt2YWzDuA==
 sn: Person
 description: Developer
 telephoneNumber: +47 55 00 00 00

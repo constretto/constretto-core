@@ -2,55 +2,53 @@ package org.constretto.ldap;
 
 import com.sun.jndi.ldap.DefaultResponseControlFactory;
 import com.sun.jndi.ldap.LdapCtxFactory;
+import org.apache.directory.server.annotations.CreateLdapServer;
+import org.apache.directory.server.annotations.CreateTransport;
+import org.apache.directory.server.core.annotations.ApplyLdifFiles;
+import org.apache.directory.server.core.annotations.CreateDS;
+import org.apache.directory.server.core.annotations.CreatePartition;
+import org.apache.directory.server.core.integ.AbstractLdapTestUnit;
+import org.apache.directory.server.core.integ.FrameworkRunner;
 import org.constretto.ConstrettoBuilder;
 import org.constretto.ConstrettoConfiguration;
 import org.constretto.annotation.Configuration;
-import org.constretto.model.ConfigurationValue;
 import org.constretto.model.TaggedPropertySet;
-import org.junit.Before;
 import org.junit.Test;
-import org.springframework.core.io.DefaultResourceLoader;
-import org.springframework.ldap.test.LdapTestUtils;
-import org.springframework.ldap.test.TestContextSourceFactoryBean;
+import org.junit.runner.RunWith;
 
 import javax.naming.Context;
 import javax.naming.directory.InitialDirContext;
 import javax.naming.ldap.LdapContext;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Hashtable;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
- * @author sondre
+ * @author zapodot at gmail dot com
  */
+@RunWith(FrameworkRunner.class)
+@CreateLdapServer(
+        transports = {
+                @CreateTransport(protocol = "LDAP", port = LdapConfigurationStoreEmbeddedLdapTest.LDAP_PORT)
+        }
+)
+@CreateDS( name = "LdapConfigurationStoreEmbeddedLdapTest", partitions = @CreatePartition(name = "constretto", suffix = "dc=constretto,dc=org"))
+@ApplyLdifFiles("constretto.ldif")
+public class LdapConfigurationStoreEmbeddedLdapTest extends AbstractLdapTestUnit {
 
-public class LdapConfigurationStoreEmbeddedLdapTest {
+    public static final int LDAP_PORT = 27389;
 
     public static class ConfigurableType {
 
         @Configuration("cn")
-        public String name;
+        public List<String> names;
 
         @Configuration("sidekick.cn")
         public String sideKickName;
-
-    }
-
-    public static final int LDAP_PORT = 27389;
-
-    @Before
-    public void setUp() throws Exception {
-        TestContextSourceFactoryBean testContextSourceFactoryBean = new TestContextSourceFactoryBean();
-        testContextSourceFactoryBean.setLdifFile(new DefaultResourceLoader().getResource("classpath:constretto.ldif"));
-        testContextSourceFactoryBean.setDefaultPartitionSuffix("dc=constretto,dc=org");
-        testContextSourceFactoryBean.setDefaultPartitionName("constretto");
-        testContextSourceFactoryBean.setSingleton(true);
-        testContextSourceFactoryBean.setPrincipal(LdapTestUtils.DEFAULT_PRINCIPAL);
-        testContextSourceFactoryBean.setPassword(LdapTestUtils.DEFAULT_PASSWORD);
-        testContextSourceFactoryBean.setPort(LDAP_PORT);
-        testContextSourceFactoryBean.afterPropertiesSet();
-
     }
 
     @Test
@@ -66,11 +64,24 @@ public class LdapConfigurationStoreEmbeddedLdapTest {
         final Collection<TaggedPropertySet> propertySets = configurationStore.parseConfiguration();
         assertEquals(1, propertySets.size());
         dirContext.close();
-        ConstrettoConfiguration constrettoConfiguration = new ConstrettoBuilder(false).addConfigurationStore(
-                configurationStore).getConfiguration();
+        ConstrettoConfiguration constrettoConfiguration = createConfiguration(configurationStore);
         final ConfigurableType configurationObject = constrettoConfiguration.as(ConfigurableType.class);
-        assertEquals("Kaare Nilsen", configurationObject.name);
+        assertTrue(configurationObject.names.containsAll(Arrays.asList("Kaare Nilsen", "Kåre Nilsen")));
         assertEquals("Jon-Anders Teigen", configurationObject.sideKickName);
+    }
+
+    @Test
+    public void testDsnMultiValue() throws Exception {
+
+        final InitialDirContext initialDirContext = new InitialDirContext(createLdapEnvironment());
+        final LdapConfigurationStore ldapConfigurationStore = LdapConfigurationStoreBuilder.usingDirContext(initialDirContext)
+                .addDsn("cn=role_developer,ou=groups,dc=constretto,dc=org")
+                .done();
+        final ConstrettoConfiguration configuration = createConfiguration(ldapConfigurationStore);
+        final List<String> members = configuration.evaluateToList(String.class, "uniquemember");
+        assertEquals(2, members.size());
+
+
     }
 
     @Test
@@ -87,8 +98,12 @@ public class LdapConfigurationStoreEmbeddedLdapTest {
         final ConstrettoConfiguration configuration = new ConstrettoBuilder(false)
                 .addConfigurationStore(ldapConfigurationStore)
                 .getConfiguration();
-        assertEquals("Kaare Nilsen", configuration.evaluateToString("kaarenilsen.cn"));
+        assertTrue(configuration.evaluateToList(String.class, "kaarenilsen.cn").containsAll(Arrays.asList("Kaare Nilsen", "Kåre Nilsen")));
+    }
 
+    private ConstrettoConfiguration createConfiguration(LdapConfigurationStore configurationStore) {
+        return new ConstrettoBuilder(false).addConfigurationStore(
+                configurationStore).getConfiguration();
     }
 
     private Hashtable<String, String> createLdapEnvironment() {
@@ -96,8 +111,8 @@ public class LdapConfigurationStoreEmbeddedLdapTest {
         ldapEnvironment.put(LdapContext.CONTROL_FACTORIES, DefaultResponseControlFactory.class.getName());
         ldapEnvironment.put(Context.PROVIDER_URL, String.format("ldap://localhost:%1$s", LDAP_PORT));
         ldapEnvironment.put(Context.INITIAL_CONTEXT_FACTORY, LdapCtxFactory.class.getName());
-        ldapEnvironment.put(Context.SECURITY_PRINCIPAL, LdapTestUtils.DEFAULT_PRINCIPAL);
-        ldapEnvironment.put(Context.SECURITY_CREDENTIALS, LdapTestUtils.DEFAULT_PASSWORD);
+        ldapEnvironment.put(Context.SECURITY_PRINCIPAL, "uid=admin,ou=system");
+        ldapEnvironment.put(Context.SECURITY_CREDENTIALS, "secret");
         ldapEnvironment.put(Context.SECURITY_PROTOCOL, "simple");
         return ldapEnvironment;
     }
