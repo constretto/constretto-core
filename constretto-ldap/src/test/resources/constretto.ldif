@@ -30,7 +30,8 @@ objectclass: organizationalPerson
 objectclass: inetOrgPerson
 uid: kaarenilsen
 userPassword: password
-cn: Kåre Nilsen
+cn: Kaare Nilsen
+cn:: S8OlcmUgTmlsc2Vu
 sn: Person
 description: Tech lead and framework hater :-)
 telephoneNumber: +47 22 00 00 00
