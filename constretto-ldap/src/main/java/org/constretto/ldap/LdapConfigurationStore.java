@@ -1,5 +1,6 @@
 package org.constretto.ldap;
 
+import com.google.gson.Gson;
 import org.constretto.ConfigurationStore;
 import org.constretto.exception.ConstrettoException;
 import org.constretto.model.ConfigurationValue;
@@ -18,6 +19,7 @@ public class LdapConfigurationStore implements ConfigurationStore {
 
     private Map<String, Attributes> keyAttributesMap = Collections.emptyMap();
     private List<String> tags = Collections.emptyList();
+    private final Gson gsonSerializer = new Gson();
 
     public LdapConfigurationStore() {
         tags = Arrays.asList(ConfigurationValue.DEFAULT_TAG);
@@ -67,7 +69,8 @@ public class LdapConfigurationStore implements ConfigurationStore {
             while (attributesAll.hasMore()) {
                 final Attribute attribute = attributesAll.next();
                 if (!attribute.getID().contains("password")) {
-                    properties.put(mergeKeyAndId(key, attribute.getID()), attribute.get().toString());
+                    properties.put(mergeKeyAndId(key, attribute.getID()),
+                            convertAttribute(attribute));
                 }
 
             }
@@ -76,6 +79,19 @@ public class LdapConfigurationStore implements ConfigurationStore {
             throw new ConstrettoException("Could not read attributes from LDAP");
         }
         return properties;
+    }
+
+    private String convertAttribute(Attribute attribute) throws NamingException {
+        final int subElementsCount = attribute.size();
+        if(subElementsCount == 1) {
+            return attribute.get().toString();
+        } else {
+            List<String> multiValue = new ArrayList<String>(subElementsCount);
+            for(int i=0; i < subElementsCount; i++) {
+                multiValue.add(attribute.get(i).toString());
+            }
+            return gsonSerializer.toJson(multiValue);
+        }
     }
 
     private String mergeKeyAndId(String key, String id) {
