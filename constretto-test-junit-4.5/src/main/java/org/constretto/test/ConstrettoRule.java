@@ -11,7 +11,6 @@
 package org.constretto.test;
 
 import org.constretto.annotation.Tags;
-import org.constretto.spring.annotation.Environment;
 import org.junit.rules.MethodRule;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
@@ -21,7 +20,7 @@ import static org.constretto.spring.internal.resolver.DefaultAssemblyContextReso
 
 /**
  * Sets the <code>CONSTRETTO_TAGS</code> and <code>CONSTRETTO_ENV</code> system properties corresponding to
- * the value of the annotations {@link Tags} and {@link Environment}, respectively, on the test class.
+ * the value of the annotations {@link Tags} and {@link org.constretto.spring.annotation.Environment}, respectively, on the test class.
  *
  * @author <a href="mailto:from.github@nisgits.net">Stig Kleppe-Jorgensen</a>, 2013.01.14
  */
@@ -64,12 +63,23 @@ public class ConstrettoRule implements MethodRule {
     }
 
     private String changeEnvironmentSystemProperty(FrameworkMethod method) {
-        Environment environment = method.getMethod().getDeclaringClass().getAnnotation(Environment.class);
 
-        if (environment == null) {
-            return System.getProperty(ASSEMBLY_KEY);
-        } else {
-            return System.setProperty(ASSEMBLY_KEY, asCsv(environment.value()));
+        if(constrettoEnvironmentAnnotationIsOnClasspath()) {
+            final String[] environmentsDeclared = ConstrettoEnvironmentExtractor.extractEnvironmentValue(method);
+            if (environmentsDeclared != null) {
+                return System.setProperty(ASSEMBLY_KEY, asCsv(environmentsDeclared));
+            }
         }
+        return System.getProperty(ASSEMBLY_KEY);
+
+    }
+
+    private boolean constrettoEnvironmentAnnotationIsOnClasspath() {
+        try {
+            Class.forName("org.constretto.spring.annotation.Environment");
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+        return true;
     }
 }
