@@ -3,6 +3,7 @@ package org.constretto.model;
 import org.constretto.exception.ConstrettoException;
 import org.junit.Test;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
@@ -43,5 +44,12 @@ public class FileResourceTest {
         final FileResource fileResource = new FileResource("file:");
         assertFalse(fileResource.exists());
         fileResource.getInputStream();
+    }
+
+    @Test
+    public void testToString() throws Exception {
+        final FileResource fileResource = new FileResource("file:src/test/resources/cache1.ini");
+        assertEquals("FileResource{path='file:src/test/resources/cache1.ini'}", fileResource.toString());
+
     }
 }

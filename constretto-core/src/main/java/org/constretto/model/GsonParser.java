@@ -58,12 +58,4 @@ public class GsonParser implements Parser {
         }
     }
 
-    public static void main(String[] args) {
-        Pattern p = Pattern.compile("#\\{(.*?)}");
-        Matcher m = p.matcher("#{base-url} dette er en #{variabel} sier nå jeg, for ikke å snakke om #{denne}");
-        while (m.find()){
-            String group = m.group(1);
-            System.out.println(group);
-        }
-    }
 }

@@ -3,6 +3,7 @@ package org.constretto.model;
 import org.constretto.exception.ConstrettoException;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -39,4 +40,12 @@ public class UrlResourceTest {
         final UrlResource urlResource = new UrlResource("http://vg.no");
         assertTrue(urlResource.exists());
     }
+
+    @Test
+    public void testToString() throws Exception {
+        final UrlResource urlResource = new UrlResource("http://vg.no");
+        assertEquals("UrlResource{path='http://vg.no'}", urlResource.toString());
+
+    }
+
 }

@@ -44,4 +44,12 @@ public abstract class Resource {
 
     public abstract InputStream getInputStream();
 
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName());
+        sb.append("{path='").append(path).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

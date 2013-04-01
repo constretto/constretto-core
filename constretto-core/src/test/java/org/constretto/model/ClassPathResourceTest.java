@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.io.InputStream;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 
@@ -26,5 +27,12 @@ public class ClassPathResourceTest {
         assertFalse(classPathResource.exists());
         InputStream inputStream = classPathResource.getInputStream();
         assertNull(inputStream);
+    }
+
+    @Test
+    public void testToString() throws Exception {
+        final ClassPathResource classPathResource = new ClassPathResource(NON_EXISITING_CLASSPATH_RESOURCE);
+        assertEquals("ClassPathResource{path='" + NON_EXISITING_CLASSPATH_RESOURCE + "'}", classPathResource.toString());
+
     }
 }
