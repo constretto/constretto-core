@@ -39,8 +39,8 @@
     </scm>
 
     <issueManagement>
-        <system>jira</system>
-        <url>http://constretto.jira.com/browse/CC</url>
+        <system>github</system>
+        <url>https://github.com/constretto/constretto-core/issues</url>
     </issueManagement>
 
     <developers>
@@ -77,9 +77,8 @@
             </roles>
             <timezone>+1</timezone>
         </developer>
-    </developers>
-    <contributors>
-        <contributor>
+        <developer>
+            <id>zapodot</id>
             <email>zapodot@gmail.com</email>
             <name>Sondre Eikanger Kvalø</name>
             <organization>Sonat Consulting AS</organization>
@@ -87,8 +86,8 @@
             <roles>
                 <role>Java Developer</role>
             </roles>
-        </contributor>
-    </contributors>
+        </developer>
+    </developers>
     <licenses>
         <license>
             <name>ASF v2 License</name>
@@ -99,6 +98,14 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <mockito.version>1.9.5</mockito.version>
+        <commons-logging.version>1.1.1</commons-logging.version>
+        <jsr250.version>1.0</jsr250.version>
+        <aspectjweaver.version>1.6.1</aspectjweaver.version>
+        <ini4j.version>0.5.1</ini4j.version>
+        <commons-lang.version>2.4</commons-lang.version>
+        <jasypt.version>1.4</jasypt.version>
+        <gson.version>1.7.1</gson.version>
     </properties>
 
     <profiles>
@@ -205,7 +212,7 @@
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-all</artifactId>
-                <version>1.9.5</version>
+                <version>${mockito.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -237,28 +244,28 @@
             <dependency>
                 <groupId>commons-logging</groupId>
                 <artifactId>commons-logging</artifactId>
-                <version>1.1.1</version>
+                <version>${commons-logging.version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.annotation</groupId>
                 <artifactId>jsr250-api</artifactId>
-                <version>1.0</version>
+                <version>${jsr250.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.aspectj</groupId>
                 <artifactId>aspectjweaver</artifactId>
-                <version>1.6.1</version>
+                <version>${aspectjweaver.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.ini4j</groupId>
                 <artifactId>ini4j</artifactId>
-                <version>0.5.1</version>
+                <version>${ini4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-lang</groupId>
                 <artifactId>commons-lang</artifactId>
-                <version>2.4</version>
+                <version>${commons-lang.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-beanutils</groupId>
