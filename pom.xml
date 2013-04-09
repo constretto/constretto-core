@@ -106,6 +106,8 @@
         <commons-lang.version>2.4</commons-lang.version>
         <jasypt.version>1.4</jasypt.version>
         <gson.version>1.7.1</gson.version>
+        <commons-beanutils.version>1.8.0</commons-beanutils.version>
+        <paranamer.version>2.5.2</paranamer.version>
     </properties>
 
     <profiles>
@@ -270,7 +272,7 @@
             <dependency>
                 <groupId>commons-beanutils</groupId>
                 <artifactId>commons-beanutils</artifactId>
-                <version>1.8.0</version>
+                <version>${commons-beanutils.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
