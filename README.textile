@@ -6,6 +6,7 @@ It allows you to "tag" configuration values, so that Constretto could choose the
 It also works as a bridge between different configuration formats, and currently Java property files, Ini files, and Java Beans are
 supported.
 
+!https://travis-ci.org/constretto/constretto-core.png(Build Status)!
 
 h2. What's new in 2.0
 
