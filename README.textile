@@ -60,12 +60,12 @@ Constretto is built with maven and deployed to the central maven repository, so 
 		<dependency>
 			<groupId>org.constretto</groupId>
 			<artifactId>constretto-api</artifactId>
-			<version>2.0</version>
+			<version>2.0.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.constretto</groupId>
 			<artifactId>constretto-core</artifactId>
-			<version>2.0</version>
+			<version>2.0.3</version>
 			<scope>runtime</scope>
 		</dependency>
 		...
@@ -78,7 +78,7 @@ If you would like to use the Spring support add:
 	<dependency>
 		<groupId>org.constretto</groupId>
 		<artifactId>constretto-spring</artifactId>
-		<version>2.0</version>
+		<version>2.0.3</version>
 	</dependency>
 </pre>
 
@@ -89,7 +89,7 @@ If you would like to use the Constretto Junit support with junit 4.4 (spring 2.5
 	<dependency>
 		<groupId>org.constretto</groupId>
 		<artifactId>constretto-test</artifactId>
-		<version>2.0</version>
+		<version>2.0.3</version>
 		<scope>test</scope>
 	</dependency>
 </pre>
@@ -100,7 +100,7 @@ If you would like to use the Constretto Junit support with junit 4.5 (spring 3.x
 	<dependency>
 		<groupId>org.constretto</groupId>
 		<artifactId>constretto-test-junit-4.5</artifactId>
-		<version>2.0</version>
+		<version>2.0.3</version>
 		<scope>test</scope>
 	</dependency>
 </pre>
@@ -183,12 +183,12 @@ Java class to be injected with configuration:
 	    @Configuration
 	    private String vendor;
 
-	    @Configuration(expression = "username")
+	    @Configuration("username")
 	    private String myUsername;
 
 		// Considered best practice. Field injections will reduce your ability to test code. 
 	    @Configure
-	    public void configure(String url, @Configuration(expression = "password") String secret) {
+	    public void configure(String url, @Configuration( "password") String secret) {
 	        this.myUrl = url;
 	        this.myPassword = secret;
 	    }
