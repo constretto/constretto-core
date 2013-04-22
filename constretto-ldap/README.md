@@ -29,7 +29,8 @@ To use the LdapConfigurationStore:
 
 Credits
 -------------
-* The [Constretto project](http://constretto.org/) is created and maintained by Kåre Nilsen and his colleagues at [Arktekk AS](http://www.arktekk.no).
+* The [Constretto project](http://constretto.org/) is created and maintained by Kåre Nilsen and his colleagues at [Arktekk AS](http://www.arktekk.no)
+* Development of the LDAP module has been sponsored by [NextGenTel AS](http://www.nextgentel.no/)
 
 
 
