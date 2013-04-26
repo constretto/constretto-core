@@ -15,6 +15,7 @@
  */
 package org.constretto.internal.util;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
@@ -24,6 +25,11 @@ import static org.constretto.util.StaticlyCachedConfiguration.*;
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class StaticlyCachedConfigurationTest {
+
+    @Before
+    public void setUp() throws Exception {
+        reset();
+    }
 
     @Test
     public void cachedSingleIniFile() {

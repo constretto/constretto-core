@@ -113,4 +113,10 @@ public class StaticlyCachedConfiguration {
             return key != null ? key.hashCode() : 0;
         }
     }
+
+    public static void reset() {
+        cache.clear();
+        cacheHits = 0;
+        cacheMiss = 0;
+    }
 }
