@@ -342,7 +342,7 @@ Or
 
 h2. How to report errors or request features?
 
-Please use the JIRA issue tracker at "http://constretto.org":http://constretto.jira.com/browse/CC
+Please use the "GitHub issue tracker":http://github.com/constretto/constretto-core/issues
 
 h2. For further information and documentation
 
