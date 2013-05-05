@@ -301,6 +301,8 @@ public interface ConstrettoConfiguration extends Iterable<Property> {
      * with new settings.
      *
      * @throws ConstrettoConversionException If a conversion error occurs when reconfiguring objects.
+     * @deprecated Will be removed because thread safety can not be guarantied
      */
+    @Deprecated
     void reconfigure() throws ConstrettoException;
 }
