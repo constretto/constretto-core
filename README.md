@@ -54,7 +54,7 @@ public class ConstrettoRuleTest {
 ```
 #### Integration with Constretto-Spring
 
-You may also use the feature together with the @Environment feature of Constretto Spring
+You may also use ConstrettoRule with the @Environment annotation from Constretto Spring
 
 ```java
 @Environment("junit")
