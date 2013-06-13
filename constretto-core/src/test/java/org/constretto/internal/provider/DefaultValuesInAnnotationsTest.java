@@ -20,7 +20,7 @@ import org.constretto.ConstrettoConfiguration;
 import org.constretto.internal.provider.helper.ContagiousConfigurationMethod;
 import org.junit.Test;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>

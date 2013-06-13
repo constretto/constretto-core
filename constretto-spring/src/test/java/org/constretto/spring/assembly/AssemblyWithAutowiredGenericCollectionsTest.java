@@ -10,13 +10,14 @@
  */
 package org.constretto.spring.assembly;
 
-import static junit.framework.Assert.assertEquals;
-import static org.constretto.spring.annotation.Environment.DEVELOPMENT;
 import org.constretto.spring.assembly.helper.service.genericcollections.ProductService;
-import static org.constretto.spring.internal.resolver.DefaultAssemblyContextResolver.ASSEMBLY_KEY;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import static org.constretto.spring.annotation.Environment.DEVELOPMENT;
+import static org.constretto.spring.internal.resolver.DefaultAssemblyContextResolver.ASSEMBLY_KEY;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>

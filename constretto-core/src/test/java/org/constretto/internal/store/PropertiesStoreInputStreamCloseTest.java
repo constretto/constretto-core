@@ -1,16 +1,15 @@
 package org.constretto.internal.store;
 
-import java.io.IOException;
-import java.io.InputStream;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.constretto.exception.ConstrettoException;
 import org.constretto.model.Resource;
 import org.junit.Test;
-import org.mockito.Mockito;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import org.mockito.internal.stubbing.answers.ThrowsException;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import static org.mockito.Mockito.*;
 
 /**
  *

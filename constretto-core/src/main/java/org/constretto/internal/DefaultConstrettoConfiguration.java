@@ -28,7 +28,6 @@ import org.constretto.exception.ConstrettoConversionException;
 import org.constretto.exception.ConstrettoException;
 import org.constretto.exception.ConstrettoExpressionException;
 import org.constretto.internal.converter.ValueConverterRegistry;
-import org.constretto.model.CArray;
 import org.constretto.model.CPrimitive;
 import org.constretto.model.CValue;
 import org.constretto.model.ConfigurationValue;
@@ -203,6 +202,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         return properties.iterator();
     }
 
+    @Override
     public void reconfigure() {
         WeakReference[] references = configuredObjects.toArray(new WeakReference[configuredObjects.size()]);
         for (WeakReference reference : references) {
