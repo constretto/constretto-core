@@ -364,7 +364,7 @@ When using Java Property files, you may tag your entry with
 
 Example:
 
-```
+```INI
 somedb.username=default username
 @production.somedb.username=username in production
 @systest.somedb.username=username in system test
@@ -376,7 +376,7 @@ Constretto also supports Ini files and here, sections are used as tags
 
 Example:
 
-```
+```INI
 [default]
 somedb.username=default username
 
