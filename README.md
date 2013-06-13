@@ -248,11 +248,10 @@ To tell spring to use Constretto:
 
 Now that you've configured Constretto, by Java API or Spring, you may query your configuration using the methods in the ConstrettoConfiguration interface like in the examples below:
 
-<pre>
+```java
     // Simple lookup
     String aDataSourceUrl = configuration.evaluateToString("datasources.customer.url");
-
-</pre>
+```
 
 ### Configuration Injection - Annotation Based
 
@@ -309,43 +308,45 @@ Java class to be injected with configuration:
 ```
 A test that shows this feature used with the Java API:
 
-        public class ConfigurationAnnotationsTest {
-            private ConstrettoConfiguration configuration;
+```java
+public class ConfigurationAnnotationsTest {
+    private ConstrettoConfiguration configuration;
 
-            @Before
-            public void prepareTests() {
-                setProperty("datasources.customer.url", "jdbc://url");
-                setProperty("datasources.customer.username", "username");
-                setProperty("datasources.customer.password", "password");
-                setProperty("datasources.customer.vendor", "derby");
-                setProperty("datasources.vendor", "derby");
-                setProperty("datasources.customer.version", "10");
+    @Before
+    public void prepareTests() {
+        setProperty("datasources.customer.url", "jdbc://url");
+        setProperty("datasources.customer.username", "username");
+        setProperty("datasources.customer.password", "password");
+        setProperty("datasources.customer.vendor", "derby");
+        setProperty("datasources.vendor", "derby");
+        setProperty("datasources.customer.version", "10");
 
-                configuration = new ConstrettoBuilder().createSystemPropertiesStore().getConfiguration();
+        configuration = new ConstrettoBuilder().createSystemPropertiesStore().getConfiguration();
 
-            }
+    }
 
-            @Test
-            public void createNewAnnotatedConfigurationObject() {
-                DataSourceConfiguration customerDataSource = configuration.at("datasources").from("customer").as(DataSourceConfiguration.class);
-                assertEquals("jdbc://url", customerDataSource.getUrl());
-                assertEquals("username", customerDataSource.getUsername());
-                assertEquals("password", customerDataSource.getPassword());
-                assertEquals("derby", customerDataSource.getVendor());
-                assertEquals(new Integer(10), customerDataSource.getVersion());
-            }
+    @Test
+    public void createNewAnnotatedConfigurationObject() {
+        DataSourceConfiguration customerDataSource = configuration.at("datasources").from("customer").as(DataSourceConfiguration.class);
+        assertEquals("jdbc://url", customerDataSource.getUrl());
+        assertEquals("username", customerDataSource.getUsername());
+        assertEquals("password", customerDataSource.getPassword());
+        assertEquals("derby", customerDataSource.getVendor());
+        assertEquals(new Integer(10), customerDataSource.getVersion());
+    }
 
-            @Test
-            public void applyConfigrationToAnnotatedConfigurationObject() {
-                DataSourceConfiguration customerDataSource = new DataSourceConfiguration();
-                configuration.at("datasources").from("customer").on(customerDataSource);
-                assertEquals("derby", customerDataSource.getVendor());
-                assertEquals("username", customerDataSource.getUsername());
-                assertEquals("jdbc://url", customerDataSource.getUrl());
-                assertEquals("password", customerDataSource.getPassword());
-                assertEquals(new Integer(10), customerDataSource.getVersion());
-            }
-        }
+    @Test
+    public void applyConfigrationToAnnotatedConfigurationObject() {
+        DataSourceConfiguration customerDataSource = new DataSourceConfiguration();
+        configuration.at("datasources").from("customer").on(customerDataSource);
+        assertEquals("derby", customerDataSource.getVendor());
+        assertEquals("username", customerDataSource.getUsername());
+        assertEquals("jdbc://url", customerDataSource.getUrl());
+        assertEquals("password", customerDataSource.getPassword());
+        assertEquals(new Integer(10), customerDataSource.getVersion());
+    }
+}
+```
 
 Configuration Formats.
 ----------------------
