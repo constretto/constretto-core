@@ -10,9 +10,11 @@ It also works as a bridge between different configuration formats, and currently
 [![Build Status](https://travis-ci.org/constretto/constretto-core.png)](https://travis-ci.org/constretto/constretto-core)
 
 ## What’s new in 2.1
-* Improved support for Junit by providing refactoring the ConstrettoRule added in 2.0.4 to be used as a `ClassRule. Look below for details
+* Improved support for Junit 4.X by providing refactoring the ConstrettoRule added in 2.0.4 to be used as a @ClassRule.
+  As a consequence the constretto-test-junit4 module has been merged into the constretto-test module.
+  Look below for details
 * LDAP configuration support. You can add configuration either by using DSN or by providing a LDAP search
-** NOTE: Constretto will not close or even handle LDAP connection issues for you. The ease usage with Spring LDAP and other third-party libraries
+    * NOTE: Constretto will not close or even handle LDAP connection issues for you. The ease usage with Spring LDAP and other third-party libraries
 
 ### Examples of using LDAP:
 
@@ -37,7 +39,7 @@ Constretto will help you setting the specified tags or environment settings for 
 to be used as either a `ClassRule (running before class initialization) or a `Rule
 
 ```java
-@Tags({“purejunit”, “test”})
+@Tags({"purejunit", "test"})
 public class ConstrettoRuleTest {
     @Rule
     public ConstrettoRule constrettoRule = new ConstrettoRule();
@@ -45,7 +47,7 @@ public class ConstrettoRuleTest {
     @Test
     public void someTestRequiringEnvironmentTagsToBeSet() {
         ConstrettoConfiguration configuration = new ConstrettoBuilder().createSystemPropertiesStore().getConfiguration();
-        // current tags will be “purejunit” and “test”
+        // current tags will be "purejunit" and "test"
         // more logic here...
     }
 }
@@ -55,7 +57,7 @@ public class ConstrettoRuleTest {
 You may also use the feature together with the @Environment feature of Constretto Spring
 
 ```java
-@Environment(“junit”)
+@Environment("junit")
 @RunWith(ConstrettoSpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = MyTest.TestConfiguration.class)
 public class MyTest {
@@ -87,7 +89,7 @@ public class MyTest {
   @Test
   public void testApplyEnvironment() throws Exception {
 
-    assertArrayEquals(new String[]{“junit”}, injectedEnvironment.toArray(new String[1]));
+    assertArrayEquals(new String[]{"junit"}, injectedEnvironment.toArray(new String[1]));
 
   }
 }
@@ -109,36 +111,36 @@ What’s new in 2.0
     are now enabled by default.
 -   Cursored navigation with the “at” method is removed. Will break any
     clients using this feature.
--   `Configuration now uses value instead of expression so that instead of writing `Configuration(expression=“aKey”)
+-   `Configuration now uses value instead of expression so that instead of writing `Configuration(expression="aKey")
     now you simply say `Configuration("aKey")
 
 ### Examples of the new json format
 
 ```javascript
-    #
-    # Usage in java code :
-    # List<String> strings = config.evaluateToList(String.class,"anArrayOfStrings")
-    #
-    anArrayOfStrings = ["one","two","three"]
+#
+# Usage in java code :
+# List<String> strings = config.evaluateToList(String.class,"anArrayOfStrings")
+#
+anArrayOfStrings = ["one","two","three"]
 
-    #
-    # Usage in java code :
-    # List<Integer> ints = config.evaluateToList(Integer.class,"anArrayOfInts")
-    #
-    anArrayOfInts = [1,2,3]
+#
+# Usage in java code :
+# List<Integer> ints = config.evaluateToList(Integer.class,"anArrayOfInts")
+#
+anArrayOfInts = [1,2,3]
 
-    #
-    # Usage in java code :
-    # Map<String,Integer> map = config.evaluateToMap(String.class,Integer.class,"mapOfStringAndInt")
-    #
-    mapOfStringAndInt = {"keyOne":1,"keyTwo":2}
+#
+# Usage in java code :
+# Map<String,Integer> map = config.evaluateToMap(String.class,Integer.class,"mapOfStringAndInt")
+#
+mapOfStringAndInt = {"keyOne":1,"keyTwo":2}
 
-    #
-    # Usage in java code :
-    # Person p = config.evaluateWith(new PersonConverter(),"aPerson")
-    # Where PersonConverter here is an implementation of GenericConverter
-    #
-    aPerson={"name":"Kaare",age:29,"adress",{"street":"somewhere","city":"over the rainbow"}}
+#
+# Usage in java code :
+# Person p = config.evaluateWith(new PersonConverter(),"aPerson")
+# Where PersonConverter here is an implementation of GenericConverter
+#
+aPerson={"name":"Kaare",age:29,"adress",{"street":"somewhere","city":"over the rainbow"}}
 
 ```
 
@@ -187,7 +189,7 @@ If you would like to use the Constretto Junit support add:
     <dependency>
         <groupId>org.constretto</groupId>
         <artifactId>constretto-test</artifactId>
-        <version>2.0.3</version>
+        <version>2.0.4</version>
         <scope>test</scope>
     </dependency>
 </pre>
@@ -201,20 +203,20 @@ If you would like to use the Constretto Junit support add:
 Constretto provides a fluent API to be used in any Java application. Its main interface is ConstrettoConfiguration, that supplies methods to query for values in your configuration. To initialize the ConstrettoConfiguration interface, use the supplied ConstrettoBuilder as shown in the example below:
 
 ```java
-    ConstrettoConfiguration config =
-                    new ConstrettoBuilder()
-                            .createPropertiesStore()
-                                .addResource(new DefaultResourceLoader().getResource("classpath:test.properties"))
-                                .addResource(new DefaultResourceLoader().getResource("file:test2.properties"))
-                            .done()
-                            .createIniFileConfigurationStore()
-                                .addResource(new DefaultResourceLoader().getResource("classpath:test.ini"))
-                            .done()
-                            .createObjectConfigurationStore()
-                                .addObject(new Object())
-                            .done()
-                            .createSystemPropertiesStore()
-                            .getConfiguration();
+ConstrettoConfiguration config =
+                new ConstrettoBuilder()
+                        .createPropertiesStore()
+                            .addResource(new DefaultResourceLoader().getResource("classpath:test.properties"))
+                            .addResource(new DefaultResourceLoader().getResource("file:test2.properties"))
+                        .done()
+                        .createIniFileConfigurationStore()
+                            .addResource(new DefaultResourceLoader().getResource("classpath:test.ini"))
+                        .done()
+                        .createObjectConfigurationStore()
+                            .addObject(new Object())
+                        .done()
+                        .createSystemPropertiesStore()
+                        .getConfiguration();
 ```
 
 ### Using Spring framework
@@ -224,22 +226,22 @@ Constretto works very well in a Spring environment, It provides a namespace for 
 To tell spring to use Constretto:
 
 ```xml
-    <beans xmlns="http://www.springframework.org/schema/beans"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xmlns:constretto="http://constretto.org/schema/constretto"
-           xsi:schemaLocation="http://www.springframework.org/schema/beans
-               http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-               http://constretto.org/schema/constretto
-               http://constretto.org/schema/constretto/constretto-1.2.xsd">
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:constretto="http://constretto.org/schema/constretto"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+           http://constretto.org/schema/constretto
+           http://constretto.org/schema/constretto/constretto-1.2.xsd">
 
-        <constretto:configuration annotation-config="true" property-placeholder="true">
-            <constretto:stores>
-                <constretto:properties-store>
-                    <constretto:resource location="classpath:properties/test1.properties"/>
-                </constretto:properties-store>
-            </constretto:stores>
-        </constretto:configuration>
-    </beans>
+    <constretto:configuration annotation-config="true" property-placeholder="true">
+        <constretto:stores>
+            <constretto:properties-store>
+                <constretto:resource location="classpath:properties/test1.properties"/>
+            </constretto:properties-store>
+        </constretto:stores>
+    </constretto:configuration>
+</beans>
 ```
 
 ## How to use Constretto in your application?
@@ -249,8 +251,8 @@ To tell spring to use Constretto:
 Now that you've configured Constretto, by Java API or Spring, you may query your configuration using the methods in the ConstrettoConfiguration interface like in the examples below:
 
 ```java
-    // Simple lookup
-    String aDataSourceUrl = configuration.evaluateToString("datasources.customer.url");
+// Simple lookup
+String aDataSourceUrl = configuration.evaluateToString("datasources.customer.url");
 ```
 
 ### Configuration Injection - Annotation Based
@@ -261,50 +263,50 @@ It supports injection in fields, and methods as seen in the example below:
 Java class to be injected with configuration:
 
 ```java
-    public class DataSourceConfiguration {
+public class DataSourceConfiguration {
 
-        private String myUrl;
-        private String myPassword;
-        private Integer version;
+    private String myUrl;
+    private String myPassword;
+    private Integer version;
 
-        // When no expression is explicitly given Constretto will use field name as key
-        @Configuration
-        private String vendor;
+    // When no expression is explicitly given Constretto will use field name as key
+    @Configuration
+    private String vendor;
 
-        @Configuration("username")
-        private String myUsername;
+    @Configuration("username")
+    private String myUsername;
 
-        @Configure
-        public void configure(String url, @Configuration( "password") String secret) {
-            this.myUrl = url;
-            this.myPassword = secret;
-        }
-
-        @Configure
-        public void setVersion(Integer version) {
-            this.version = version;
-        }
-
-        public String getUrl() {
-            return myUrl;
-        }
-
-        public String getUsername() {
-            return myUsername;
-        }
-
-        public String getPassword() {
-            return myPassword;
-        }
-
-        public String getVendor() {
-            return vendor;
-        }
-
-        public Integer getVersion() {
-            return version;
-        }
+    @Configure
+    public void configure(String url, @Configuration("password") String secret) {
+        this.myUrl = url;
+        this.myPassword = secret;
     }
+
+    @Configure
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
+    public String getUrl() {
+        return myUrl;
+    }
+
+    public String getUsername() {
+        return myUsername;
+    }
+
+    public String getPassword() {
+        return myPassword;
+    }
+
+    public String getVendor() {
+        return vendor;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+}
 ```
 A test that shows this feature used with the Java API:
 
@@ -363,9 +365,9 @@ When using Java Property files, you may tag your entry with
 Example:
 
 ```
-    somedb.username=default username
-    @production.somedb.username=username in production
-    @systest.somedb.username=username in system test
+somedb.username=default username
+@production.somedb.username=username in production
+@systest.somedb.username=username in system test
 ```
 
 ###Ini Files
@@ -375,14 +377,14 @@ Constretto also supports Ini files and here, sections are used as tags
 Example:
 
 ```
-    [default]
-    somedb.username=default username
+[default]
+somedb.username=default username
 
-    [production]
-    somedb.username=username in production
+[production]
+somedb.username=username in production
 
-    [systest]
-    somedb.username=username in system test
+[systest]
+somedb.username=username in system test
 ```
 
 ### Java Objects used as configuration sources
@@ -393,21 +395,21 @@ Also the ConfigurationSource annotation can use an optional basePath attribute, 
 Example:
 
 ```java
-    @ConfigurationSource(basePath =”somedb“)
-    public class DefaultDataSourceConfigurer {
+@ConfigurationSource(basePath ="somedb")
+public class DefaultDataSourceConfigurer {
 
-        public String getUsername() {
-            return”default username;
-        }
+    public String getUsername() {
+        return”default username;
     }
+}
 
-    @ConfigurationSource(basePath = “somedb”, tag = “production”)
-    public class ProductionDataSourceConfigurer {
+@ConfigurationSource(basePath = "somedb", tag = "production")
+public class ProductionDataSourceConfigurer {
 
-        public String getUsername() {
-            return “username in production”;
-        }
+    public String getUsername() {
+        return "username in production";
     }
+}
 ```
 
 ### System properties
