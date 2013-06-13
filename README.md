@@ -20,17 +20,17 @@ It also works as a bridge between different configuration formats, and currently
 
 Add LDAP entry either by using its distinguished name or by providing LDAP search parameters:
 ```java
-    final ConstrettoConfiguration configuration = new ConstrettoBuilder()
-        .createLdapConfigurationStore(initialDirContext)
-            .addDsn("cn=Kaare Nilsen,dc=constretto,dc=org")
-            // all attributes in the given entry will be available (ie. configuration key "cn" will have the value \"Kaare Nilsen")
-            .addDsnWithKey("sidekick", "cn=Jon-Anders Teigen,dc=constretto,dc=org")
-            // maps LDAP attributes with prefix "sidekick". (ie. "sidekick.cn" will have the value "Jon-Anders Teigen")
-            .addUsingSearch("dc=constretto,dc=org", "(&(cn=K*)(objectClass=inetOrgPerson))", "uid")
-             // Adds all LDAP objects matching the query to configuration attributes prefixed with the value of the "uid" attribute
-             // ie. if the uid attribute for "cn=Kaare Nilsen,dc=constretto,dc=org" is "kaare", its "cn" attribute will be available as "kaare.cn"
-        .done()
-        .getConfiguration();
+final ConstrettoConfiguration configuration = new ConstrettoBuilder()
+    .createLdapConfigurationStore(initialDirContext)
+        .addDsn("cn=Kaare Nilsen,dc=constretto,dc=org")
+        // all attributes in the given entry will be available (ie. configuration key "cn" will have the value \"Kaare Nilsen")
+        .addDsnWithKey("sidekick", "cn=Jon-Anders Teigen,dc=constretto,dc=org")
+        // maps LDAP attributes with prefix "sidekick". (ie. "sidekick.cn" will have the value "Jon-Anders Teigen")
+        .addUsingSearch("dc=constretto,dc=org", "(&(cn=K*)(objectClass=inetOrgPerson))", "uid")
+         // Adds all LDAP objects matching the query to configuration attributes prefixed with the value of the "uid" attribute
+         // ie. if the uid attribute for "cn=Kaare Nilsen,dc=constretto,dc=org" is "kaare", its "cn" attribute will be available as "kaare.cn"
+    .done()
+    .getConfiguration();
 ```
 
 ### Examples of the new ConstrettoRule
