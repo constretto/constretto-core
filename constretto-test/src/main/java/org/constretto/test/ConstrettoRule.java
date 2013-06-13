@@ -11,9 +11,12 @@
 package org.constretto.test;
 
 import org.constretto.annotation.Tags;
-import org.junit.rules.MethodRule;
-import org.junit.runners.model.FrameworkMethod;
+import org.constretto.test.extractors.ConstrettoEnvironmentExtractor;
+import org.constretto.test.extractors.ConstrettoTagExtractor;
+import org.junit.rules.TestRule;
+import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
+
 import static org.constretto.internal.ConstrettoUtils.asCsv;
 import static org.constretto.internal.resolver.DefaultConfigurationContextResolver.TAGS;
 import static org.constretto.spring.internal.resolver.DefaultAssemblyContextResolver.ASSEMBLY_KEY;
@@ -24,14 +27,16 @@ import static org.constretto.spring.internal.resolver.DefaultAssemblyContextReso
  *
  * @author <a href="mailto:from.github@nisgits.net">Stig Kleppe-Jorgensen</a>, 2013.01.14
  */
-public class ConstrettoRule implements MethodRule {
+public class ConstrettoRule implements TestRule {
+
     @Override
-    public Statement apply(final Statement base, final FrameworkMethod method, final Object target) {
+    public Statement apply(final Statement base, final Description description) {
         return new Statement() {
             @Override
             public void evaluate() throws Throwable {
-                final String originalTags = changeTagsSystemProperty(method);
-                final String originalEnvironment = changeEnvironmentSystemProperty(method);
+
+                final String originalTags = changeTagsSystemProperty(description);
+                final String originalEnvironment = changeEnvironmentSystemProperty(description);
 
                 try {
                     base.evaluate();
@@ -51,21 +56,22 @@ public class ConstrettoRule implements MethodRule {
             }
         };
     }
-    
-    private String changeTagsSystemProperty(FrameworkMethod method) {
-        final Tags tags = method.getMethod().getDeclaringClass().getAnnotation(Tags.class);
 
-        if (tags == null) {
+
+    private String changeTagsSystemProperty(Description description) {
+        final String[] tagValue = ConstrettoTagExtractor.findTagValueForDescription(description);
+
+        if (tagValue == null) {
             return System.getProperty(TAGS);
         } else {
-            return System.setProperty(TAGS, asCsv(tags.value()));
+            return System.setProperty(TAGS, asCsv(tagValue));
         }
     }
 
-    private String changeEnvironmentSystemProperty(FrameworkMethod method) {
+    private String changeEnvironmentSystemProperty(Description description) {
 
         if(constrettoEnvironmentAnnotationIsOnClasspath()) {
-            final String[] environmentsDeclared = ConstrettoEnvironmentExtractor.extractEnvironmentValue(method);
+            final String[] environmentsDeclared = ConstrettoEnvironmentExtractor.extractEnvironmentValue(description);
             if (environmentsDeclared != null) {
                 return System.setProperty(ASSEMBLY_KEY, asCsv(environmentsDeclared));
             }
