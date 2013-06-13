@@ -10,13 +10,14 @@
  */
 package org.constretto.test;
 
-import java.util.List;
-
 import org.constretto.ConstrettoBuilder;
 import org.constretto.ConstrettoConfiguration;
 import org.constretto.annotation.Tags;
 import org.junit.Rule;
 import org.junit.Test;
+
+import java.util.List;
+
 import static org.junit.Assert.assertArrayEquals;
 
 /**

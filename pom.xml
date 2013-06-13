@@ -29,7 +29,6 @@
         <module>constretto-ldap</module>
         <module>constretto-spring</module>
         <module>constretto-test</module>
-        <module>constretto-test-junit-4.5</module>
     </modules>
 
     <scm>
