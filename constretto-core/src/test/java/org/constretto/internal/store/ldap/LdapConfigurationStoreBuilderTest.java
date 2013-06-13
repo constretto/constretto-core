@@ -1,4 +1,4 @@
-package org.constretto.ldap;
+package org.constretto.internal.store.ldap;
 
 import org.constretto.exception.ConstrettoException;
 import org.junit.After;

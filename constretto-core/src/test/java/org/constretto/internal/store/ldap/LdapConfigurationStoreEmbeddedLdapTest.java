@@ -1,4 +1,4 @@
-package org.constretto.ldap;
+package org.constretto.internal.store.ldap;
 
 import com.sun.jndi.ldap.DefaultResponseControlFactory;
 import com.sun.jndi.ldap.LdapCtxFactory;
@@ -74,10 +74,11 @@ public class LdapConfigurationStoreEmbeddedLdapTest extends AbstractLdapTestUnit
     public void testDsnMultiValue() throws Exception {
 
         final InitialDirContext initialDirContext = new InitialDirContext(createLdapEnvironment());
-        final LdapConfigurationStore ldapConfigurationStore = LdapConfigurationStoreBuilder.usingDirContext(initialDirContext)
-                .addDsn("cn=role_developer,ou=groups,dc=constretto,dc=org")
-                .done();
-        final ConstrettoConfiguration configuration = createConfiguration(ldapConfigurationStore);
+        final ConstrettoConfiguration configuration = new ConstrettoBuilder(false)
+                .createLdapConfigurationStore(initialDirContext)
+                    .addDsn("cn=role_developer,ou=groups,dc=constretto,dc=org")
+                .done()
+                .getConfiguration();
         final List<String> members = configuration.evaluateToList(String.class, "uniquemember");
         assertEquals(2, members.size());
 
@@ -87,18 +88,17 @@ public class LdapConfigurationStoreEmbeddedLdapTest extends AbstractLdapTestUnit
     @Test
     public void testParseConfigurationUsingSearch() throws Exception {
         final InitialDirContext initialDirContext = new InitialDirContext(createLdapEnvironment());
-        final LdapConfigurationStore ldapConfigurationStore = LdapConfigurationStoreBuilder.usingDirContext(
-                initialDirContext)
+        final ConstrettoConfiguration configuration = new ConstrettoBuilder(false)
+                .createLdapConfigurationStore(initialDirContext)
                 .addUsingSearch(
                         "dc=constretto,dc=org",
                         "(&(cn=K*)(objectClass=inetOrgPerson))",
                         "uid")
-                .done();
-        initialDirContext.close();
-        final ConstrettoConfiguration configuration = new ConstrettoBuilder(false)
-                .addConfigurationStore(ldapConfigurationStore)
+                .done()
                 .getConfiguration();
         assertTrue(configuration.evaluateToList(String.class, "kaarenilsen.cn").containsAll(Arrays.asList("Kaare Nilsen", "Kåre Nilsen")));
+        initialDirContext.close();
+
     }
 
     private ConstrettoConfiguration createConfiguration(LdapConfigurationStore configurationStore) {

@@ -18,9 +18,11 @@ package org.constretto;
 import org.constretto.internal.DefaultConstrettoConfiguration;
 import org.constretto.internal.resolver.DefaultConfigurationContextResolver;
 import org.constretto.internal.store.*;
+import org.constretto.internal.store.ldap.LdapConfigurationStoreBuilder;
 import org.constretto.model.*;
 import org.constretto.resolver.ConfigurationContextResolver;
 
+import javax.naming.directory.DirContext;
 import java.util.*;
 
 /**
@@ -148,6 +150,10 @@ public class ConstrettoBuilder {
         return new ObjectConfigurationStoreBuilder();
     }
 
+    public WrappedLdapConfigurationStoreBuilder createLdapConfigurationStore(final DirContext dirContext) {
+        return new WrappedLdapConfigurationStoreBuilder(LdapConfigurationStoreBuilder.usingDirContext(dirContext));
+    }
+
     private Collection<TaggedPropertySet> loadPropertySets() {
         List<TaggedPropertySet> taggedPropertySets = new ArrayList<TaggedPropertySet>();
         for (ConfigurationStore configurationStore : configurationStores) {
@@ -165,7 +171,19 @@ public class ConstrettoBuilder {
         public ConstrettoBuilder done();
     }
 
-    public class PropertiesStoreBuilder implements StoreBuilder {
+    private abstract class ContributingStoreBuilder implements StoreBuilder {
+
+        abstract ConfigurationStore createStore();
+
+        @Override
+        final public ConstrettoBuilder done() {
+            configurationStores.add(createStore());
+            return new ConstrettoBuilder(configurationStores, tags, enableSystemProps);
+        }
+    }
+
+
+    public class PropertiesStoreBuilder extends ContributingStoreBuilder {
         private final PropertiesStore store;
 
         public PropertiesStoreBuilder() {
@@ -181,13 +199,14 @@ public class ConstrettoBuilder {
             return new PropertiesStoreBuilder(store);
         }
 
-        public ConstrettoBuilder done() {
-            configurationStores.add(store);
-            return new ConstrettoBuilder(configurationStores, tags, enableSystemProps);
+        @Override
+        ConfigurationStore createStore() {
+            return store;
         }
+
     }
 
-    public class JsonStoreBuilder implements StoreBuilder {
+    public class JsonStoreBuilder extends ContributingStoreBuilder {
         private final JsonStore store;
 
         public JsonStoreBuilder() {
@@ -202,14 +221,15 @@ public class ConstrettoBuilder {
             return new JsonStoreBuilder(store.addResource(resource, key, tags));
         }
 
-        public ConstrettoBuilder done() {
-            configurationStores.add(store);
-            return new ConstrettoBuilder(configurationStores, tags, enableSystemProps);
+        @Override
+        ConfigurationStore createStore() {
+            return store;
         }
+
     }
 
 
-    public class EncryptedPropertiesStoreBuilder implements StoreBuilder {
+    public class EncryptedPropertiesStoreBuilder extends ContributingStoreBuilder {
         private final EncryptedPropertiesStore store;
 
         public EncryptedPropertiesStoreBuilder(String passwordProperty) {
@@ -225,13 +245,14 @@ public class ConstrettoBuilder {
             return new EncryptedPropertiesStoreBuilder(store);
         }
 
-        public ConstrettoBuilder done() {
-            configurationStores.add(store);
-            return new ConstrettoBuilder(configurationStores, tags, enableSystemProps);
+        @Override
+        ConfigurationStore createStore() {
+            return store;
         }
+
     }
 
-    public class IniFileConfigurationStoreBuilder implements StoreBuilder {
+    public class IniFileConfigurationStoreBuilder extends ContributingStoreBuilder {
         private final IniFileConfigurationStore store;
 
         public IniFileConfigurationStoreBuilder() {
@@ -247,13 +268,14 @@ public class ConstrettoBuilder {
             return new IniFileConfigurationStoreBuilder(store);
         }
 
-        public ConstrettoBuilder done() {
-            configurationStores.add(store);
-            return new ConstrettoBuilder(configurationStores, tags, enableSystemProps);
+        @Override
+        ConfigurationStore createStore() {
+            return store;
         }
+
     }
 
-    public class ObjectConfigurationStoreBuilder implements StoreBuilder {
+    public class ObjectConfigurationStoreBuilder extends ContributingStoreBuilder {
         private final ObjectConfigurationStore store;
 
         public ObjectConfigurationStoreBuilder() {
@@ -269,10 +291,47 @@ public class ConstrettoBuilder {
             return new ObjectConfigurationStoreBuilder(store);
         }
 
-        public ConstrettoBuilder done() {
-            configurationStores.add(store);
-            return new ConstrettoBuilder(configurationStores, tags, enableSystemProps);
+        @Override
+        ConfigurationStore createStore() {
+            return store;
         }
+
     }
+
+    public class WrappedLdapConfigurationStoreBuilder extends ContributingStoreBuilder{
+
+        private LdapConfigurationStoreBuilder ldapConfigurationStoreBuilder;
+
+        public WrappedLdapConfigurationStoreBuilder(final LdapConfigurationStoreBuilder ldapConfigurationStoreBuilder) {
+            this.ldapConfigurationStoreBuilder = ldapConfigurationStoreBuilder;
+        }
+
+        public WrappedLdapConfigurationStoreBuilder addDsnWithKey(final String key,
+                                                           final String distinguishedName,
+                                                           final String... tags) {
+            ldapConfigurationStoreBuilder.addDsnWithKey(key, distinguishedName, tags);
+            return this;
+        }
+
+        public WrappedLdapConfigurationStoreBuilder addDsn(final String distinguishedName, final String... tags) {
+            ldapConfigurationStoreBuilder.addDsn(distinguishedName, tags);
+            return this;
+        }
+
+        public WrappedLdapConfigurationStoreBuilder addUsingSearch(final String searchBase,
+                                                            final String filter,
+                                                            final String keyAttribute, final String... tags) {
+            ldapConfigurationStoreBuilder.addUsingSearch(searchBase, filter, keyAttribute, tags);
+            return this;
+        }
+
+        @Override
+        ConfigurationStore createStore() {
+            return ldapConfigurationStoreBuilder.done();
+        }
+
+    }
+
+
 
 }

@@ -1,4 +1,4 @@
-package org.constretto.ldap;
+package org.constretto.internal.store.ldap;
 
 import com.google.gson.Gson;
 import org.constretto.ConfigurationStore;
@@ -13,7 +13,7 @@ import javax.naming.directory.Attributes;
 import java.util.*;
 
 /**
- * @author zapodot
+ * @author <a href=mailto:zapodot@gmail.com>Sondre Eikanger Kval&oslash;</a>
  */
 public class LdapConfigurationStore implements ConfigurationStore {
 

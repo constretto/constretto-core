@@ -8,6 +8,92 @@ supported.
 
 !https://travis-ci.org/constretto/constretto-core.png(Build Status)!:https://travis-ci.org/constretto/constretto-core
 
+h2. What's new in 2.1
+* Improved support for Junit by providing refactoring the ConstrettoRule added in 2.0.4 to be used as a @ClassRule. Look below for details
+* LDAP configuration support. You can add configuration either by using DSN or by providing a LDAP search
+** NOTE: Constretto will not close or even handle LDAP connection issues for you. The ease usage with Spring LDAP and other third-party libraries
+
+h3. Examples of using LDAP:
+
+Add LDAP entry either by using its distinguished name or by providing LDAP search parameters:
+<pre>
+final ConstrettoConfiguration configuration = new ConstrettoBuilder()
+        .createLdapConfigurationStore(initialDirContext)
+            .addDsn("cn=Kaare Nilsen,dc=constretto,dc=org")
+            // all attributes in the given entry will be available (ie. configuration key "cn" will have the value \"Kaare Nilsen")
+            .addDsnWithKey("sidekick", "cn=Jon-Anders Teigen,dc=constretto,dc=org")
+            // maps LDAP attributes with prefix "sidekick". (ie. "sidekick.cn" will have the value "Jon-Anders Teigen")
+            .addUsingSearch("dc=constretto,dc=org", "(&(cn=K*)(objectClass=inetOrgPerson))", "uid")
+             // Adds all LDAP objects matching the query to configuration attributes prefixed with the value of the "uid" attribute
+             // ie. if the uid attribute for "cn=Kaare Nilsen,dc=constretto,dc=org" is "kaare", its "cn" attribute will be available as "kaare.cn"
+        .done()
+        .getConfiguration();
+</pre>
+
+h3. Examples of the new ConstrettoRule
+
+Constretto will help you setting the specified tags or environment settings for a Junit test by providing ConstrettoRule
+to be used as either a @ClassRule (running before class initialization) or a @Rule
+
+<pre>
+@Tags({"purejunit", "test"})
+public class ConstrettoRuleTest {
+    @Rule
+    public ConstrettoRule constrettoRule = new ConstrettoRule();
+
+    @Test
+    public void someTestRequiringEnvironmentTagsToBeSet() {
+          ConstrettoConfiguration configuration =
+                    new ConstrettoBuilder().createSystemPropertiesStore().getConfiguration();
+          // current tags will be "purejunit" and "test"
+          ...
+    }
+}
+</pre>
+
+h4. Integration with Constretto-Spring
+
+You may also use the feature together with the @Environment feature of Constretto Spring
+<pre>
+@Environment("junit")
+@RunWith(ConstrettoSpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = ConstrettoRuleEnvironmentTest.TestConfiguration.class)
+public class ConstrettoRuleEnvironmentTest {
+
+    @Configuration
+    public static class TestConfiguration {
+
+        @Bean
+        public static ConstrettoConfiguration constrettoConfiguration() {
+            return new ConstrettoBuilder(true).getConfiguration();
+        }
+
+        // Using Spring Java config for this example
+        @Bean
+        public static ConfigurationAnnotationConfigurer configurationAnnotationConfigurer(final ConstrettoConfiguration configuration) {
+            return new ConfigurationAnnotationConfigurer(configuration, new DefaultAssemblyContextResolver());
+        }
+    }
+
+    // The current environment value will be injected by the ConfigurationAnnotationConfigurer
+    // It is enabled by default in Spring XML configurations if you include the "<constretto:configuration/>" tag
+    @Environment
+    private List<String> injectedEnvironment;
+
+    @ClassRule
+    public static ConstrettoRule constrettoRule = new ConstrettoRule();
+
+    @Test
+    public void testApplyEnvironment() throws Exception {
+
+        assertArrayEquals(new String[]{"junit"}, injectedEnvironment.toArray(new String[1]));
+
+    }
+}
+
+
+</pre>
+
 h2. What's new in 2.0
 
 * Json configuration support. You can now in your config files configure rich objects, arrays and maps
