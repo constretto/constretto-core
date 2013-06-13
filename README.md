@@ -44,9 +44,9 @@ public class ConstrettoRuleTest {
 
     @Test
     public void someTestRequiringEnvironmentTagsToBeSet() {
-     ConstrettoConfiguration configuration = new ConstrettoBuilder().createSystemPropertiesStore().getConfiguration();
-     // current tags will be “purejunit” and “test”
-     …
+        ConstrettoConfiguration configuration = new ConstrettoBuilder().createSystemPropertiesStore().getConfiguration();
+        // current tags will be “purejunit” and “test”
+        // more logic here...
     }
 }
 ```
@@ -112,9 +112,9 @@ What’s new in 2.0
 -   `Configuration now uses value instead of expression so that instead of writing `Configuration(expression=“aKey”)
     now you simply say `Configuration("aKey")
 
-    h3. Examples of the new json format
+### Examples of the new json format
 
-```java
+```javascript
     #
     # Usage in java code :
     # List<String> strings = config.evaluateToList(String.class,"anArrayOfStrings")
