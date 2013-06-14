@@ -60,6 +60,17 @@ public class ConstrettoRuleTest {
 You may also use ConstrettoRule with the @Environment annotation from Constretto Spring
 
 ```java
+import org.constretto.ConstrettoConfiguration;
+import org.constretto.spring.ConfigurationAnnotationConfigurer;
+import org.constretto.spring.annotation.Environment;
+import org.constretto.spring.internal.resolver.DefaultAssemblyContextResolver;
+import org.junit.ClassRule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.ContextConfiguration;
+
 @Environment("junit")
 @RunWith(ConstrettoSpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = MyTest.TestConfiguration.class)
@@ -116,8 +127,8 @@ What’s new in 2.0
     are now enabled by default.
 -   Cursored navigation with the “at” method is removed. Will break any
     clients using this feature.
--   `Configuration now uses value instead of expression so that instead of writing `Configuration(expression="aKey")
-    now you simply say `Configuration("aKey")
+-   @Configuration now uses value instead of expression so that instead of writing **@Configuration(expression="aKey")**
+    now you simply say **@Configuration("aKey")**
 
 ### Examples of the new json format
 
