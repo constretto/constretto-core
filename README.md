@@ -39,8 +39,9 @@ final ConstrettoConfiguration configuration = new ConstrettoBuilder()
 ### Using the ConstrettoRule in a JUnit test
 
 Constretto will help you setting the specified tags or environment settings for a Junit test by providing ConstrettoRule
-to be used as either a @ClassRule (running before class initialization like @BeforeClass and @AfterClass) or a @Rule (wrapping a test method invocation like @Before and @After).
-The @ClassRule use case is useful if you use a customer JUnitRunner such as the ones provided by Spring Test as it will ensure
+to be used as either a [@ClassRule](https://github.com/junit-team/junit/wiki/Rules#classrule) (running before class initialization like @BeforeClass and @AfterClass) or a [@Rule](https://github.com/junit-team/junit/wiki/Rules#rules) (wrapping a test method invocation like @Before and @After).
+
+The @ClassRule use case is useful if you use a custom JUnitRunner such as the ones provided by Spring Test as it will ensure
 that specified tags are set before the JUnitRunner is invoked (and reset to its previous value afterwords).
 @ClassRule may also be used for JUnit Suites.
 
