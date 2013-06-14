@@ -10,9 +10,9 @@ It also works as a bridge between different configuration formats, and currently
 [![Build Status](https://travis-ci.org/constretto/constretto-core.png)](https://travis-ci.org/constretto/constretto-core)
 
 ## What’s new in 2.1
-* Improved support for Junit 4.X by providing refactoring the [JUnit Rule](https://github.com/junit-team/junit/wiki/Rules) ConstrettoRule added in 2.0.4 to be used as a @ClassRule.
+* Improved support for Junit 4.X by after refactoring the [JUnit Rule](https://github.com/junit-team/junit/wiki/Rules) *ConstrettoRule* added in 2.0.4 to be used as a @ClassRule.
   As a consequence the constretto-test-junit4 module has been merged into the constretto-test module.
-  Look below for details
+  Look at the [example](#using-the-constrettorule-in-a-junit-test) for details
 * LDAP configuration support. You can add configuration either by using DSN or by providing a LDAP search
     * NOTE: Constretto will not close or even handle LDAP connection issues for you. The ease usage with Spring LDAP and other third-party libraries
 
@@ -33,7 +33,7 @@ final ConstrettoConfiguration configuration = new ConstrettoBuilder()
     .getConfiguration();
 ```
 
-### Examples of the new ConstrettoRule
+### Using the ConstrettoRule in a JUnit test
 
 Constretto will help you setting the specified tags or environment settings for a Junit test by providing ConstrettoRule
 to be used as either a `ClassRule (running before class initialization) or a `Rule
@@ -62,8 +62,9 @@ You may also use ConstrettoRule with the @Environment annotation from Constretto
 @ContextConfiguration(classes = MyTest.TestConfiguration.class)
 public class MyTest {
 
-    @Configuration
-    public static class TestConfiguration {
+  // Using Spring Java config for this example
+  @Configuration
+  public static class TestConfiguration {
 
     @Bean
     public static ConstrettoConfiguration constrettoConfiguration() {
@@ -73,7 +74,7 @@ public class MyTest {
     // Using Spring Java config for this example
     @Bean
     public static ConfigurationAnnotationConfigurer configurationAnnotationConfigurer(final ConstrettoConfiguration configuration) {
-            return new ConfigurationAnnotationConfigurer(configuration, new DefaultAssemblyContextResolver());
+      return new ConfigurationAnnotationConfigurer(configuration, new DefaultAssemblyContextResolver());
     }
   }
 
