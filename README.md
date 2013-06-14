@@ -152,48 +152,38 @@ How to Install?
 Constretto is built with maven and deployed to the central maven repository, so if you are using maven, you can simply add Constretto as dependencies in your pom:
 
 ```xml
-<pre>
-    <dependencies>
-        ...
-        <dependency>
-            <groupId>org.constretto</groupId>
-            <artifactId>constretto-api</artifactId>
-            <version>2.0.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.constretto</groupId>
-            <artifactId>constretto-core</artifactId>
-            <version>2.0.4</version>
-            <scope>runtime</scope>
-        </dependency>
-        ...
-    </dependencies>
-</pre>
+<dependency>
+    <groupId>org.constretto</groupId>
+    <artifactId>constretto-api</artifactId>
+    <version>2.0.4</version>
+</dependency>
+<dependency>
+    <groupId>org.constretto</groupId>
+    <artifactId>constretto-core</artifactId>
+    <version>2.0.4</version>
+    <scope>runtime</scope>
+</dependency>
 ```
 
 If you would like to use the Spring support add:
 
 ```xml
-<pre>
-    <dependency>
-        <groupId>org.constretto</groupId>
-        <artifactId>constretto-spring</artifactId>
-        <version>2.0.4</version>
-    </dependency>
-</pre>
+<dependency>
+    <groupId>org.constretto</groupId>
+    <artifactId>constretto-spring</artifactId>
+    <version>2.0.4</version>
+</dependency>
 ```
 
 If you would like to use the Constretto Junit support add:
 
 ```xml
-<pre>
-    <dependency>
-        <groupId>org.constretto</groupId>
-        <artifactId>constretto-test</artifactId>
-        <version>2.0.4</version>
-        <scope>test</scope>
-    </dependency>
-</pre>
+<dependency>
+    <groupId>org.constretto</groupId>
+    <artifactId>constretto-test</artifactId>
+    <version>2.0.4</version>
+    <scope>test</scope>
+</dependency>
 ```
 
 
