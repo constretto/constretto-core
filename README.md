@@ -10,14 +10,16 @@ It also works as a bridge between different configuration formats, and currently
 [![Build Status](https://travis-ci.org/constretto/constretto-core.png)](https://travis-ci.org/constretto/constretto-core)
 
 ## What’s new in 2.1
-* Improved support for Junit 4.X by after refactoring the [JUnit Rule](https://github.com/junit-team/junit/wiki/Rules) *ConstrettoRule* added in 2.0.4 to be used as a @ClassRule.
+* Improved support for Junit 4.X after refactoring the [JUnit Rule](https://github.com/junit-team/junit/wiki/Rules) *ConstrettoRule* added in 2.0.4 to be used as a @ClassRule.
   As a consequence the constretto-test-junit4 module has been merged into the constretto-test module.
   Look at the [example](#using-the-constrettorule-in-a-junit-test) for details
 * LDAP configuration support. You can add configuration either by using DSN or by providing a LDAP search
     * NOTE: Constretto will not close or even handle LDAP connection issues for you. The ease usage with Spring LDAP and other third-party libraries
 * Dropped support for Spring 2.X in favour of the latest Spring 3.2 release. 
+* The [reconfigure()](constretto-api/src/main/java/org/constretto/ConstrettoConfiguration.java#L307) call on the ConstrettoConfiguration interface has been deprecated as it is not thread-safe. 
+  It will be completely removed in the next release 
 
-### Examples of using LDAP:
+### Using the LdapConfigurationStore
 
 Add LDAP entry either by using its distinguished name or by providing LDAP search parameters:
 ```java
