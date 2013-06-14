@@ -442,4 +442,4 @@ Please use the [GitHub issue tracker](http://github.com/constretto/constretto-co
 For further information and documentation
 -----------------------------------------
 
-Constretto has several more nice features, and they are covered in the reference manual at the Constretto official website: [http://constretto.org](http://constretto.org)
+Constretto has several more nice features, and they are covered in the reference manual at the Constretto official website: [http://constretto.github.io](http://constretto.github.io/)
