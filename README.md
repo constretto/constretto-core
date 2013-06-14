@@ -10,7 +10,7 @@ It also works as a bridge between different configuration formats, and currently
 [![Build Status](https://travis-ci.org/constretto/constretto-core.png)](https://travis-ci.org/constretto/constretto-core)
 
 ## What’s new in 2.1
-* Improved support for Junit 4.X by providing refactoring the ConstrettoRule added in 2.0.4 to be used as a @ClassRule.
+* Improved support for Junit 4.X by providing refactoring the [JUnit Rule](https://github.com/junit-team/junit/wiki/Rules) ConstrettoRule added in 2.0.4 to be used as a @ClassRule.
   As a consequence the constretto-test-junit4 module has been merged into the constretto-test module.
   Look below for details
 * LDAP configuration support. You can add configuration either by using DSN or by providing a LDAP search
