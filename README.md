@@ -64,6 +64,7 @@ import org.constretto.ConstrettoConfiguration;
 import org.constretto.spring.ConfigurationAnnotationConfigurer;
 import org.constretto.spring.annotation.Environment;
 import org.constretto.spring.internal.resolver.DefaultAssemblyContextResolver;
+import org.constretto.test.Environment;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
