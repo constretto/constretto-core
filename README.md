@@ -15,6 +15,7 @@ It also works as a bridge between different configuration formats, and currently
   Look at the [example](#using-the-constrettorule-in-a-junit-test) for details
 * LDAP configuration support. You can add configuration either by using DSN or by providing a LDAP search
     * NOTE: Constretto will not close or even handle LDAP connection issues for you. The ease usage with Spring LDAP and other third-party libraries
+* Dropped support for Spring 2.X in favour of the latest Spring 3.2 release. 
 
 ### Examples of using LDAP:
 
