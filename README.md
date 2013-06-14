@@ -87,6 +87,7 @@ public class MyTest {
   @Environment
   private List<String> injectedEnvironment;
 
+  // ClassRules will be invoked before the class (like @BeforeClass/@AfterClass) and thus need to be static
   @ClassRule
   public static ConstrettoRule constrettoRule = new ConstrettoRule();
 
