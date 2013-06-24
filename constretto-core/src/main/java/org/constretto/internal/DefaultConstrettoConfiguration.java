@@ -34,9 +34,7 @@ import org.constretto.model.ConfigurationValue;
 
 import java.lang.annotation.Annotation;
 import java.lang.ref.WeakReference;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -140,10 +138,13 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     public <T> T as(Class<T> configurationClass) throws ConstrettoException {
         T objectToConfigure;
         try {
-            objectToConfigure = configurationClass.newInstance();
-        } catch (Exception e) {
+            objectToConfigure = createInstance(configurationClass);
+        } catch (ConstrettoException e) {
+            throw e;
+        }
+        catch (Exception e) {
             throw new ConstrettoException("Could not instansiate class of type: " + configurationClass.getName()
-                    + " when trying to inject it with configuration, It may be missing a default constructor", e);
+                    + " when trying to inject it with configuration, It may be missing a default or @Configure annotated constructor", e);
         }
         injectConfiguration(objectToConfigure);
         return objectToConfigure;
@@ -215,6 +216,51 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     //
     // Helper methods
     //
+    private <T> T createInstance(final Class<T> configurationClass) throws InstantiationException, IllegalAccessException {
+
+
+        if(configurationClass.isInterface()) {
+            throw new ConstrettoException("Can not instantiate interfaces. You need to create an concrete implementing class first");
+        }
+        if (configurationClass.isAnonymousClass()) {
+            throw new ConstrettoException("Can not instantiate anonymous classes using as(Class<T>. To inject configuration in to inner or anonymous classes, " +
+                                                  "instantiate it first and call the on(T configuredObjecT) method");
+        }
+        Constructor<T>[] annotatedConstructors = findAnnotatedConstructorsOnClass(configurationClass);
+        if(configurationClass.isMemberClass() && annotatedConstructors != null) {
+            throw new ConstrettoException("Can not instantiate inner classes using a @Configure annotated constructor. " +
+                                                  "To inject configuration, construct the instance yourself use the \"on(T configuredObject)\" method");
+        }
+        if(annotatedConstructors == null) {
+            return configurationClass.newInstance();
+        } else {
+            if(annotatedConstructors.length > 1) {
+                throw new ConstrettoException("More than one @Configure annotated constructor defined for class \"" + configurationClass.getName() + "\". It can only be one");
+            }
+            Constructor<T> constructor = annotatedConstructors[0];
+            final Object[] resolvedParameters = resolveParameters(constructor);
+            try {
+                constructor.setAccessible(true);
+                return constructor.newInstance(resolvedParameters);
+            } catch (InvocationTargetException e) {
+                throw new ConstrettoException("Could not instantiate class with @Configure annotated constructor");
+            }
+
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> Constructor<T>[] findAnnotatedConstructorsOnClass(final Class<T> configurationClass) {
+        Constructor<?>[] constructors = configurationClass.getConstructors();
+        List<Constructor<?>> annotatedConstructors = new ArrayList<Constructor<?>>();
+        for(Constructor<?> constructor: constructors) {
+            if(constructor.isAnnotationPresent(Configure.class)) {
+                annotatedConstructors.add(constructor);
+            }
+        }
+        return annotatedConstructors.isEmpty() ? null : annotatedConstructors.toArray(new Constructor[]{});
+    }
+
     private Map<String, String> asMap() {
         Map<String, String> properties = new HashMap<String, String>();
         for (Map.Entry<String, List<ConfigurationValue>> entry : configuration.entrySet()) {
@@ -307,84 +353,122 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         }
     }
 
+    private Object[] resolveParameters(AccessibleObject accessibleObject) throws IllegalAccessException, InstantiationException {
+        Annotation[][] methodAnnotations;
+        String[] parameterNames;
+        Class<?>[] parameterTargetTypes;
+
+        if(accessibleObject instanceof Method) {
+            Method method = (Method) accessibleObject;
+            methodAnnotations = method.getParameterAnnotations();
+            parameterNames = paranamer.lookupParameterNames(method);
+            parameterTargetTypes = method.getParameterTypes();
+        } else if(accessibleObject instanceof Constructor) {
+            Constructor constructor = (Constructor) accessibleObject;
+            methodAnnotations = constructor.getParameterAnnotations();
+            parameterNames = paranamer.lookupParameterNames(constructor);
+            parameterTargetTypes = constructor.getParameterTypes();
+        } else {
+            throw new ConstrettoException("Could not resolve parameter names ");
+        }
+
+        Object[] resolvedArguments = new Object[methodAnnotations.length];
+        int i = 0;
+        for (Annotation[] parameterAnnotations : methodAnnotations) {
+            Object defaultValue = null;
+            boolean required = true;
+            String expression = "";
+            Class<?> parameterTargetClass = parameterTargetTypes[i];
+            if (parameterAnnotations.length != 0) {
+                for (Annotation parameterAnnotation : parameterAnnotations) {
+                    if (parameterAnnotation.annotationType() == Configuration.class) {
+                        Configuration configurationAnnotation = (Configuration) parameterAnnotation;
+                        expression = configurationAnnotation.value();
+                        required = configurationAnnotation.required();
+                        if (hasAnnotationDefaults(configurationAnnotation)) {
+                            if (configurationAnnotation.defaultValueFactory().equals(Configuration.EmptyValueFactory.class)) {
+                                defaultValue = ValueConverterRegistry.convert(parameterTargetClass, parameterTargetClass, new CPrimitive(configurationAnnotation.defaultValue()));
+                            } else {
+                                ConfigurationDefaultValueFactory valueFactory = configurationAnnotation.defaultValueFactory().newInstance();
+                                defaultValue = valueFactory.getDefaultValue();
+                            }
+                        }
+                    }
+                }
+            }
+            if (expression.equals("")) {
+                if (parameterNames == null) {
+                    throw new ConstrettoException("Could not resolve the expression of the property to look up. " +
+                                                          "The cause of this could be that the class is compiled without debug enabled. " +
+                                                          "when a class is compiled without debug, the @Configuration with a value attribute is required " +
+                                                          "to correctly resolve the property expression.");
+                } else {
+                    expression = parameterNames[i];
+                }
+            }
+            if (hasValue(expression)) {
+                if (parameterTargetClass.isAssignableFrom(List.class)) {
+                    Class<?> collectionParameterType = getCollectionParameterType(createMethodParameter(accessibleObject, i));
+                    resolvedArguments[i] = evaluateToList(collectionParameterType, expression);
+                } else if (parameterTargetClass.isAssignableFrom(Map.class)) {
+                    Class<?> mapKeyType = getMapKeyParameterType(createMethodParameter(accessibleObject, i));
+                    Class<?> mapValueType = getMapValueParameterType(createMethodParameter(accessibleObject, i));
+                    resolvedArguments[i] = evaluateToMap(mapKeyType, mapValueType, expression);
+                } else {
+                    resolvedArguments[i] = processAndConvert(parameterTargetClass, expression);
+                }
+
+            } else {
+                if (defaultValue != null || !required) {
+                    resolvedArguments[i] = defaultValue;
+                } else {
+                    if(accessibleObject instanceof Constructor) {
+                        Constructor constructor = (Constructor) accessibleObject;
+                        throw new ConstrettoException("Missing value or default value for expression [" + expression + "], in annotated constructor in class [" + constructor.getClass().getName() + "], with tags " + currentTags + ".");
+
+                    }
+                    else {
+                        Method method = (Method) accessibleObject;
+                        throw new ConstrettoException("Missing value or default value for expression [" + expression + "], in method [" + method.getName() + "], in class [" + method.getClass().getName() + "], with tags " + currentTags + ".");
+
+                    }
+                }
+            }
+
+            i++;
+        }
+        return resolvedArguments;
+
+    }
+
     private <T> void injectMethods(T objectToConfigure) {
         Method[] methods = objectToConfigure.getClass().getMethods();
         for (Method method : methods) {
             try {
                 if (method.isAnnotationPresent(Configure.class)) {
-                    Annotation[][] methodAnnotations = method.getParameterAnnotations();
-                    String[] parameterNames = paranamer.lookupParameterNames(method);
-                    Object[] resolvedArguments = new Object[methodAnnotations.length];
-                    int i = 0;
-                    for (Annotation[] parameterAnnotations : methodAnnotations) {
-                        Object defaultValue = null;
-                        boolean required = true;
-                        String expression = "";
-                        Class<?> parameterTargetClass = method.getParameterTypes()[i];
-                        if (parameterAnnotations.length != 0) {
-                            for (Annotation parameterAnnotation : parameterAnnotations) {
-                                if (parameterAnnotation.annotationType() == Configuration.class) {
-                                    Configuration configurationAnnotation = (Configuration) parameterAnnotation;
-                                    expression = configurationAnnotation.value();
-                                    required = configurationAnnotation.required();
-                                    if (hasAnnotationDefaults(configurationAnnotation)) {
-                                        if (configurationAnnotation.defaultValueFactory().equals(Configuration.EmptyValueFactory.class)) {
-                                            defaultValue = ValueConverterRegistry.convert(parameterTargetClass, parameterTargetClass, new CPrimitive(configurationAnnotation.defaultValue()));
-                                        } else {
-                                            ConfigurationDefaultValueFactory valueFactory = configurationAnnotation.defaultValueFactory().newInstance();
-                                            defaultValue = valueFactory.getDefaultValue();
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        if (expression.equals("")) {
-                            if (parameterNames == null) {
-                                throw new ConstrettoException("Could not resolve the expression of the property to look up. " +
-                                        "The cause of this could be that the class is compiled without debug enabled. " +
-                                        "when a class is compiled without debug, the @Configuration with a value attribute is required " +
-                                        "to correctly resolve the property expression.");
-                            } else {
-                                expression = parameterNames[i];
-                            }
-                        }
-                        if (hasValue(expression)) {
-                            if (parameterTargetClass.isAssignableFrom(List.class)) {
-                                Class<?> collectionParameterType = getCollectionParameterType(new MethodParameter(method, i));
-                                resolvedArguments[i] = evaluateToList(collectionParameterType, expression);
-                            } else if (parameterTargetClass.isAssignableFrom(Map.class)) {
-                                Class<?> mapKeyType = getMapKeyParameterType(new MethodParameter(method, i));
-                                Class<?> mapValueType = getMapValueParameterType(new MethodParameter(method, i));
-                                resolvedArguments[i] = evaluateToMap(mapKeyType, mapValueType, expression);
-                            } else {
-                                resolvedArguments[i] = processAndConvert(parameterTargetClass, expression);
-                            }
-
-                        } else {
-                            if (defaultValue != null || !required) {
-                                resolvedArguments[i] = defaultValue;
-                            } else {
-                                throw new ConstrettoException("Missing value or default value for expression [" + expression + "], in method [" + method.getName() + "], in class [" + objectToConfigure.getClass().getName() + "], with tags " + currentTags + ".");
-                            }
-                        }
-
-                        i++;
-                    }
-
+                    Object[] resolvedArguments = resolveParameters(method);
                     method.setAccessible(true);
                     method.invoke(objectToConfigure, resolvedArguments);
 
                 }
             } catch (IllegalAccessException e) {
                 throw new ConstrettoException("Cold not invoke method ["
-                        + method.getName() + "] annotated with @Configured,", e);
+                                                      + method.getName() + "] annotated with @Configured,", e);
             } catch (InvocationTargetException e) {
                 throw new ConstrettoException("Cold not invoke method ["
-                        + method.getName() + "] annotated with @Configured,", e);
+                                                      + method.getName() + "] annotated with @Configured,", e);
             } catch (InstantiationException e) {
                 throw new ConstrettoException("Cold not invoke method ["
-                        + method.getName() + "] annotated with @Configured,", e);
+                                                      + method.getName() + "] annotated with @Configured,", e);
             }
+        }
+    }
+
+    private <T extends AccessibleObject> MethodParameter createMethodParameter(T accessibleObject, final int parameterIndex) {
+        if(accessibleObject instanceof Constructor) {
+            return new MethodParameter((Constructor) accessibleObject, parameterIndex);
+        } else {
+            return new MethodParameter((Method) accessibleObject, parameterIndex);
         }
     }
 
