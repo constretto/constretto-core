@@ -15,9 +15,62 @@ It also works as a bridge between different configuration formats, and currently
   Look at the [example](#using-the-constrettorule-in-a-junit-test) for details
 * LDAP configuration support. You can add configuration either by using DSN or by providing a LDAP search. [Example](#using-the-ldapconfigurationstore)
     * NOTE: Constretto will not close or even handle LDAP connection issues for you. The will make it easier to integrate with Spring LDAP or other third-party libraries
-* Dropped support for Spring 2.X in favour of the latest Spring 3.2 release. 
+* Dropped support for Spring 2.X in favour of the latest Spring 3.2 release.
+* The @Configure annotation can now be used on [constructors](#constructor-injection) (w/o Spring)
 * The reconfigure() call on the [ConstrettoConfiguration](constretto-api/src/main/java/org/constretto/ConstrettoConfiguration.java) interface has been deprecated as it is not thread-safe.
     * It will be completely removed in the next release 
+
+### Constructor injection
+* only one constructor per class may be have the @Configure annotation or Constretto will complain
+
+Given the following POJO:
+```java
+public class SimpleConstructorInjectableBean {
+
+    private String key1;
+
+    @Configure
+    public SimpleConstructorInjectableBean(final String key1) {
+        this.key1 = key1;
+    }
+
+    public String getKey1() {
+        return key1;
+    }
+}
+```
+An instance may be Constructed using the "as" method:
+```java
+ConstrettoConfiguration configuration = ...
+SimpleConstructorInjectableBean configBean = configuration.as(SimpleConstructorInjectableBean.class);
+```
+
+If you use Spring and have enabled Constretto-Spring support you can mix @Autowired and @Configure annotations:
+```java
+public class AutowiredAndConfiguredConstructorInjectionBean {
+
+    private SimpleConstructorInjectableBean simpleConstructorInjectableBean;
+
+    private String key2;
+
+    @Autowired
+    @Configure
+    public AutowiredAndConfiguredConstructorInjectionBean(final SimpleConstructorInjectableBean simpleConstructorInjectableBean,
+                                                          final String key2) {
+        this.simpleConstructorInjectableBean = simpleConstructorInjectableBean;
+        this.key2 = key2;
+    }
+
+    public SimpleConstructorInjectableBean getSimpleConstructorInjectableBean() {
+        return simpleConstructorInjectableBean;
+    }
+
+    public String getKey2() {
+        return key2;
+    }
+}
+```
+
 
 ### Using the LdapConfigurationStore
 
