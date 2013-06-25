@@ -28,6 +28,7 @@ import org.constretto.exception.ConstrettoConversionException;
 import org.constretto.exception.ConstrettoException;
 import org.constretto.exception.ConstrettoExpressionException;
 import org.constretto.internal.converter.ValueConverterRegistry;
+import org.constretto.internal.introspect.Constructors;
 import org.constretto.model.CPrimitive;
 import org.constretto.model.CValue;
 import org.constretto.model.ConfigurationValue;
@@ -249,16 +250,8 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         }
     }
 
-    @SuppressWarnings("unchecked")
     private <T> Constructor<T>[] findAnnotatedConstructorsOnClass(final Class<T> configurationClass) {
-        Constructor<?>[] constructors = configurationClass.getConstructors();
-        List<Constructor<?>> annotatedConstructors = new ArrayList<Constructor<?>>();
-        for(Constructor<?> constructor: constructors) {
-            if(constructor.isAnnotationPresent(Configure.class)) {
-                annotatedConstructors.add(constructor);
-            }
-        }
-        return annotatedConstructors.isEmpty() ? null : annotatedConstructors.toArray(new Constructor[]{});
+        return Constructors.findConstructorsWithConfigureAnnotation(configurationClass);
     }
 
     private Map<String, String> asMap() {
