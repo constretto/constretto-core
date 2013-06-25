@@ -13,6 +13,9 @@ import java.util.List;
 public class Constructors {
 
     public static <T, A extends Annotation> Constructor[] findConstructorsWithAnnotation(Class<T> clazz, Class<A> annotation) {
+        if(clazz == null) {
+            return null;
+        }
         Constructor<?>[] constructors = clazz.getConstructors();
         List<Constructor<?>> annotatedConstructors = new ArrayList<Constructor<?>>();
         for(Constructor<?> constructor: constructors) {
