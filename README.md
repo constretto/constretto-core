@@ -19,6 +19,7 @@ It also works as a bridge between different configuration formats, and currently
 * The @Configure annotation can now be used on [constructors](#constructor-injection) (w/o Spring)
 * The reconfigure() call on the [ConstrettoConfiguration](constretto-api/src/main/java/org/constretto/ConstrettoConfiguration.java) interface has been deprecated as it is not thread-safe.
     * It will be completely removed in the next release 
+* As always: special thanks goes to those who made contributions to this release
 
 ### Constructor injection
 * only one constructor per class may be have the @Configure annotation or Constretto will complain
