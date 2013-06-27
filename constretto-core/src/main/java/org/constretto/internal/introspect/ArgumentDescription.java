@@ -8,7 +8,7 @@ import java.util.Arrays;
 /**
  * Parameter name
  *
- * @author zapodot
+ * @author <a href=mailto:zapodot@gmail.com>Sondre Eikanger Kval&oslash;</a>
  */
 public class ArgumentDescription {
 

@@ -11,7 +11,7 @@ import java.lang.reflect.Method;
 /**
  * Utility for resolving arguments
  *
- * @author zapodot
+ * @author <a href=mailto:zapodot@gmail.com>Sondre Eikanger Kval&oslash;</a>
  */
 public class ArgumentDescriptionFactory<A extends AccessibleObject> {
 

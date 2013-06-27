@@ -9,6 +9,7 @@ import java.util.List;
 
 /**
  * Utility for working with constructors
+ * @author <a href=mailto:zapodot@gmail.com>Sondre Eikanger Kval&oslash;</a>
  */
 public class Constructors {
 
