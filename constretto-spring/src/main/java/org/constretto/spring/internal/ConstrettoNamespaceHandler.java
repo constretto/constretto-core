@@ -159,7 +159,7 @@ public class ConstrettoNamespaceHandler extends NamespaceHandlerSupport {
                             try {
                                 objectBuilder.addObject(Class.forName(clazz).newInstance());
                             } catch (Exception e) {
-                                throw new IllegalStateException("Could not instansiate configuration source object with class [" + clazz + "]");
+                                throw new IllegalStateException("Could not instantiate configuration source object with class [" + clazz + "]");
                             }
                         }
                         objectBuilder.done();
