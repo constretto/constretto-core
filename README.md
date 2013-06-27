@@ -14,7 +14,8 @@ It also works as a bridge between different configuration formats, and currently
   As a consequence the constretto-test-junit4 module has been merged into the constretto-test module.
   Look at the [example](#using-the-constrettorule-in-a-junit-test) for details
 * LDAP configuration support. You can add configuration either by using DSN or by providing a LDAP search. [Example](#using-the-ldapconfigurationstore)
-    * NOTE: Constretto will not close or even handle LDAP connection issues for you. The will make it easier to integrate with Spring LDAP or other third-party libraries
+    * NOTE: Constretto will not close or even handle LDAP connection issues for you. The will make it easier to integrate with Spring LDAP or other third-party libraries.
+    * The development of this feature has been sponsored by <a href="http://www.nextgentel.no">NextGenTel AS</a>
 * Dropped support for Spring 2.X in favour of the latest Spring 3.2 release.
 * The @Configure annotation can now be used on [constructors](#constructor-injection) (w/o Spring)
 * The reconfigure() call on the [ConstrettoConfiguration](constretto-api/src/main/java/org/constretto/ConstrettoConfiguration.java) interface has been deprecated as it is not thread-safe.
