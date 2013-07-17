@@ -80,11 +80,7 @@ public class ValueConverterRegistry {
 
     @SuppressWarnings("unchecked")
     public static <T> List<T> convertList(Class<T> clazz, CArray list) throws ConstrettoException {
-        if (!converters.containsKey(clazz)) {
-            throw new ConstrettoException("No converter found for class: " + clazz.getName());
-        }
         List<T> result = new ArrayList<T>();
-        ValueConverter<T> converter = (ValueConverter<T>) converters.get(clazz);
         for (CValue value : list.data()) {
             result.add((T) convert(clazz, clazz, value));
         }
@@ -106,8 +102,8 @@ public class ValueConverterRegistry {
 
     @SuppressWarnings("unchecked")
     public static <K, V> Map<K, V> convertMap(Class<K> keyClazz, Class<V> valueClazz, CObject value) throws ConstrettoException {
-        if (!converters.containsKey(valueClazz)) {
-            throw new ConstrettoException("No converter found for class: " + valueClazz.getName());
+        if (!converters.containsKey(keyClazz)) {
+            throw new ConstrettoException("No converter found for class: " + keyClazz.getName());
         }
         Map<K, V> result = new HashMap<K, V>();
         ValueConverter<K> keyConverter = (ValueConverter<K>) converters.get(keyClazz);
