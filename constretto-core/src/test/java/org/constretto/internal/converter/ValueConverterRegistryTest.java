@@ -12,19 +12,18 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */package org.constretto.internal.converter;
+ */
+package org.constretto.internal.converter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import org.constretto.exception.ConstrettoException;
 import org.constretto.model.CArray;
 import org.constretto.model.CObject;
 import org.constretto.model.CPrimitive;
 import org.constretto.model.CValue;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.*;
 
 /**
  * @author <a href="mailto:asbjorn@aarrestad.com">Asbj&oslash;rn Aarrestad</a>
@@ -42,7 +41,8 @@ public class ValueConverterRegistryTest {
 		Assert.assertTrue(convertedList.size() == 1);
 	}
 
-	@SuppressWarnings("unchecked")
+
+    @Test
 	public void mapListConversion() {
 		final List<CValue> list = new ArrayList<CValue>();
 		final Map<String, CValue> data = new HashMap<String, CValue>();
@@ -58,4 +58,25 @@ public class ValueConverterRegistryTest {
 		Assert.assertTrue(element.size() == 1);
 		Assert.assertEquals("value", element.get("key"));
 	}
+
+    @Test(expected = ConstrettoException.class)
+    public void testIllegalDataTypeConversion() throws Exception {
+        ValueConverterRegistry.convert(String.class, String.class, new CValue() {
+            @Override
+            public Set<String> referencedKeys() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            @Override
+            public void replace(final String key, final String resolvedValue) {
+                //To change body of implemented methods use File | Settings | File Templates.
+            }
+        });
+
+    }
+
+    @Test(expected = ConstrettoException.class)
+    public void testConvertUnsopportedClassConversion() {
+        ValueConverterRegistry.convertMap(getClass(), null, null);
+    }
 }
