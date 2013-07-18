@@ -9,6 +9,9 @@ It also works as a bridge between different configuration formats, and currently
 
 [![Build Status](https://travis-ci.org/constretto/constretto-core.png)](https://travis-ci.org/constretto/constretto-core)
 
+## What’s new in 2.1.1
+* Bugfix contributed by @ahaarrestad. Resolving properties to Map is finally working :-)
+
 ## What’s new in 2.1
 * Improved support for Junit 4.X after refactoring the [JUnit Rule](https://github.com/junit-team/junit/wiki/Rules) [ConstrettoRule](constretto-test/src/main/java/org/constretto/test/ConstrettoRule.java) added in 2.0.4 to be used as a @ClassRule.
   As a consequence the constretto-test-junit4 module has been merged into the constretto-test module.
