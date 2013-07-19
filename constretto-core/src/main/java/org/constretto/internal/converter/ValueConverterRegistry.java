@@ -73,7 +73,7 @@ public class ValueConverterRegistry {
         } else if (value instanceof CObject) {
             return convertMap(keyClazz, valueClazz, (CObject) value);
         } else {
-            throw new ConstrettoException("ivalid datatype, parsing haz failed");
+            throw new ConstrettoException("invalid datatype, parsing haz failed");
         }
 
     }
