@@ -15,6 +15,12 @@
  */
 package org.constretto.internal.converter;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.constretto.exception.ConstrettoException;
 import org.constretto.model.CArray;
 import org.constretto.model.CObject;
@@ -22,8 +28,6 @@ import org.constretto.model.CPrimitive;
 import org.constretto.model.CValue;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.*;
 
 /**
  * @author <a href="mailto:asbjorn@aarrestad.com">Asbj&oslash;rn Aarrestad</a>
@@ -41,6 +45,17 @@ public class ValueConverterRegistryTest {
 		Assert.assertTrue(convertedList.size() == 1);
 	}
 
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void simpleMapConversion() {
+		final Map<String, CValue> map = new HashMap<String, CValue>();
+		map.put("hei", new CPrimitive("hallo"));
+		final Map<String,String> convertedMap = (Map<String,String>) ValueConverterRegistry.convert(String.class, String.class, new CObject(map));
+
+		Assert.assertNotNull(convertedMap);
+		Assert.assertTrue(convertedMap.size() == 1);
+	}
 
     @Test
 	public void mapListConversion() {
@@ -77,6 +92,8 @@ public class ValueConverterRegistryTest {
 
     @Test(expected = ConstrettoException.class)
     public void testConvertUnsopportedClassConversion() {
-        ValueConverterRegistry.convertMap(getClass(), null, null);
+		final Map<String, CValue> map = new HashMap<String, CValue>();
+		map.put("hei", new CPrimitive("hallo"));
+		ValueConverterRegistry.convert(getClass(), getClass(), new CObject(map));
     }
 }
