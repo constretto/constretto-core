@@ -39,7 +39,7 @@ public abstract class GenericCollectionTypeResolver {
      * @return the generic type, or <code>null</code> if none
      */
     public static Class<?> getCollectionFieldType(Field collectionField) {
-        return getGenericFieldType(collectionField, Collection.class, 0, 1);
+        return getGenericFieldType(collectionField, Collection.class, 0, getNestingLevel(collectionField.getGenericType(), 0));
     }
 
     /**
@@ -49,7 +49,7 @@ public abstract class GenericCollectionTypeResolver {
      * @return the generic type, or <code>null</code> if none
      */
     public static Class<?> getMapKeyFieldType(Field mapField) {
-        return getGenericFieldType(mapField, Map.class, 0, 1);
+        return getGenericFieldType(mapField, Map.class, 0, getNestingLevel(mapField.getGenericType(), 0));
     }
 
     /**
@@ -59,7 +59,7 @@ public abstract class GenericCollectionTypeResolver {
      * @return the generic type, or <code>null</code> if none
      */
     public static Class<?> getMapValueFieldType(Field mapField) {
-        return getGenericFieldType(mapField, Map.class, 1, 1);
+        return getGenericFieldType(mapField, Map.class, 1, getNestingLevel(mapField.getGenericType(), 0));
     }
 
     /**
@@ -122,6 +122,24 @@ public abstract class GenericCollectionTypeResolver {
     }
 
     /**
+     * Recursively find the nesting level of a generic type.
+     *
+     * @param type 			the
+     * @param nestingLevel 	calculated nesting level. Initial call using 0
+     * @return
+     */
+    static int getNestingLevel(final Type type, final int nestingLevel){
+        if(type instanceof ParameterizedType){
+            final Type[] paramTypes = ((ParameterizedType) type).getActualTypeArguments();
+            return getNestingLevel(paramTypes[paramTypes.length-1], nestingLevel +1);
+        } else {
+            return nestingLevel;
+        }
+
+    }
+
+
+    /**
      * Extract the generic type from the given Type object.
      *
      * @param methodParam  the method parameter specification
@@ -177,7 +195,7 @@ public abstract class GenericCollectionTypeResolver {
             // Default is last parameter type: Collection element or Map value.
             int indexToUse = (currentTypeIndex != null ? currentTypeIndex : paramTypes.length - 1);
             Type paramType = paramTypes[indexToUse];
-            return extractType(methodParam, paramType, source, typeIndex, nestingLevel, nextLevel);
+            return extractType(methodParam, paramType, null, typeIndex, nestingLevel, nextLevel);
         }
         if (source != null && !source.isAssignableFrom(rawType)) {
             return null;
