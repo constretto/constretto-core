@@ -9,6 +9,9 @@ It also works as a bridge between different configuration formats, and currently
 
 [![Build Status](https://travis-ci.org/constretto/constretto-core.png)](https://travis-ci.org/constretto/constretto-core)
 
+## What's new in 2.1.2
+* Improved handling of generic fields and method parameter injections (thanks again to @ahaarrestad)
+
 ## What’s new in 2.1.1
 * Bugfix contributed by @ahaarrestad. Resolving properties to Map is finally working :-)
 
