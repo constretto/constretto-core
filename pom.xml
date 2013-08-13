@@ -7,7 +7,8 @@
   either express or implied. See the License for the specific language governing permissions and limitations under the
   License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.constretto</groupId>
     <artifactId>constretto</artifactId>
@@ -16,7 +17,9 @@
     <inceptionYear>2008</inceptionYear>
     <url>http://constretto.github.io</url>
     <packaging>pom</packaging>
-
+    <prerequisites>
+        <maven>2.2.1</maven>
+    </prerequisites>
     <description>
         This project aims to help java application developers to manage
         their configuration issues.
@@ -96,20 +99,28 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <mockito.version>1.9.5</mockito.version>
-        <commons-logging.version>1.1.1</commons-logging.version>
+        <commons-logging.version>1.1.3</commons-logging.version>
         <jsr250.version>1.0</jsr250.version>
         <aspectjweaver.version>1.6.1</aspectjweaver.version>
-        <ini4j.version>0.5.1</ini4j.version>
-        <commons-lang.version>2.4</commons-lang.version>
+        <ini4j.version>0.5.2</ini4j.version>
+        <commons-lang.version>2.6</commons-lang.version>
         <jasypt.version>1.4</jasypt.version>
         <gson.version>1.7.1</gson.version>
-        <commons-beanutils.version>1.8.0</commons-beanutils.version>
+        <commons-beanutils.version>1.8.3</commons-beanutils.version>
         <paranamer.version>2.5.2</paranamer.version>
-        <spring.version>3.2.2.RELEASE</spring.version>
+        <spring.version>3.2.4.RELEASE</spring.version>
         <junit.version>4.11</junit.version>
         <spring-ldap.version>1.3.1.RELEASE</spring-ldap.version>
         <slf4j.version>1.7.2</slf4j.version>
         <apacheds.version>1.5.7</apacheds.version>
+        <maven-javadoc-plugin.version>2.9.1</maven-javadoc-plugin.version>
+        <maven-source-plugin.version>2.2.1</maven-source-plugin.version>
+        <maven-gpg-plugin.version>1.4</maven-gpg-plugin.version>
+        <maven-clover2-plugin.version>3.1.12</maven-clover2-plugin.version>
+        <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
+        <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
+        <maven-enforcer-plugin.version>1.3.1</maven-enforcer-plugin.version>
+        <maven-surefire-plugin.version>2.15</maven-surefire-plugin.version>
     </properties>
 
     <profiles>
@@ -126,7 +137,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>2.1.2</version>
+                        <version>${maven-source-plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>attach-sources</id>
@@ -139,7 +150,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>2.7</version>
+                        <version>${maven-javadoc-plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>attach-javadocs</id>
@@ -152,7 +163,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.1</version>
+                        <version>${maven-gpg-plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
@@ -263,7 +274,7 @@
             <plugin>
                 <groupId>com.atlassian.maven.plugins</groupId>
                 <artifactId>maven-clover2-plugin</artifactId>
-                <version>3.1.3</version>
+                <version>${maven-clover2-plugin.version}</version>
                 <configuration>
                     <licenseLocation>/local/systems/licenses/clover.license</licenseLocation>
                     <generateXml>true</generateXml>
@@ -273,7 +284,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
+                <version>${maven-compiler-plugin.version}</version>
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
@@ -283,7 +294,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.5</version>
+                <version>${maven-javadoc-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>javadoc:aggregate</id>
@@ -307,7 +318,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>2.5</version>
+                <version>${maven-resources-plugin.version}</version>
                 <configuration>
                     <encoding>UTF-8</encoding>
                 </configuration>
@@ -315,7 +326,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>1.0</version>
+                <version>${maven-enforcer-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>enforce-maven</id>
