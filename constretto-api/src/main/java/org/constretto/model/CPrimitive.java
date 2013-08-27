@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
  * @author <a href="mailto:kaare.nilsen@arktekk.no">Kaare Nilsen</a>
  */
 public class CPrimitive extends CValue {
-    private final Pattern variablePattern = Pattern.compile("#\\{(.*?)}");
+    private static final Pattern VARIABLE_PATTERN = Pattern.compile("#\\{(.*?)}");
     private String value;
 
     public CPrimitive(String value) {
@@ -23,7 +23,7 @@ public class CPrimitive extends CValue {
     @Override
     public Set<String> referencedKeys() {
         Set<String> referencedKeys = new HashSet<String>();
-        Matcher matcher = variablePattern.matcher(value);
+        Matcher matcher = VARIABLE_PATTERN.matcher(value);
         while (matcher.find()) {
             String group = matcher.group(1);
             referencedKeys.add(group);
