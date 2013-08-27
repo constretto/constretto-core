@@ -217,7 +217,7 @@ public interface ConstrettoConfiguration extends Iterable<Property> {
      * @param configurationClass the class to instantiate
      * @param <T>                the target type
      * @return new and fully configured object.
-     * @throws ConstrettoConversionException If a conversion error occurs for resolved values
+     * @throws ConstrettoException If a conversion error occurs for resolved values
      */
     <T> T as(Class<T> configurationClass) throws ConstrettoException;
 
@@ -229,7 +229,7 @@ public interface ConstrettoConfiguration extends Iterable<Property> {
      * @param objectToConfigure the object to inject configuration
      * @param <T>               the object type
      * @return Fully configured object.
-     * @throws ConstrettoConversionException If a conversion error occurs for resolved values
+     * @throws ConstrettoException If a conversion error occurs for resolved values
      */
     <T> T on(T objectToConfigure) throws ConstrettoException;
 
@@ -239,7 +239,8 @@ public interface ConstrettoConfiguration extends Iterable<Property> {
      * Will try to reconfigure any classes configured with on() or at()
      *
      * @param newtag the new Tag to be appended to the list of constretto configuration tags.
-     * @throws ConstrettoConversionException If a conversion error occurs when reconfiguring objects.
+     * @throws ConstrettoException If a conversion error occurs when reconfiguring objects.
+     * @deprecated Will be removed because thread safety can not be guarantied
      */
     @Deprecated
     void appendTag(String... newtag) throws ConstrettoException;
@@ -249,7 +250,8 @@ public interface ConstrettoConfiguration extends Iterable<Property> {
      * Will try to reconfigure any classes configured with on() or at()
      *
      * @param newtag the new Tag to be prepended to the list of constretto configuration tags.
-     * @throws ConstrettoConversionException If a conversion error occurs when reconfiguring objects.
+     * @throws ConstrettoException If a conversion error occurs when reconfiguring objects.
+     * @deprecated Will be removed because thread safety can not be guarantied
      */
     @Deprecated
     void prependTag(String... newtag) throws ConstrettoException;
@@ -259,7 +261,8 @@ public interface ConstrettoConfiguration extends Iterable<Property> {
      * Will try to reconfigure any classes configured with on() or at()
      *
      * @param newTag the new tags to be appended to the list of constretto configuration tags.
-     * @throws ConstrettoConversionException If a conversion error occurs when reconfiguring objects.
+     * @throws ConstrettoException If a conversion error occurs when reconfiguring objects.
+     * @deprecated Will be removed because thread safety can not be guarantied
      */
     @Deprecated
     void removeTag(String... newTag) throws ConstrettoException;
@@ -272,7 +275,8 @@ public interface ConstrettoConfiguration extends Iterable<Property> {
      * @param reconfigure if set constretto will run the reconfigure() method after the reset.
      *                    Note this may result in exceptions from constretto if default values does not exist for all keys
      *                    injected in methods or fields annotated with @Configure or @Configuration
-     * @throws ConstrettoConversionException If a conversion error occurs when reconfiguring objects.
+     * @throws ConstrettoException If a conversion error occurs when reconfiguring objects.
+     * @deprecated Will be removed because thread safety can not be guarantied
      */
     @Deprecated
     void resetTags(boolean reconfigure) throws ConstrettoException;
@@ -288,7 +292,8 @@ public interface ConstrettoConfiguration extends Iterable<Property> {
      * @param reconfigure if set constretto will run the reconfigure() method after clearing.
      *                    Note this may result in exceptions from constretto if default values does not exist for all keys
      *                    injected in methods or fields annotated with @Configure or @Configuration
-     * @throws ConstrettoConversionException If a conversion error occurs when reconfiguring objects.
+     * @throws ConstrettoException If a conversion error occurs when reconfiguring objects.
+     * @deprecated Will be removed because thread safety can not be guarantied
      */
     @Deprecated
     void clearTags(boolean reconfigure) throws ConstrettoException;
@@ -305,7 +310,7 @@ public interface ConstrettoConfiguration extends Iterable<Property> {
      * Iterates over all objects that have been configured with at or on. and reapplies configuration
      * with new settings.
      *
-     * @throws ConstrettoConversionException If a conversion error occurs when reconfiguring objects.
+     * @throws ConstrettoException If a conversion error occurs when reconfiguring objects.
      * @deprecated Will be removed because thread safety can not be guarantied
      */
     @Deprecated
