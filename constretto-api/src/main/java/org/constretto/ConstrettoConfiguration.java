@@ -241,6 +241,7 @@ public interface ConstrettoConfiguration extends Iterable<Property> {
      * @param newtag the new Tag to be appended to the list of constretto configuration tags.
      * @throws ConstrettoConversionException If a conversion error occurs when reconfiguring objects.
      */
+    @Deprecated
     void appendTag(String... newtag) throws ConstrettoException;
 
     /**
@@ -250,6 +251,7 @@ public interface ConstrettoConfiguration extends Iterable<Property> {
      * @param newtag the new Tag to be prepended to the list of constretto configuration tags.
      * @throws ConstrettoConversionException If a conversion error occurs when reconfiguring objects.
      */
+    @Deprecated
     void prependTag(String... newtag) throws ConstrettoException;
 
     /**
@@ -259,6 +261,7 @@ public interface ConstrettoConfiguration extends Iterable<Property> {
      * @param newTag the new tags to be appended to the list of constretto configuration tags.
      * @throws ConstrettoConversionException If a conversion error occurs when reconfiguring objects.
      */
+    @Deprecated
     void removeTag(String... newTag) throws ConstrettoException;
 
     /**
@@ -271,6 +274,7 @@ public interface ConstrettoConfiguration extends Iterable<Property> {
      *                    injected in methods or fields annotated with @Configure or @Configuration
      * @throws ConstrettoConversionException If a conversion error occurs when reconfiguring objects.
      */
+    @Deprecated
     void resetTags(boolean reconfigure) throws ConstrettoException;
 
     /**
@@ -286,6 +290,7 @@ public interface ConstrettoConfiguration extends Iterable<Property> {
      *                    injected in methods or fields annotated with @Configure or @Configuration
      * @throws ConstrettoConversionException If a conversion error occurs when reconfiguring objects.
      */
+    @Deprecated
     void clearTags(boolean reconfigure) throws ConstrettoException;
 
     /**
