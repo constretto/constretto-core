@@ -9,6 +9,9 @@ It also works as a bridge between different configuration formats, and currently
 
 [![Build Status](https://travis-ci.org/constretto/constretto-core.png)](https://travis-ci.org/constretto/constretto-core)
 
+## What's new in 2.1.3
+* Fix issue reported by @jhberges regarding stripping of leading characters from properties by upgrading GSon
+
 ## What's new in 2.1.2
 * Improved handling of generic fields and method parameter injections (thanks again to @ahaarrestad)
 
