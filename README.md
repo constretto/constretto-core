@@ -10,7 +10,8 @@ It also works as a bridge between different configuration formats, and currently
 [![Build Status](https://travis-ci.org/constretto/constretto-core.png)](https://travis-ci.org/constretto/constretto-core)
 
 ## What's new in 2.1.3
-* Fix issue reported by @jhberges regarding stripping of leading characters from properties by upgrading GSon
+* Fixed issue reported by @jhberges bad handling of leading characters in values by upgrading GSon.
+  Be aware if you rely on stripping leading chars in property values as it will no longer work.
 * Upgraded jasypt dependency to version 1.9.1
 
 ## What's new in 2.1.2
