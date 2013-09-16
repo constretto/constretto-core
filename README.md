@@ -11,6 +11,7 @@ It also works as a bridge between different configuration formats, and currently
 
 ## What's new in 2.1.3
 * Fix issue reported by @jhberges regarding stripping of leading characters from properties by upgrading GSon
+* Upgraded jasypt dependency to version 1.9.1
 
 ## What's new in 2.1.2
 * Improved handling of generic fields and method parameter injections (thanks again to @ahaarrestad)
