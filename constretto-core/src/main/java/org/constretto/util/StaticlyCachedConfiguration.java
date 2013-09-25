@@ -55,7 +55,7 @@ public class StaticlyCachedConfiguration {
         try {
             lock.writeLock().lock();
             cacheMiss++;
-            ConstrettoBuilder builder = new ConstrettoBuilder();
+            ConstrettoBuilder builder = new ConstrettoBuilder(includeSystemProperties);
             IniFileConfigurationStore iniFileConfigurationStore = new IniFileConfigurationStore();
             PropertiesStore propertyFileConfigurationStore = new PropertiesStore();
 

@@ -15,6 +15,7 @@
  */
 package org.constretto.internal.util;
 
+import org.constretto.exception.ConstrettoExpressionException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -65,5 +66,15 @@ public class StaticlyCachedConfigurationTest {
     public void cachedSinglePropertyFile() {
         String value = config("classpath:cache3.properties").evaluateToString("key3");
         assertEquals("value3", value);
+    }
+
+    @Test(expected = ConstrettoExpressionException.class)
+    public void withoutSystemProperties() {
+        System.setProperty("key1", "sys-prop1");
+        try {
+            config(false, "classpath:cache2.ini").evaluateToString("key1");
+        } finally {
+            System.clearProperty("key1");
+        }
     }
 }
