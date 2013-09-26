@@ -19,8 +19,8 @@ import org.constretto.exception.ConstrettoExpressionException;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
 import static org.constretto.util.StaticlyCachedConfiguration.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
@@ -76,5 +76,14 @@ public class StaticlyCachedConfigurationTest {
         } finally {
             System.clearProperty("key1");
         }
+    }
+
+    @Test
+    public void withSystemProperties() throws Exception {
+        final String systemPropertyValue = "sys-prop1";
+        System.setProperty("key1", systemPropertyValue);
+        assertEquals(systemPropertyValue, config(true, "classpath:cache2.ini").evaluateToString("key1"));
+        System.clearProperty("key1");
+
     }
 }
