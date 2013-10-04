@@ -495,7 +495,7 @@ Example:
 public class DefaultDataSourceConfigurer {
 
     public String getUsername() {
-        return”default username;
+        return ”default username";
     }
 }
 
