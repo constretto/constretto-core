@@ -9,6 +9,9 @@ It also works as a bridge between different configuration formats, and currently
 
 [![Build Status](https://travis-ci.org/constretto/constretto-core.png)](https://travis-ci.org/constretto/constretto-core)
 
+## What's new in 2.1.4
+* Change StaticlyCachedConfiguration by adding the SystemPropertiesStore (contributed by @kolstae)
+
 ## What's new in 2.1.3
 * Fixed issue reported by @jhberges bad handling of leading characters in values by upgrading GSon.
   Be aware if you rely on stripping leading chars in property values as it will no longer work.
