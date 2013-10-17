@@ -22,7 +22,7 @@ public class ClassPathResource extends Resource {
 
     @Override
     public InputStream getInputStream() {
-        ClassLoader classLoader = this.getClass().getClassLoader();
+        ClassLoader classLoader = getClassLoader();
         String location;
         if (path.startsWith(CLASSPATH_PREFIX)) {
             location = path.substring(CLASSPATH_PREFIX.length(), path.length());
@@ -45,4 +45,14 @@ public class ClassPathResource extends Resource {
         }
         return result;
     }
+
+    private static ClassLoader getClassLoader() {
+        try {
+            return Thread.currentThread().getContextClassLoader();
+        }
+        catch (Throwable ex) {
+            return ClassPathResource.class.getClassLoader();
+        }
+    }
+
 }
