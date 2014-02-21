@@ -99,7 +99,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <mockito.version>1.9.5</mockito.version>
-        <commons-logging.version>1.1.3</commons-logging.version>
         <jsr250.version>1.0</jsr250.version>
         <aspectjweaver.version>1.7.4</aspectjweaver.version>
         <ini4j.version>0.5.2</ini4j.version>
@@ -235,11 +234,6 @@
                 <artifactId>spring-aop</artifactId>
                 <version>${spring.version}</version>
                 <scope>runtime</scope>
-            </dependency>
-            <dependency>
-                <groupId>commons-logging</groupId>
-                <artifactId>commons-logging</artifactId>
-                <version>${commons-logging.version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.annotation</groupId>
