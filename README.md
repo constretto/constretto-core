@@ -9,6 +9,10 @@ It also works as a bridge between different configuration formats, and currently
 
 [![Build Status](https://travis-ci.org/constretto/constretto-core.png)](https://travis-ci.org/constretto/constretto-core)
 
+## What's new in 2.2.0 (to be released)
+* Improved support for Spring Java Config (issue #41)
+
+
 ## What's new in 2.1.4
 * Change StaticlyCachedConfiguration by adding the SystemPropertiesStore (contributed by @kolstae SHA: 0f0d6eda3a010ca5f9f16afbbd4e2d892ef9d117 )
 
@@ -322,8 +326,9 @@ ConstrettoConfiguration config =
 
 Constretto works very well in a Spring environment, It provides a namespace for Spring xml configuration files, to build a ConstrettoConfiguration object, and also provides a ProperyPlaceHolder to allow values in Spring xml files to be resolved from Constretto, and also a BeanPostProcessor that enables ConfigurationInjection.
 
-To tell spring to use Constretto:
+To tell Spring to use Constretto:
 
+#### XML Contexts
 ```xml
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -342,6 +347,20 @@ To tell spring to use Constretto:
     </constretto:configuration>
 </beans>
 ```
+#### Java Contexts
+```java
+    @org.constretto.spring.annotation.Constretto
+    @org.springframework.context.annotation.Configuration
+    public class Context {
+
+        // Add public static non-arg factory method that creates a ConstrettoConfiguration
+        public static ConstrettoConfiguration constrettoConfiguration() {
+            return new ConstrettoBuilder(true).getConfiguration();
+        }
+
+    }
+```
+
 
 ## How to use Constretto in your application?
 
