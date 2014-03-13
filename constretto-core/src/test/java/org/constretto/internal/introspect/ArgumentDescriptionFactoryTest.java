@@ -4,10 +4,13 @@ import org.constretto.annotation.Configure;
 import org.constretto.internal.NonLocalConfigurationClass;
 import org.junit.Test;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 /**
  *
@@ -43,4 +46,13 @@ public class ArgumentDescriptionFactoryTest {
         assertEquals(String.class, argumentDescriptions[0].getType());
     }
 
+    @Test
+    public void testForConstructorWithoutAnnotations() throws Exception {
+        final Constructor[] constructors = Constructors.findConstructorsWithConfigureAnnotation(
+                NonLocalConfigurationClass.class);
+        final Constructor theConstructor = constructors[0];
+        final ArgumentDescription argumentDescription = new ArgumentDescription(theConstructor.getName(), null, theConstructor.getDeclaringClass());
+        assertArrayEquals(new Annotation[]{}, argumentDescription.getAnnotations());
+
+    }
 }

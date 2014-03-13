@@ -4,6 +4,8 @@ import org.constretto.annotation.Configuration;
 
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Parameter name
@@ -12,13 +14,14 @@ import java.util.Arrays;
  */
 public class ArgumentDescription {
 
-    private String name;
-    private Annotation[] annotations;
-    private Class<?> type;
+    private final String name;
+    private final List<Annotation> annotations;
+    private final Class<?> type;
 
     public ArgumentDescription(final String name, final Annotation[] annotations, final Class<?> type) {
         this.name = name;
-        this.annotations = annotations;
+
+        this.annotations = annotations == null || annotations.length == 0 ? Collections.<Annotation>emptyList() : Arrays.asList(annotations);
         this.type = type;
     }
 
@@ -27,7 +30,7 @@ public class ArgumentDescription {
     }
 
     public Annotation[] getAnnotations() {
-        return annotations;
+        return annotations.toArray(new Annotation[]{});
     }
 
     public Class<?> getType() {
@@ -57,11 +60,10 @@ public class ArgumentDescription {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ArgumentDescription that = (ArgumentDescription) o;
+        final ArgumentDescription that = (ArgumentDescription) o;
 
-        if (!Arrays.equals(annotations, that.annotations)) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null)
-            return false;
+        if (annotations != null ? !annotations.equals(that.annotations) : that.annotations != null) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (type != null ? !type.equals(that.type) : that.type != null) return false;
 
         return true;
@@ -70,7 +72,7 @@ public class ArgumentDescription {
     @Override
     public int hashCode() {
         int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + (annotations != null ? Arrays.hashCode(annotations) : 0);
+        result = 31 * result + (annotations != null ? annotations.hashCode() : 0);
         result = 31 * result + (type != null ? type.hashCode() : 0);
         return result;
     }
@@ -79,7 +81,7 @@ public class ArgumentDescription {
     public String toString() {
         final StringBuilder sb = new StringBuilder("ArgumentDescription{");
         sb.append("name='").append(name).append('\'');
-        sb.append(", annotations=").append(Arrays.toString(annotations));
+        sb.append(", annotations=").append(annotations);
         sb.append(", type=").append(type);
         sb.append('}');
         return sb.toString();

@@ -22,6 +22,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -195,7 +196,7 @@ public class MethodParameter {
                 this.parameterAnnotations = new Annotation[0];
             }
         }
-        return this.parameterAnnotations;
+        return (this.parameterAnnotations == null ? null : Arrays.copyOf(this.parameterAnnotations, this.parameterAnnotations.length));
     }
 
     /**
