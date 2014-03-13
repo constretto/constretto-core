@@ -156,12 +156,15 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         return objectToConfigure;
     }
 
-    @Override
-    public <T extends Map> T map(T map) {
-        for (Property property : this) {
-            map.put(property.getKey(), property.getValue());
+    public Map<String, String> asMap() {
+        Map<String, String> properties = new HashMap<String, String>();
+        for (Map.Entry<String, List<ConfigurationValue>> entry : configuration.entrySet()) {
+            ConfigurationValue value = findElementOrNull(entry.getKey());
+            if (value != null){
+                properties.put(entry.getKey(), value.value().toString());
+            }
         }
-        return map;
+        return properties;
     }
 
     public boolean hasValue(String expression) {
@@ -260,17 +263,6 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
 
     private <T> Constructor<T>[] findAnnotatedConstructorsOnClass(final Class<T> configurationClass) {
         return Constructors.findConstructorsWithConfigureAnnotation(configurationClass);
-    }
-
-    private Map<String, String> asMap() {
-        Map<String, String> properties = new HashMap<String, String>();
-        for (Map.Entry<String, List<ConfigurationValue>> entry : configuration.entrySet()) {
-            ConfigurationValue value = findElementOrNull(entry.getKey());
-            if (value != null){
-                properties.put(entry.getKey(), value.value().toString());
-            }
-        }
-        return properties;
     }
 
     protected ConfigurationValue findElementOrThrowException(String expression) {

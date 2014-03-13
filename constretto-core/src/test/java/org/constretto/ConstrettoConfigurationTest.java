@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -32,18 +32,18 @@ public class ConstrettoConfigurationTest {
                 .addResource(new ClassPathResource("test.properties"))
                 .done()
                 .getConfiguration()
-                .map(new Properties());
+                .asMap();
     }
 
     @Test
     public void youShouldBeAbleToGetConfigurationAsAMap() throws Exception {
-        Properties map = new ConstrettoBuilder(false)
+        Map<String, String> map = new ConstrettoBuilder(false)
                 .createPropertiesStore()
                 .addResource(new ClassPathResource("test.properties"))
                 .done()
                 .addCurrentTag("production")
                 .getConfiguration()
-                .map(new Properties());
+                .asMap();
         assertEquals(4, map.size());
     }
 
