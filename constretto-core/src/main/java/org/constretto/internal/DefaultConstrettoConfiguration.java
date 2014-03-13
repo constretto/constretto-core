@@ -156,6 +156,14 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         return objectToConfigure;
     }
 
+    @Override
+    public <T extends Map> T map(T map) {
+        for (Property property : this) {
+            map.put(property.getKey(), property.getValue());
+        }
+        return map;
+    }
+
     public boolean hasValue(String expression) {
         return findElementOrNull(expression) != null;
     }

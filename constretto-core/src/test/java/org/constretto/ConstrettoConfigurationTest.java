@@ -1,11 +1,13 @@
 package org.constretto;
 
+import org.constretto.exception.ConstrettoExpressionException;
 import org.constretto.model.ClassPathResource;
 import org.constretto.model.Resource;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -23,6 +25,27 @@ public class ConstrettoConfigurationTest {
         assertNotNull(configuration);
     }
 
+    @Test(expected = ConstrettoExpressionException.class) //TODO perhaps a more specific expeption
+    public void shouldThrowExceptionIfTryingToMapWithoutNeededAllTagsProvided() throws Exception {
+        new ConstrettoBuilder(false)
+                .createPropertiesStore()
+                .addResource(new ClassPathResource("test.properties"))
+                .done()
+                .getConfiguration()
+                .map(new Properties());
+    }
+
+    @Test
+    public void youShouldBeAbleToGetConfigurationAsAMap() throws Exception {
+        Properties map = new ConstrettoBuilder(false)
+                .createPropertiesStore()
+                .addResource(new ClassPathResource("test.properties"))
+                .done()
+                .addCurrentTag("production")
+                .getConfiguration()
+                .map(new Properties());
+        assertEquals(4, map.size());
+    }
 
     @Test
     public void youShouldBeAbleToGetCurrentEnvironmentTroughTheAPI() {
