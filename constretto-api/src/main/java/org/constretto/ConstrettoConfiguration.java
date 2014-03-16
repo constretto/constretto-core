@@ -248,7 +248,7 @@ public interface ConstrettoConfiguration extends Iterable<Property> {
      *
      * @param newtag the new Tag to be appended to the list of constretto configuration tags.
      * @throws ConstrettoException If a conversion error occurs when reconfiguring objects.
-     * @deprecated Will be removed because thread safety can not be guarantied
+     * @deprecated Will be removed in the 3.0 release as thread safety can not be guarantied
      */
     @Deprecated
     void appendTag(String... newtag) throws ConstrettoException;
@@ -270,7 +270,7 @@ public interface ConstrettoConfiguration extends Iterable<Property> {
      *
      * @param newTag the new tags to be appended to the list of constretto configuration tags.
      * @throws ConstrettoException If a conversion error occurs when reconfiguring objects.
-     * @deprecated Will be removed because thread safety can not be guarantied
+     * @deprecated Will be removed in the 3.0 release as thread safety can not be guarantied
      */
     @Deprecated
     void removeTag(String... newTag) throws ConstrettoException;
@@ -284,7 +284,7 @@ public interface ConstrettoConfiguration extends Iterable<Property> {
      *                    Note this may result in exceptions from constretto if default values does not exist for all keys
      *                    injected in methods or fields annotated with @Configure or @Configuration
      * @throws ConstrettoException If a conversion error occurs when reconfiguring objects.
-     * @deprecated Will be removed because thread safety can not be guarantied
+     * @deprecated Will be removed in the 3.0 release as thread safety can not be guarantied
      */
     @Deprecated
     void resetTags(boolean reconfigure) throws ConstrettoException;
@@ -301,7 +301,7 @@ public interface ConstrettoConfiguration extends Iterable<Property> {
      *                    Note this may result in exceptions from constretto if default values does not exist for all keys
      *                    injected in methods or fields annotated with @Configure or @Configuration
      * @throws ConstrettoException If a conversion error occurs when reconfiguring objects.
-     * @deprecated Will be removed because thread safety can not be guarantied
+     * @deprecated Will be removed in the 3.0 release as thread safety can not be guarantied
      */
     @Deprecated
     void clearTags(boolean reconfigure) throws ConstrettoException;
@@ -319,7 +319,7 @@ public interface ConstrettoConfiguration extends Iterable<Property> {
      * with new settings.
      *
      * @throws ConstrettoException If a conversion error occurs when reconfiguring objects.
-     * @deprecated Will be removed because thread safety can not be guarantied
+     * @deprecated Will be removed in the 3.0 release as it does not gurantee thread safety
      */
     @Deprecated
     void reconfigure() throws ConstrettoException;
