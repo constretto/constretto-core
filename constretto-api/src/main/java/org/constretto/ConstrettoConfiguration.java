@@ -233,6 +233,14 @@ public interface ConstrettoConfiguration extends Iterable<Property> {
      */
     <T> T on(T objectToConfigure) throws ConstrettoException;
 
+    /**
+     * Will shuffle the configuration values to an instance of map.
+     * This method requires you to have configured the required tags to resolve all properties in the configuration.
+     *
+     * @return a populated instance extending the {@link java.util.Map} interface
+     * @throws ConstrettoException If some values are not qualifiable by the configured tags
+     */
+    Map<String, String> asMap();
 
     /**
      * Appends (lower precedence) a new configuration tag at runtime.
