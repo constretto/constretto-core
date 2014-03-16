@@ -238,7 +238,7 @@ public class ConstrettoNamespaceHandler extends NamespaceHandlerSupport {
         }
     }
 
-    private class ImportDefinitionParser implements BeanDefinitionParser {
+    private static class ImportDefinitionParser implements BeanDefinitionParser {
 
         public BeanDefinition parse(Element element, ParserContext parserContext) {
             String targetEnvironmentsCsv = element.getAttribute("environments");
