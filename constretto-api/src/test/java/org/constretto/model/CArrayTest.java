@@ -1,0 +1,52 @@
+package org.constretto.model;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.Arrays;
+
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+
+/**
+ * @author zapodot at gmail dot com
+ */
+public class CArrayTest {
+
+    public static final String VALUE_ONE = "1";
+    public static final String VALUE_TWO = "2";
+    public static final CPrimitive PRIMITIVE_ONE = new CPrimitive(VALUE_ONE);
+    public static final CPrimitive PRIMITIVE_TWO = new CPrimitive(VALUE_TWO);
+    private CArray cArray;
+
+    @Before
+    public void setUp() throws Exception {
+        cArray = new CArray(Arrays.<CValue>asList(PRIMITIVE_ONE, PRIMITIVE_TWO));
+    }
+
+    @Test
+    public void testData() throws Exception {
+        assertArrayEquals(new CValue[]{PRIMITIVE_ONE, PRIMITIVE_TWO}, cArray.data().toArray(new CValue[]{}));
+    }
+
+    @Test
+    public void testReferencedKeys() throws Exception {
+        assertEquals(0, cArray.referencedKeys().size());
+    }
+
+    @Test
+    public void testReplace() throws Exception {
+        final CArray arrayWithKey = new CArray(Arrays.<CValue>asList(new CPrimitive("#{key}")));
+        assertEquals(1, arrayWithKey.referencedKeys().size());
+        arrayWithKey.replace("key", VALUE_ONE);
+        assertArrayEquals(new CValue[]{PRIMITIVE_ONE}, arrayWithKey.data().toArray(new CValue[]{}));
+
+
+    }
+
+    @Test
+    public void testToString() throws Exception {
+
+        assertEquals("[" + VALUE_ONE + "," + VALUE_TWO + "]", cArray.toString());
+    }
+}

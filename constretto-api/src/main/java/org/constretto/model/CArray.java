@@ -1,5 +1,7 @@
 package org.constretto.model;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -35,15 +37,24 @@ public class CArray extends CValue {
     }
 
     @Override
-    public String toString() {
-        String value = "[";
-        for (CValue cValue : data) {
-            value += cValue.toString() + ",";
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        }
-        if (value.endsWith(",")){
-            value = value.substring(0,value.length()-1);
-        }
-        return value + "]";
+        final CArray cArray = (CArray) o;
+
+        if (data != null ? !data.equals(cArray.data) : cArray.data != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return data != null ? data.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return "[" + StringUtils.join(data, ',') + "]";
     }
 }
