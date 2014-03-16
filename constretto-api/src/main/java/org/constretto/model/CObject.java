@@ -2,6 +2,7 @@ package org.constretto.model;
 
 import org.apache.commons.lang.StringUtils;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -17,7 +18,7 @@ public class CObject extends CValue {
     }
 
     public Map<String, CValue> data() {
-        return data;
+        return data == null ? Collections.<String, CValue>emptyMap() : Collections.unmodifiableMap(data);
     }
 
     @Override
@@ -51,5 +52,22 @@ public class CObject extends CValue {
             }
         }
         return stringBuilder.append("}").toString();
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        final CObject cObject = (CObject) o;
+
+        if (data != null ? !data.equals(cObject.data) : cObject.data != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return data != null ? data.hashCode() : 0;
     }
 }
