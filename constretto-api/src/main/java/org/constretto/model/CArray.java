@@ -12,7 +12,9 @@ public class CArray extends CValue {
 
     public CArray(final List<CValue> data) {
 
-        Objects.requireNonNull(data, "The \"data\" argument can not be null");
+        if(data == null) {
+            throw new NullPointerException("The \"data\" argument can not be null");
+        }
         this.data = Arrays.asList(data.toArray(new CValue[]{}));
     }
 

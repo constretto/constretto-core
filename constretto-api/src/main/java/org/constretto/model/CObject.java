@@ -12,7 +12,9 @@ public class CObject extends CValue {
 
     public CObject(Map<String, CValue> data) {
 
-        Objects.requireNonNull(data, "The \"data\" argument can not be null");
+        if(data == null) {
+            throw new NullPointerException("The \"data\" argument can not be null");
+        }
         this.data = data;
     }
 

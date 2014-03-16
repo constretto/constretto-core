@@ -1,7 +1,6 @@
 package org.constretto.model;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,7 +14,9 @@ public class CPrimitive extends CValue {
 
     public CPrimitive(String value) {
 
-        Objects.requireNonNull(value, "The \"value\" argument can not be null");
+        if(value == null) {
+            throw new NullPointerException("The \"value\" argument can not be null");
+        }
         this.value = value;
     }
 
