@@ -1,5 +1,7 @@
 package org.constretto.model;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -36,13 +38,18 @@ public class CObject extends CValue {
 
     @Override
     public String toString() {
-        String value = "{";
+        StringBuilder stringBuilder = new StringBuilder("{");
+        final int length = data.entrySet().size();
+        int elementsAdded = 0;
         for (Map.Entry<String, CValue> entry : data.entrySet()) {
-            value += entry.getKey() + ":" + entry.getValue().toString() + ", ";
+            stringBuilder.append(entry.getKey());
+            stringBuilder.append(':');
+            stringBuilder.append(entry.getValue().toString());
+            elementsAdded++;
+            if(elementsAdded < length) {
+                stringBuilder.append(", ");
+            }
         }
-        if (value.endsWith(", ")){
-            value = value.substring(0,value.length()-2);
-        }
-        return value + "}";
+        return stringBuilder.append("}").toString();
     }
 }
