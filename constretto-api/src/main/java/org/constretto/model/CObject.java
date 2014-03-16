@@ -2,10 +2,7 @@ package org.constretto.model;
 
 import org.apache.commons.lang.StringUtils;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author <a href="mailto:kaare.nilsen@arktekk.no">Kaare Nilsen</a>
@@ -14,6 +11,8 @@ public class CObject extends CValue {
     private final Map<String, CValue> data;
 
     public CObject(Map<String, CValue> data) {
+
+        Objects.requireNonNull(data, "The \"data\" argument can not be null");
         this.data = data;
     }
 

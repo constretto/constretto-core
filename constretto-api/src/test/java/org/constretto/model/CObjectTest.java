@@ -44,4 +44,10 @@ public class CObjectTest {
         assertEquals(cObject.hashCode(), new CObject(values).hashCode());
 
     }
+
+    @Test(expected = NullPointerException.class)
+    public void testNull() throws Exception {
+        new CArray(null);
+
+    }
 }

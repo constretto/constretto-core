@@ -2,9 +2,7 @@ package org.constretto.model;
 
 import org.apache.commons.lang.StringUtils;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author <a href="mailto:kaare.nilsen@arktekk.no">Kaare Nilsen</a>
@@ -12,12 +10,14 @@ import java.util.Set;
 public class CArray extends CValue {
     private final List<CValue> data;
 
-    public CArray(List<CValue> data) {
-        this.data = data;
+    public CArray(final List<CValue> data) {
+
+        Objects.requireNonNull(data, "The \"data\" argument can not be null");
+        this.data = Arrays.asList(data.toArray(new CValue[]{}));
     }
 
     public List<CValue> data() {
-        return data;
+        return data == null ? Collections.<CValue>emptyList() : Collections.unmodifiableList(data);
     }
 
     @Override

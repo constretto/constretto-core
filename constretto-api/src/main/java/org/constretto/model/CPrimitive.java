@@ -1,6 +1,7 @@
 package org.constretto.model;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,6 +14,8 @@ public class CPrimitive extends CValue {
     private String value;
 
     public CPrimitive(String value) {
+
+        Objects.requireNonNull(value, "The \"value\" argument can not be null");
         this.value = value;
     }
 
@@ -43,6 +46,7 @@ public class CPrimitive extends CValue {
 
     @Override
     public boolean equals(final Object o) {
+
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
@@ -55,6 +59,7 @@ public class CPrimitive extends CValue {
 
     @Override
     public int hashCode() {
+
         return value != null ? value.hashCode() : 0;
     }
 }

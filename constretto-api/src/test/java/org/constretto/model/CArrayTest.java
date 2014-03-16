@@ -7,6 +7,7 @@ import java.util.Arrays;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author zapodot at gmail dot com
@@ -33,6 +34,12 @@ public class CArrayTest {
     public void testReferencedKeys() throws Exception {
         assertEquals(0, cArray.referencedKeys().size());
     }
+
+    @Test(expected = NullPointerException.class)
+    public void testNull() throws Exception {
+        new CArray(null);
+    }
+
 
     @Test
     public void testReplace() throws Exception {

@@ -15,4 +15,17 @@ public final class CPrimitiveTest {
 
         assertEquals(expectedValue, primitive.value());
     }
+
+    @Test
+    public void testEquals() throws Exception {
+
+        assertEquals(new CPrimitive("1"), new CPrimitive("1"));
+
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testNull() throws Exception {
+        new CPrimitive(null);
+
+    }
 }
