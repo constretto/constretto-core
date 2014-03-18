@@ -16,6 +16,7 @@ It also works as a bridge between different configuration formats, and currently
 * Removed direct dependency on commons-logging (the constretto-spring module still has a transitive dependency on it in through its dependency on Spring-Core)
 * Upgraded AspectJ to 1.7.4
 * Upgraded Commons Beanutils to 1.9.1
+* No longer depends on commons-logging. Depends on slf4j-api instead, making it easier to configure your own logging backend
 
 
 ## What's new in 2.1.4
