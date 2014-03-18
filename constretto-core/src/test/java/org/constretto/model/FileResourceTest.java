@@ -3,6 +3,8 @@ package org.constretto.model;
 import org.constretto.exception.ConstrettoException;
 import org.junit.Test;
 
+import java.io.File;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -11,6 +13,8 @@ import static org.junit.Assert.assertTrue;
  * @author <a href=mailto:zapodot@gmail.com>Sondre Eikanger Kval&oslash;</a>
  */
 public class FileResourceTest {
+
+    private File file;
 
     @Test(expected = ConstrettoException.class)
     public void testCreateFileResourceForNullPath() throws Exception {
@@ -28,7 +32,10 @@ public class FileResourceTest {
     public void checkThatFileResourceExists() throws Exception {
         final FileResource nonExisting = new FileResource("devNullFile");
         assertFalse(nonExisting.exists());
-        final FileResource existing = new FileResource("file:src/test/resources/cache1.ini");
+        final File file = new File(getClass().getResource("/cache1.ini").toURI());
+        assertTrue(file.exists());
+
+        final FileResource existing = new FileResource(file.toURI().toString());
         assertTrue(existing.exists());
     }
 
