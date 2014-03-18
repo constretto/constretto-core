@@ -84,9 +84,9 @@ public class ConstrettoImportRegistrar implements ImportBeanDefinitionRegistrar 
             try {
                 return (ConstrettoConfiguration) factoryMethod.invoke(null);
             } catch (IllegalAccessException e) {
-                throw new ConstrettoException(String.format("Could not invoke factory method \"%1$s\" in configuration class \"%2$\"", factoryMethod.getName(), configurationClass.getName()), e);
+                throw new ConstrettoException(String.format("Could not invoke factory method \"%1$s\" in configuration class \"%2$s\"", factoryMethod.getName(), configurationClass.getName()), e);
             } catch (InvocationTargetException e) {
-                throw new ConstrettoException(String.format("Could not invoke factory method \"%1$s\" in configuration class \"%2$\"", factoryMethod.getName(), configurationClass.getName()), e);
+                throw new ConstrettoException(String.format("Could not invoke factory method \"%1$s\" in configuration class \"%2$s\"", factoryMethod.getName(), configurationClass.getName()), e);
             }
         }
     }
