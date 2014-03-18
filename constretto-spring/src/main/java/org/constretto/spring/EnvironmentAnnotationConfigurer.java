@@ -15,12 +15,12 @@
  */
 package org.constretto.spring;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.constretto.exception.ConstrettoException;
 import org.constretto.spring.annotation.Environment;
 import org.constretto.spring.internal.ConstrettoAutowireCandidateResolver;
 import org.constretto.spring.resolver.AssemblyContextResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -46,7 +46,7 @@ import java.util.Set;
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class EnvironmentAnnotationConfigurer implements BeanFactoryPostProcessor {
-    private final Log logger = LogFactory.getLog(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     private final AssemblyContextResolver assemblyContextResolver;
     public static final String INCLUDE_IN_COLLECTIONS = "includeInCollections";
 
@@ -205,13 +205,15 @@ public class EnvironmentAnnotationConfigurer implements BeanFactoryPostProcessor
         targetEnvironments.retainAll(assemblyContext);
         boolean autowireCandidate = !targetEnvironments.isEmpty();
         if (autowireCandidate) {
-            logger.info(beanName + " is annotated with environment '" + environmentAnnotation.value()
-                    + "', and is selected for autowiring in the current environment '"
-                    + assemblyContextResolver.getAssemblyContext() + "'");
+            logger.info("{} is annotated with environment '{}', and is selected for autowiring in the current environment '{}'",
+                    beanName,
+                    environmentAnnotation.value(),
+                    assemblyContextResolver.getAssemblyContext());
         } else {
-            logger.info(beanName + " is annotated with environment '" + environmentAnnotation.value()
-                    + "', and is discarded for autowiring in the current environment '"
-                    + assemblyContextResolver.getAssemblyContext() + "'");
+            logger.info("{} is annotated with environment '{}', and is discarded for autowiring in the current environment '{}'",
+                    beanName,
+                    environmentAnnotation.value(),
+                    assemblyContextResolver.getAssemblyContext());
         }
         return autowireCandidate;
     }
