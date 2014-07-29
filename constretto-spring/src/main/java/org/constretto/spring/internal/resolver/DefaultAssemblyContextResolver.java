@@ -60,4 +60,12 @@ public class DefaultAssemblyContextResolver implements AssemblyContextResolver {
         return assemblyEnvironment;
     }
 
+    @Override
+    public String toString() {
+        return new StringBuilder(getClass().getName())
+                .append("[assemblyContext=")
+                .append(getAssemblyContext())
+                .append(']')
+                .toString();
+    }
 }

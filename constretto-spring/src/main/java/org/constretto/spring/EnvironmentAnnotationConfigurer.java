@@ -30,10 +30,11 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
-import static java.util.Arrays.asList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static java.util.Arrays.asList;
 
 /**
  * A BeanFactoryBeanFactoryPostProcessor implementation that will if registered as a bean in a spring context, enable
@@ -127,7 +128,7 @@ public class EnvironmentAnnotationConfigurer implements BeanFactoryPostProcessor
         for (String beanName : beanNames) {
             BeanDefinition beanDefinition = configurableListableBeanFactory.getBeanDefinition(beanName);
             Class beanClass = Class.forName(beanDefinition.getBeanClassName());
-            beanDefinition.setAttribute(INCLUDE_IN_COLLECTIONS, beanClass.getInterfaces());
+            beanDefinition.setAttribute(INCLUDE_IN_COLLECTIONS, new Class[]{beanClass});
             Environment environmentAnnotation = findEnvironmentAnnotation(beanClass);
             if (environmentAnnotation == null) {
                 beanDefinition.setAutowireCandidate(false);

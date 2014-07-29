@@ -15,11 +15,12 @@
  */
 package org.constretto.spring.assembly.helper;
 
-import static org.constretto.spring.annotation.Environment.DEVELOPMENT;
 import org.constretto.spring.resolver.AssemblyContextResolver;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.constretto.spring.annotation.Environment.DEVELOPMENT;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
@@ -32,5 +33,12 @@ public class AlwaysDevelopmentEnvironmentResolver implements AssemblyContextReso
         }};
     }
 
-
+    @Override
+    public String toString() {
+        return new StringBuilder(getClass().getName())
+                .append("[assemblyContext=")
+                .append(getAssemblyContext())
+                .append("]")
+                .toString();
+    }
 }

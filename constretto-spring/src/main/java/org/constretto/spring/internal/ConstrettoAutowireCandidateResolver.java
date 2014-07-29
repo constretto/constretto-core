@@ -10,13 +10,9 @@
  */
 package org.constretto.spring.internal;
 
-import org.constretto.spring.EnvironmentAnnotationConfigurer;
-import org.constretto.spring.annotation.Environment;
 import org.springframework.beans.factory.annotation.QualifierAnnotationAutowireCandidateResolver;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.config.DependencyDescriptor;
-import org.springframework.beans.factory.support.AutowireCandidateResolver;
-import org.springframework.core.MethodParameter;
 
 import static org.constretto.spring.EnvironmentAnnotationConfigurer.findEnvironmentAnnotation;
 
@@ -30,20 +26,12 @@ public class ConstrettoAutowireCandidateResolver extends QualifierAnnotationAuto
 
     @SuppressWarnings("unchecked")
     public boolean isAutowireCandidate(BeanDefinitionHolder bdHolder, DependencyDescriptor descriptor) {
-        if (bdHolder.getBeanDefinition().getAttribute(EnvironmentAnnotationConfigurer.INCLUDE_IN_COLLECTIONS) != null && descriptor.getCollectionType() != null) {
-            Class[] interfaces = (Class[]) bdHolder.getBeanDefinition().getAttribute(EnvironmentAnnotationConfigurer.INCLUDE_IN_COLLECTIONS);
-            for (Class anInterface : interfaces) {
-                if (descriptor.getCollectionType().isAssignableFrom(anInterface)) {
-                    return true;
-                }
-            }
-        }
 
-        if (descriptor.getDependencyType().isInterface()){
+        if (descriptor.getDependencyType().isInterface()) {
             return super.isAutowireCandidate(bdHolder, descriptor);
         } else {
             return findEnvironmentAnnotation(descriptor.getDependencyType()) == null || super.isAutowireCandidate(bdHolder, descriptor);
         }
 
-    }    
+    }
 }

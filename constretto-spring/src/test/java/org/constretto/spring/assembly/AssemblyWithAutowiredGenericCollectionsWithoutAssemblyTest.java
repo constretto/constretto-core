@@ -11,42 +11,38 @@
 package org.constretto.spring.assembly;
 
 import org.constretto.spring.assembly.helper.service.genericcollections.ProductService;
-import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.junit.contrib.java.lang.system.ClearSystemProperties;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static org.constretto.spring.annotation.Environment.DEVELOPMENT;
 import static org.constretto.spring.internal.resolver.DefaultAssemblyContextResolver.ASSEMBLY_KEY;
 import static org.junit.Assert.assertEquals;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
-public class AssemblyWithAutowiredGenericCollectionsTest {
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = "classpath:org/constretto/spring/assembly/AssemblyWithAutowiredGenericCollectionsTest-context.xml")
+@DirtiesContext
+public class AssemblyWithAutowiredGenericCollectionsWithoutAssemblyTest {
+
+    @Autowired
     private ProductService productService;
 
-    @Before
-    public void removeAssemblyKey() {
-        System.clearProperty(ASSEMBLY_KEY);
-    }
+    @ClassRule
+    public static ClearSystemProperties clearSystemProperties = new ClearSystemProperties(ASSEMBLY_KEY);
+
 
     @Test
     public void givenNoAssemblyContextGenericCollectionsThenCorrectlyWireContext() throws Exception {
-        loadContextAndInjectConfigurationService();
+
         assertEquals(2, productService.getProductHandlers().size());
     }
 
-    @Test
-    public void givenAssemblyContextGenericCollectionsThenCorrectlyWireContext() throws Exception {
-        System.setProperty(ASSEMBLY_KEY, DEVELOPMENT);
-        loadContextAndInjectConfigurationService();
-        assertEquals(3, productService.getProductHandlers().size());
-    }
-
-    private void loadContextAndInjectConfigurationService() {
-        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(
-                "org/constretto/spring/assembly/AssemblyWithAutowiredGenericCollectionsTest-context.xml");
-        productService = (ProductService) ctx.getBean("productService");
-    }
 
 }
