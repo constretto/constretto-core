@@ -12,7 +12,7 @@ It also works as a bridge between different configuration formats, and currently
 ## What's new in 2.2.0 (to be released)
 * Improved support for Spring Java Config (issue #41) [example](constretto-spring/src/test/java/org/constretto/spring/ConstrettoJavaConfigTest.java)
 * Added support for a simple mapping api method as contributed by [kenglxn](https://github.com/kenglxn) in pull request [#41](https://github.com/constretto/constretto-core/pull/43) 
-* Upgraded Spring dependency to 3.2.8.RELEASE (4.x will be supported in the next major version)
+* Upgraded Spring dependency to 3.2.9.RELEASE (4.x will be supported in the next major version)
 * Removed direct dependency on commons-logging (the constretto-spring module still has a transitive dependency on it in through its dependency on Spring-Core)
 * Upgraded AspectJ to 1.7.4
 * Upgraded Commons Beanutils to 1.9.1
