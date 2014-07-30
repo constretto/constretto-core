@@ -9,7 +9,7 @@ It also works as a bridge between different configuration formats, and currently
 
 [![Build Status](https://travis-ci.org/constretto/constretto-core.png)](https://travis-ci.org/constretto/constretto-core)
 
-## What's new in 2.2.0 (to be released)
+## What's new in 2.2.0 
 * Improved support for Spring Java Config (issue #41) [example](constretto-spring/src/test/java/org/constretto/spring/ConstrettoJavaConfigTest.java)
 * Added support for a simple mapping api method as contributed by [kenglxn](https://github.com/kenglxn) in pull request [#41](https://github.com/constretto/constretto-core/pull/43) 
 * Upgraded Spring dependency to 3.2.9.RELEASE (4.x will be supported in the next major version)
