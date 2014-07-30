@@ -28,3 +28,27 @@ Spring XML Namespace support
     </bean>
 </beans>
 ```
+
+Spring JavaConfig support
+----------------------------
+```java
+    @org.springframework.context.annotation.Configuration
+    public class TestContext extends BasicConstrettoConfiguration {
+    
+        @Configuration(required = true) // Will be injected by Constretto's Configuration processor
+        private String key1;
+    
+        @Value("${key1}") // Will be injected by Constretto's Property placeholder processor
+        private String key1AsValue;
+    
+        @Override
+        public org.constretto.ConstrettoConfiguration constrettoConfiguration() {
+            return new ConstrettoBuilder()
+                    .createPropertiesStore()
+                    .addResource(Resource.create("classpath:properties/test1.properties"))
+                    .done()
+                    .getConfiguration();
+        }
+    }
+```
+
