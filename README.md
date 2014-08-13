@@ -8,6 +8,7 @@ choose the correct value at runtime.
 It also works as a bridge between different configuration formats, and currently Java property files, Ini files, and Java Beans are supported.
 
 [![Build Status](https://travis-ci.org/constretto/constretto-core.png)](https://travis-ci.org/constretto/constretto-core)
+[![Coverage Status](https://img.shields.io/coveralls/constretto/constretto-core.svg)](https://coveralls.io/r/constretto/constretto-core)
 
 ## What's new in 2.2.0 
 * Improved support for Spring Java Config (issue #41) [example](constretto-spring/src/test/java/org/constretto/spring/ConstrettoJavaConfigTest.java)
