@@ -68,6 +68,10 @@ public class ConstrettoPropertyPlaceholderConfigurer extends PropertyPlaceholder
         String value = null;
         if (ignoreUnresolvedPlaceHolders) {
             value = configuration.evaluateTo(placeholder, "");
+        } else if(placeholder.contains(valueSeparator)) {
+            final String placeholderValuePart = placeholder.substring(0,placeholder.indexOf(valueSeparator));
+            final String defaultValuePart = placeholder.substring(placeholder.indexOf(valueSeparator)+1,placeholder.length());
+            value = configuration.evaluateTo(placeholderValuePart,defaultValuePart);
         } else {
             value = configuration.evaluateTo(String.class, placeholder);
         }

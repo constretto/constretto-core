@@ -22,6 +22,7 @@ public class TestBean {
     private String url;
     private String serviceUrl;
     private String mayBeNull;
+    private String getMeDefault;
 
     public TestBean(String serviceUrl) {
         this.serviceUrl = serviceUrl;
@@ -45,5 +46,13 @@ public class TestBean {
 
     public String getMayBeNull() {
         return mayBeNull;
+    }
+
+    public String getGetMeDefault() {
+        return getMeDefault;
+    }
+
+    public void setGetMeDefault(String getMeDefault) {
+        this.getMeDefault = getMeDefault;
     }
 }
