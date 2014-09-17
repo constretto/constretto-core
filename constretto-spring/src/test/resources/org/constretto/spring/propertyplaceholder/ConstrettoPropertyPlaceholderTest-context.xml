@@ -24,7 +24,8 @@
 
   <bean id="testbean" class="org.constretto.spring.propertyplaceholder.helper.TestBean">
     <constructor-arg value="${aCoolService}"/>
-    <property name="url" value="${aCoolUrl}"/>
+    <!--<property name="url" value="${aCoolUrl}"/>-->
+    <property name="getMeDefault" value="${notHere:default}"/>
   </bean>
 
 

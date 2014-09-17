@@ -42,4 +42,9 @@ public class ConstrettoPropertyPlaceholderTest {
     public void givenPlaceholderOnConstructorThenPlaceholderResolved() throws Exception {
         assertEquals("http://arktekk.no/coolService", testBean.getServiceUrl());
     }
+
+    @Test
+    public void givenPlaceholderOnPropertyWithDefaultValue() throws Exception {
+        assertEquals("defaultValue",testBean.getGetMeDefault());
+    }
 }
