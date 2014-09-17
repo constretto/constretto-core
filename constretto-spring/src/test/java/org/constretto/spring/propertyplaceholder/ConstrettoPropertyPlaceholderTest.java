@@ -45,6 +45,6 @@ public class ConstrettoPropertyPlaceholderTest {
 
     @Test
     public void givenPlaceholderOnPropertyWithDefaultValue() throws Exception {
-        assertEquals("defaultValue",testBean.getGetMeDefault());
+        assertEquals("default",testBean.getGetMeDefault());
     }
 }
