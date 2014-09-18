@@ -10,6 +10,10 @@ It also works as a bridge between different configuration formats, and currently
 [![Build Status](https://travis-ci.org/constretto/constretto-core.png)](https://travis-ci.org/constretto/constretto-core)
 [![Coverage Status](https://img.shields.io/coveralls/constretto/constretto-core.svg)](https://coveralls.io/r/constretto/constretto-core)
 
+## What's new in 2.2.1
+* Support for specifying default values for Spring property placeholders (i.e `${missingValue:default}`). Contributed by [PavlikPolivka](https://github.com/PavlikPolivka) - pull request #46
+* Updated Spring dependencies to v. 3.2.11
+
 ## What's new in 2.2.0 
 * Improved support for Spring Java Config (issue #41) [example](constretto-spring/src/test/java/org/constretto/spring/ConstrettoJavaConfigTest.java)
 * Added support for a simple mapping api method as contributed by [kenglxn](https://github.com/kenglxn) in pull request [#41](https://github.com/constretto/constretto-core/pull/43) 
