@@ -17,7 +17,7 @@
     <url>http://constretto.github.io</url>
     <packaging>pom</packaging>
     <prerequisites>
-        <maven>2.2.1</maven>
+        <maven>3.2.1</maven>
     </prerequisites>
     <description>
         This project aims to help java application developers to manage
@@ -114,13 +114,12 @@
         <apacheds.version>1.5.7</apacheds.version>
         <system-rules.version>1.6.0</system-rules.version>
         <maven-javadoc-plugin.version>2.9.1</maven-javadoc-plugin.version>
-        <maven-source-plugin.version>2.2.1</maven-source-plugin.version>
-        <maven-gpg-plugin.version>1.4</maven-gpg-plugin.version>
-        <maven-clover2-plugin.version>3.1.12</maven-clover2-plugin.version>
+        <maven-source-plugin.version>2.3</maven-source-plugin.version>
+        <maven-gpg-plugin.version>1.5</maven-gpg-plugin.version>
         <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
         <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
         <maven-enforcer-plugin.version>1.3.1</maven-enforcer-plugin.version>
-        <maven-surefire-plugin.version>2.15</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>2.17</maven-surefire-plugin.version>
     </properties>
 
     <profiles>
@@ -309,16 +308,6 @@
     <build>
 
         <plugins>
-            <plugin>
-                <groupId>com.atlassian.maven.plugins</groupId>
-                <artifactId>maven-clover2-plugin</artifactId>
-                <version>${maven-clover2-plugin.version}</version>
-                <configuration>
-                    <licenseLocation>/local/systems/licenses/clover.license</licenseLocation>
-                    <generateXml>true</generateXml>
-                    <generateHtml>true</generateHtml>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
