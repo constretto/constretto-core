@@ -8,7 +8,7 @@ choose the correct value at runtime.
 It also works as a bridge between different configuration formats, and currently Java property files, Ini files, and Java Beans are supported.
 
 [![Build Status](https://travis-ci.org/constretto/constretto-core.png)](https://travis-ci.org/constretto/constretto-core)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.constretto/constretto/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.constretto/constretto)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.constretto/constretto-core/badge.svg)](http://mvnrepository.com/artifact/org.constretto/constretto-core)
 [![Coverage Status](https://img.shields.io/coveralls/constretto/constretto-core.svg)](https://coveralls.io/r/constretto/constretto-core)
 
 ## What's new in 2.2.1
