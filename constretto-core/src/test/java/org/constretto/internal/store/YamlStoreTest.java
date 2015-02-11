@@ -41,7 +41,7 @@ public class YamlStoreTest {
     }
 
     @Test
-    public void jsonShouldAllowNonExistingResources() {
+    public void shouldAllowNonExistingResources() {
         ConstrettoConfiguration conf = new ConstrettoBuilder()
                 .createYamlConfigurationStore()
                 .addResource(Resource.create("classpath:nonExisiting.yaml"), "person")
