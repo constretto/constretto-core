@@ -162,6 +162,10 @@ public class ConstrettoBuilder {
         return taggedPropertySets;
     }
 
+    public YamlStoreBuilder createYamlConfigurationStore() {
+        return new YamlStoreBuilder();
+    }
+
 
 //
 // Store builders
@@ -219,6 +223,28 @@ public class ConstrettoBuilder {
 
         public JsonStoreBuilder addResource(Resource resource, String key, String... tags) {
             return new JsonStoreBuilder(store.addResource(resource, key, tags));
+        }
+
+        @Override
+        ConfigurationStore createStore() {
+            return store;
+        }
+
+    }
+
+    public class YamlStoreBuilder extends ContributingStoreBuilder {
+        private final YamlStore store;
+
+        public YamlStoreBuilder() {
+            this.store = new YamlStore();
+        }
+
+        private YamlStoreBuilder(YamlStore store) {
+            this.store = store;
+        }
+
+        public YamlStoreBuilder addResource(Resource resource, String key, String... tags) {
+            return new YamlStoreBuilder(store.addResource(resource, key, tags));
         }
 
         @Override
