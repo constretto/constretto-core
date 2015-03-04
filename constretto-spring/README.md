@@ -5,6 +5,10 @@ Support for using Constretto in Spring contexts. It includes namespace support f
 as a PropertyPlaceHolder implementation (allowing property placeholders refering to to Constretto configuration keys 
 to be used in bean definitions).
 
+### Compatibility
+The Spring module is tested with Spring 3.2.X and Java 7. Most features will probably work fine with Spring 4.X and/or Java 8, but 100% compatibility can not be guaranteed.  
+
+
 Spring XML Namespace support
 ----------------------------
 
