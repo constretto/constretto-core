@@ -12,6 +12,10 @@ All current releases are compiled with target JDK 1.6. Starting with Constretto 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.constretto/constretto-core/badge.svg)](http://mvnrepository.com/artifact/org.constretto/constretto-core)
 [![Coverage Status](https://img.shields.io/coveralls/constretto/constretto-core.svg)](https://coveralls.io/r/constretto/constretto-core)
 
+## What's new in 2.2.2
+* Support for YAML store contributed by [hamnis](//github.com/hamnis) - pull request #48
+* Change scope of Constretto-test in the Constretto Spring module to "test" - pull request #47
+
 ## What's new in 2.2.1
 * Support for specifying default values for Spring property placeholders (i.e `${missingValue:default}`). Contributed by [PavlikPolivka](https://github.com/PavlikPolivka) - pull request #46
 * Updated Spring dependencies to v. 3.2.11
