@@ -11,7 +11,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.constretto</groupId>
     <artifactId>constretto</artifactId>
-    <version>2.2.2</version>
+    <version>2.2.3-SNAPSHOT</version>
     <name>Constretto :: Parent - ${project.version}</name>
     <inceptionYear>2008</inceptionYear>
     <url>http://constretto.github.io</url>
@@ -35,7 +35,7 @@
         <connection>scm:git:git@github.com:constretto/constretto-core.git</connection>
         <developerConnection>scm:git:git@github.com:constretto/constretto-core.git</developerConnection>
         <url>http://github.com/constretto/constretto-core</url>
-      <tag>constretto-2.2.2</tag>
+      <tag>HEAD</tag>
   </scm>
 
     <issueManagement>
