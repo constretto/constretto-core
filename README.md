@@ -6,7 +6,7 @@ It allows you to “tag” configuration values, so that Constretto could
 choose the correct value at runtime.
 
 It also works as a bridge between different configuration formats, and currently Java property files, Ini files, and Java Beans are supported.
-All current releases are compiled with target JDK 1.6. Starting with Constretto 3 all releases will require Java 7 or later   
+Starting with Constretto 3 all releases requires Java 7 or later   
 
 [![Build Status](https://travis-ci.org/constretto/constretto-core.png)](https://travis-ci.org/constretto/constretto-core)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.constretto/constretto-core/badge.svg)](http://mvnrepository.com/artifact/org.constretto/constretto-core)
