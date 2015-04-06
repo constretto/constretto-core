@@ -34,12 +34,9 @@ import org.constretto.model.CValue;
 import org.constretto.model.ConfigurationValue;
 
 import java.lang.annotation.Annotation;
-import java.lang.ref.WeakReference;
 import java.lang.reflect.*;
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArraySet;
 
-import static java.util.Arrays.asList;
 import static org.constretto.internal.GenericCollectionTypeResolver.*;
 
 /**
@@ -51,7 +48,6 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     private final Paranamer paranamer = new BytecodeReadingParanamer();
 
     protected final Map<String, List<ConfigurationValue>> configuration;
-    private Set<WeakReference<Object>> configuredObjects = new CopyOnWriteArraySet<WeakReference<Object>>();
     private final List<String> originalTags = new ArrayList<String>();
     protected final List<String> currentTags = new ArrayList<String>();
 
@@ -171,41 +167,6 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         return findElementOrNull(expression) != null;
     }
 
-    public void appendTag(String... newtags) {
-        currentTags.addAll(asList(newtags));
-        reconfigure();
-    }
-
-    public void prependTag(String... newtags) {
-        currentTags.addAll(0, asList(newtags));
-        reconfigure();
-    }
-
-    public void resetTags(boolean reconfigure) {
-        currentTags.clear();
-        currentTags.addAll(originalTags);
-        if (reconfigure)
-            reconfigure();
-    }
-
-    public void clearTags(boolean reconfigure) {
-        currentTags.clear();
-        originalTags.clear();
-        if (reconfigure)
-            reconfigure();
-    }
-
-    public void removeTag(String... newTags) {
-        for (String newTag : newTags) {
-            currentTags.remove(newTag);
-        }
-        reconfigure();
-    }
-
-    public List<String> getCurrentTags() {
-        return currentTags;
-    }
-
     public Iterator<Property> iterator() {
         List<Property> properties = new ArrayList<Property>();
         Map<String, String> map = asMap();
@@ -213,16 +174,6 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
             properties.add(new Property(entry.getKey(), entry.getValue()));
         }
         return properties.iterator();
-    }
-
-    @Override
-    public void reconfigure() {
-        WeakReference[] references = configuredObjects.toArray(new WeakReference[configuredObjects.size()]);
-        for (WeakReference reference : references) {
-            if (reference != null && reference.get() != null) {
-                on(reference.get());
-            }
-        }
     }
 
     //
@@ -334,16 +285,6 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     private <T> void injectConfiguration(T objectToConfigure) {
         injectFields(objectToConfigure);
         injectMethods(objectToConfigure);
-        boolean found = false;
-        for (WeakReference<Object> configuredObject : configuredObjects) {
-            if (configuredObject.get() == objectToConfigure) {
-                found = true;
-                break;
-            }
-        }
-        if (!found) {
-            this.configuredObjects.add(new WeakReference<Object>(objectToConfigure));
-        }
     }
 
     private Object[] resolveParameters(AccessibleObject accessibleObject) throws IllegalAccessException, InstantiationException {

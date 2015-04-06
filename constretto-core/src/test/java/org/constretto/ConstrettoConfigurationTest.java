@@ -48,20 +48,6 @@ public class ConstrettoConfigurationTest {
     }
 
     @Test
-    public void youShouldBeAbleToGetCurrentEnvironmentTroughTheAPI() {
-        ConstrettoConfiguration configuration = new ConstrettoBuilder(false)
-                .createPropertiesStore()
-                .addResource(new ClassPathResource("test.properties"))
-                .done()
-                .getConfiguration();
-        assertEquals(0, configuration.getCurrentTags().size());
-        configuration.prependTag("dev");
-        assertEquals(1, configuration.getCurrentTags().size());
-        configuration.prependTag("local");
-        assertEquals(2, configuration.getCurrentTags().size());
-    }
-
-    @Test
     public void iteratingSimplePropertiesShouldWork() {
         ConstrettoConfiguration configuration = new ConstrettoBuilder(false)
                 .createPropertiesStore()
