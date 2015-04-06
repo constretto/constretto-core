@@ -4,9 +4,9 @@ env:
   - secure: njJrgrBWrEHK86vEK8UlmM5SxlptsyU7ghWOPsQl5Dr0WvseZWtT/7A9bDPmcNxp2EJBx4xt0BAIDnhnqcHwdKDrYjpHPabneDipEchdm2p+vI96lqb1zZ5Du+xvQGzZlXPhf1VocWSFXRACAJ2+Nky6nbTrhKCr101kBA8oSe4=
 language: java
 jdk:
-- openjdk6
 - openjdk7
 - oraclejdk7
+- oraclejdk8
 after_success:
 - mvn clean cobertura:cobertura coveralls:cobertura
 - echo "<settings><servers><server><id>sonatype-nexus-snapshots</id><username>\${env.REPO_USER}</username><password>\${env.REPO_PASSWORD}</password></server></servers></settings>" > ~/settings.xml
