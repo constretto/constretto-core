@@ -48,6 +48,22 @@ public class ConstrettoConfigurationTest {
     }
 
     @Test
+    public void testAsIterator() throws Exception {
+        final ConstrettoConfiguration configuration = new ConstrettoBuilder(false)
+                .createPropertiesStore()
+                .addResource(new ClassPathResource("test.properties"))
+                .done()
+                .addCurrentTag("production")
+                .getConfiguration();
+
+        int i = 0;
+        for (final Property property : configuration) {
+            i++;
+        }
+        assertEquals(4, i);
+    }
+
+    @Test
     public void iteratingSimplePropertiesShouldWork() {
         ConstrettoConfiguration configuration = new ConstrettoBuilder(false)
                 .createPropertiesStore()

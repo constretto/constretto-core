@@ -43,13 +43,12 @@ import static org.constretto.internal.GenericCollectionTypeResolver.*;
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
  */
 public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
-    private static final String NULL_STRING = "![![Null]!]!";
 
     private final Paranamer paranamer = new BytecodeReadingParanamer();
 
     protected final Map<String, List<ConfigurationValue>> configuration;
-    private final List<String> originalTags = new ArrayList<String>();
-    protected final List<String> currentTags = new ArrayList<String>();
+    private final List<String> originalTags = new ArrayList<>();
+    protected final List<String> currentTags = new ArrayList<>();
 
     public DefaultConstrettoConfiguration(Map<String, List<ConfigurationValue>> configuration, List<String> originalTags) {
         this.configuration = configuration;
@@ -153,7 +152,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     }
 
     public Map<String, String> asMap() {
-        Map<String, String> properties = new HashMap<String, String>();
+        Map<String, String> properties = new HashMap<>();
         for (Map.Entry<String, List<ConfigurationValue>> entry : configuration.entrySet()) {
             ConfigurationValue value = findElementOrNull(entry.getKey());
             if (value != null){
@@ -168,8 +167,8 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     }
 
     public Iterator<Property> iterator() {
-        List<Property> properties = new ArrayList<Property>();
         Map<String, String> map = asMap();
+        List<Property> properties = new ArrayList<>(map.size());
         for (Map.Entry<String, String> entry : map.entrySet()) {
             properties.add(new Property(entry.getKey(), entry.getValue()));
         }
