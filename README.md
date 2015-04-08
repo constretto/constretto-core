@@ -126,7 +126,6 @@ public class AutowiredAndConfiguredConstructorInjectionBean {
 </beans>    
 ```
 
-
 ### Using the LdapConfigurationStore
 
 Add LDAP entry either by using its distinguished name or by providing LDAP search parameters:
@@ -223,8 +222,6 @@ public class MyTest {
   }
 }
 ```
-
-
 
 
 
