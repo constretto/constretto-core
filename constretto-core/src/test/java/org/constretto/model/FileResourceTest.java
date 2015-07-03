@@ -3,6 +3,9 @@ package org.constretto.model;
 import org.constretto.exception.ConstrettoException;
 import org.junit.Test;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -51,5 +54,19 @@ public class FileResourceTest {
         final FileResource fileResource = new FileResource("file:src/test/resources/cache1.ini");
         assertEquals("FileResource{path='file:src/test/resources/cache1.ini'}", fileResource.toString());
 
+    }
+
+    /**
+     * If file name starts with file: chances are it is a file url.
+     * Constretto should decode this url since it uses new File(String) which does not support
+     * url encoding.
+     */
+    @Test
+    public void testWithSpaces() throws Exception {
+        Path path = Paths.get("src/test/resources/dir with spaces/test.properties");
+
+        String string = path.toFile().toURI().toURL().toString();
+        final FileResource existing = new FileResource(string);
+        assertTrue(existing.exists());
     }
 }
