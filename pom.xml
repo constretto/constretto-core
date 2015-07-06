@@ -7,7 +7,8 @@
   either express or implied. See the License for the specific language governing permissions and limitations under the
   License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.constretto</groupId>
     <artifactId>constretto</artifactId>
@@ -27,7 +28,6 @@
     <modules>
         <module>constretto-api</module>
         <module>constretto-core</module>
-        <module>constretto-spring</module>
         <module>constretto-test</module>
     </modules>
 
@@ -36,7 +36,7 @@
         <developerConnection>scm:git:git@github.com:constretto/constretto-core.git</developerConnection>
         <url>http://github.com/constretto/constretto-core</url>
         <tag>constretto-3</tag>
-  </scm>
+    </scm>
 
     <issueManagement>
         <system>github</system>
@@ -121,6 +121,8 @@
         <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
         <maven-enforcer-plugin.version>1.3.1</maven-enforcer-plugin.version>
         <maven-surefire-plugin.version>2.17</maven-surefire-plugin.version>
+        <reflections.version>0.9.10</reflections.version>
+        <guava.version>18.0</guava.version>
     </properties>
 
     <profiles>
@@ -307,7 +309,16 @@
                 <version>${system-rules.version}</version>
                 <scope>test</scope>
             </dependency>
-
+            <dependency>
+                <groupId>org.reflections</groupId>
+                <artifactId>reflections</artifactId>
+                <version>${reflections.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -363,7 +374,7 @@
                 </configuration>
             </plugin>
             <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>${maven-resources-plugin.version}</version>
                 <configuration>

@@ -31,16 +31,6 @@
             <artifactId>constretto-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.constretto</groupId>
-            <artifactId>constretto-spring</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
         </dependency>
