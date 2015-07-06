@@ -16,6 +16,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
@@ -43,10 +45,19 @@ public class FileResource extends Resource {
     private String extractFileNameFromFileResource(String path) {
         String fileName;
         if (path.startsWith(FILE_PREFIX)) {
-            fileName = path.substring(FILE_PREFIX.length(), path.length());
+            fileName = decode(path.substring(FILE_PREFIX.length(), path.length()));
         } else {
             fileName = path;
         }
         return fileName;
     }
+
+    private String decode(String path) {
+        try {
+            return URLDecoder.decode(path, "UTF-8");
+        } catch (UnsupportedEncodingException ignored) {
+        }
+        return path;
+    }
+
 }
