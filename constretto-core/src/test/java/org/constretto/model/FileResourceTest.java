@@ -4,8 +4,6 @@ import org.constretto.exception.ConstrettoException;
 import org.junit.Test;
 
 import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -68,9 +66,9 @@ public class FileResourceTest {
      */
     @Test
     public void testWithSpaces() throws Exception {
-        Path path = Paths.get("src/test/resources/dir with spaces/test.properties");
+        File file = new File("src/test/resources/dir with spaces/test.properties");
 
-        String string = path.toFile().toURI().toURL().toString();
+        String string = file.toURI().toURL().toString();
         final FileResource existing = new FileResource(string);
         assertTrue(existing.exists());
     }
