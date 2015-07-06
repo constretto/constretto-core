@@ -45,7 +45,7 @@ public class FileResource extends Resource {
     private String extractFileNameFromFileResource(String path) {
         String fileName;
         if (path.startsWith(FILE_PREFIX)) {
-            fileName = decode(path);
+            fileName = decode(path.substring(FILE_PREFIX.length(), path.length()));
         } else {
             fileName = path;
         }
@@ -54,10 +54,7 @@ public class FileResource extends Resource {
 
     private String decode(String path) {
         try {
-            return URLDecoder.decode(
-                    path.substring(FILE_PREFIX.length(), path.length()),
-                    "UTF-8"
-            );
+            return URLDecoder.decode(path, "UTF-8");
         } catch (UnsupportedEncodingException ignored) {
         }
         return path;
