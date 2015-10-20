@@ -17,6 +17,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.util.ArrayList;
@@ -32,19 +33,25 @@ import java.util.List;
 @ContextConfiguration
 public class ConstrettoSpringJUnit4ClassRunnerTest {
 
-    @Tags
-    List<String> currentEnvironment;
-
     @Autowired
-    Color color;
+    TestBean testBean;
 
     @Test
     public void givenEnvironmentAnnotationOnTestClassWhenRunningTestThenConstrettoKnowsEnvironment() {
         List<String> expected = new ArrayList<String>() {{
             add("springjunit");
         }};
-        Assert.assertArrayEquals(expected.toArray(new String[0]), currentEnvironment.toArray(new String[0]));
-        Assert.assertEquals("green", color.name());
+        Assert.assertArrayEquals(expected.toArray(new String[0]), testBean.currentEnvironment.toArray(new String[0]));
+        Assert.assertEquals("green", testBean.color.name());
+    }
+
+    static class TestBean {
+
+        @Autowired
+        Color color;
+
+        @Tags
+        List<String> currentEnvironment;
     }
 
 }

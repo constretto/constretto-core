@@ -8,6 +8,8 @@ import org.constretto.spring.internal.resolver.DefaultAssemblyContextResolver;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
@@ -28,30 +30,50 @@ public class ConstrettoRuleEnvironmentTest {
 
     public static final String ENVIRONMENT_VALUE = "junit";
 
+    @Autowired
+    private TestBean testBean;
+
     @Configuration
     public static class TestConfiguration {
 
+        @Autowired
+        private BeanFactory beanFactory;
+
         @Bean
-        public static ConstrettoConfiguration constrettoConfiguration() {
+        public ConstrettoConfiguration constrettoConfiguration() {
             return new ConstrettoBuilder(true).getConfiguration();
         }
 
         @Bean
-        public static ConfigurationAnnotationConfigurer configurationAnnotationConfigurer(final ConstrettoConfiguration configuration) {
-            return new ConfigurationAnnotationConfigurer(configuration, new DefaultAssemblyContextResolver());
+        public ConfigurationAnnotationConfigurer configurationAnnotationConfigurer(final ConstrettoConfiguration configuration) {
+            final ConfigurationAnnotationConfigurer configurer = new ConfigurationAnnotationConfigurer(configuration,
+                                                                                                       new DefaultAssemblyContextResolver());
+            configurer.setBeanFactory(beanFactory);
+            return configurer;
+        }
+
+        @Bean
+        TestBean testBean() {
+            return new TestBean();
         }
     }
 
-    @Environment
-    private List<String> injectedEnvironment;
 
-    @ClassRule
-    public static ConstrettoRule constrettoRule = new ConstrettoRule();
 
     @Test
     public void testApplyEnvironment() throws Exception {
 
-        assertArrayEquals(new String[]{ENVIRONMENT_VALUE}, injectedEnvironment.toArray(new String[1]));
+        assertArrayEquals(new String[]{ENVIRONMENT_VALUE}, testBean.injectedEnvironment.toArray(new String[1]));
+
+    }
+
+    static final class TestBean {
+
+        @Environment
+        private List<String> injectedEnvironment;
+
+        @ClassRule
+        public static ConstrettoRule constrettoRule = new ConstrettoRule();
 
     }
 }
