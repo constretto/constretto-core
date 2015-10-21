@@ -6,12 +6,16 @@ import org.constretto.model.Resource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 /**
  * @author zapodot at gmail dot com
@@ -25,12 +29,19 @@ public class BasicConstrettoConfigurationTest {
     @Autowired
     private TestBean testBean;
 
+    @Autowired
+    @Qualifier("requestScopedBean")
+    private TestBean requestScopedTestBean;
+
     @Test
     public void testKeyConfigured() throws Exception {
         final String expectedValue = "value1";
         assertEquals(expectedValue, testBean.key1);
         assertEquals(expectedValue, testBean.key1AsValue);
         assertEquals(DEFAULT_VALUE, testBean.defaultValue);
+        assertNull(requestScopedTestBean.key1);
+        assertNull(requestScopedTestBean.key1AsValue);
+        assertNull(requestScopedTestBean.defaultValue);
     }
 
     @org.springframework.context.annotation.Configuration
@@ -49,9 +60,15 @@ public class BasicConstrettoConfigurationTest {
             return new TestBean();
         }
 
+        @Bean(name = "requestScopedBean")
+        @Scope(value="request", proxyMode = ScopedProxyMode.TARGET_CLASS)
+        public TestBean requestScopedBean() {
+            return new TestBean();
+        }
+
     }
 
-    private static class TestBean {
+    public static class TestBean {
         @Configuration(required = true)
         private String key1;
 

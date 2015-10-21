@@ -29,12 +29,18 @@ public class EnvironmentAnnotatedFieldTest {
 
     @Test
     public void givenClassWithEnvironmentAnnotatedPropertyThenInjectEnvironment() throws Exception {
-        TestClazz testClazz = new TestClazz();
         ConfigurationAnnotationConfigurer annotationConfigurer = new ConfigurationAnnotationConfigurer(
                 new DefaultConstrettoConfiguration(null), new AlwaysDevelopmentEnvironmentResolver());
-        annotationConfigurer.setBeanFactory(new TestBeanFactory());
+
+        TestClazz testClazz = new TestClazz();
+        annotationConfigurer.setBeanFactory(new TestBeanFactory(true));
         annotationConfigurer.postProcessAfterInstantiation(testClazz, "testBean");
         Assert.assertTrue(testClazz.getEnvironments().contains("development"));
+
+        TestClazz notSingletonTestClazz = new TestClazz();
+        annotationConfigurer.setBeanFactory(new TestBeanFactory(false));
+        annotationConfigurer.postProcessAfterInstantiation(notSingletonTestClazz, "testBean");
+        Assert.assertNull(notSingletonTestClazz.getEnvironments());
     }
 
     private class TestClazz {
@@ -48,6 +54,12 @@ public class EnvironmentAnnotatedFieldTest {
     }
 
     private class TestBeanFactory implements BeanFactory {
+
+        private boolean singleton;
+
+        TestBeanFactory(boolean singleton) {
+            this.singleton = singleton;
+        }
 
         @Override
         public Object getBean(final String name) throws BeansException {
@@ -76,7 +88,7 @@ public class EnvironmentAnnotatedFieldTest {
 
         @Override
         public boolean isSingleton(final String name) throws NoSuchBeanDefinitionException {
-            return true;
+            return singleton;
         }
 
         @Override

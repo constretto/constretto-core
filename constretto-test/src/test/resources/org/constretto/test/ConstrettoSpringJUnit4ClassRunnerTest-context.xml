@@ -18,6 +18,8 @@
   <constretto:configuration/>
   <context:component-scan base-package="org.constretto.test.helper"/>
 
-  <bean class="org.constretto.test.ConstrettoSpringJUnit4ClassRunnerTest.TestBean"/>
+  <bean class="org.constretto.test.ConstrettoSpringJUnit4ClassRunnerTest.TestBean" name="testBean"/>
+
+  <bean class="org.constretto.test.ConstrettoSpringJUnit4ClassRunnerTest.TestBean" name="prototypeScopedTestBean" scope="prototype"/>
 
 </beans>
