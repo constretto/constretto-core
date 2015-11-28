@@ -33,6 +33,8 @@ public class DataSourceConfiguration {
     @Configuration("username")
     private String myUsername;
 
+    @Configuration
+    public String homeDir = "derby.system.home";
 
     @Configure
     public void configureMe(@Configuration String url, @Configuration("password") String secret) {
