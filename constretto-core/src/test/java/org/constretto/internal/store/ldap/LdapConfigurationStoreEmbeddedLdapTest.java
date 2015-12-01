@@ -4,10 +4,8 @@ import org.constretto.ConstrettoBuilder;
 import org.constretto.ConstrettoConfiguration;
 import org.constretto.annotation.Configuration;
 import org.constretto.model.TaggedPropertySet;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.internal.matchers.GreaterThan;
 import org.zapodot.junit.ldap.EmbeddedLdapRule;
 import org.zapodot.junit.ldap.EmbeddedLdapRuleBuilder;
 
@@ -18,7 +16,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assume.assumeThat;
 
 /**
  * @author zapodot at gmail dot com
@@ -32,12 +29,6 @@ public class LdapConfigurationStoreEmbeddedLdapTest {
                                                                       .importingLdifs("constretto.ldif")
                                                                       .build();
     public static final int LDAP_PORT = 27389;
-
-    @BeforeClass
-    public static void assumeJavaVersionGreatherThan6() {
-        assumeThat(Integer.parseInt(System.getProperty("java.version").split("\\.")[1]), new GreaterThan<Integer>(6));
-
-    }
 
     public static class ConfigurableType {
 
