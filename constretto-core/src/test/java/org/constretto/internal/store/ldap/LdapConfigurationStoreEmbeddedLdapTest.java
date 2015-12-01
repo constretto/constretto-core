@@ -4,6 +4,7 @@ import org.constretto.ConstrettoBuilder;
 import org.constretto.ConstrettoConfiguration;
 import org.constretto.annotation.Configuration;
 import org.constretto.model.TaggedPropertySet;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.internal.matchers.GreaterThan;
@@ -32,6 +33,12 @@ public class LdapConfigurationStoreEmbeddedLdapTest {
                                                                       .build();
     public static final int LDAP_PORT = 27389;
 
+    @BeforeClass
+    public static void assumeJavaVersionGreatherThan6() {
+        assumeThat(Integer.parseInt(System.getProperty("java.version").split("\\.")[1]), new GreaterThan<Integer>(6));
+
+    }
+
     public static class ConfigurableType {
 
         @Configuration("cn")
@@ -44,7 +51,6 @@ public class LdapConfigurationStoreEmbeddedLdapTest {
     @Test
     public void testParseConfigurationUsingAddDsn() throws Exception {
 
-        assumeJdkHigherThan6();
         final DirContext dirContext = embeddedLdapRule.dirContext();
         final LdapConfigurationStore configurationStore = LdapConfigurationStoreBuilder.usingDirContext(dirContext)
                                                                                        .addDsn("cn=Kaare Nilsen,dc=constretto,dc=org")
@@ -62,7 +68,6 @@ public class LdapConfigurationStoreEmbeddedLdapTest {
     @Test
     public void testDsnMultiValue() throws Exception {
 
-        assumeJdkHigherThan6();
         final DirContext initialDirContext = embeddedLdapRule.dirContext();
         final ConstrettoConfiguration configuration = new ConstrettoBuilder(false)
                 .createLdapConfigurationStore(initialDirContext)
@@ -78,7 +83,6 @@ public class LdapConfigurationStoreEmbeddedLdapTest {
     @Test
     public void testParseConfigurationUsingSearch() throws Exception {
 
-        assumeJdkHigherThan6();
         final DirContext initialDirContext = embeddedLdapRule.dirContext();
         final ConstrettoConfiguration configuration = new ConstrettoBuilder(false)
                 .createLdapConfigurationStore(initialDirContext)
@@ -91,10 +95,6 @@ public class LdapConfigurationStoreEmbeddedLdapTest {
         assertTrue(configuration.evaluateToList(String.class, "kaarenilsen.cn")
                                 .containsAll(Arrays.asList("Kaare Nilsen", "Kåre Nilsen")));
 
-    }
-
-    private void assumeJdkHigherThan6() {
-        assumeThat(Integer.parseInt(System.getProperty("java.version").split("\\.")[1]), new GreaterThan<Integer>(6));
     }
 
     private ConstrettoConfiguration createConfiguration(LdapConfigurationStore configurationStore) {
