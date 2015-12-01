@@ -25,6 +25,9 @@ import org.constretto.spring.annotation.Environment;
 import org.constretto.spring.resolver.AssemblyContextResolver;
 import org.springframework.beans.BeanInstantiationException;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.*;
 
 import java.lang.reflect.Constructor;
@@ -50,11 +53,12 @@ import java.util.Map;
  * @see org.constretto.spring.annotation.Environment
  */
 public class ConfigurationAnnotationConfigurer extends InstantiationAwareBeanPostProcessorAdapter implements
-        BeanFactoryPostProcessor {
+        BeanFactoryPostProcessor, BeanFactoryAware {
     private ConstrettoConfiguration configuration;
     private AssemblyContextResolver assemblyContextResolver;
     private Map<Class<?>, Constructor<?>> configurableConstructorCache = Collections.synchronizedMap(new HashMap<Class<?>, Constructor<?>>());
     private final static Object constructorCacheLockObject = new Object();
+    private BeanFactory beanFactory;
 
     public ConfigurationAnnotationConfigurer(ConstrettoConfiguration configuration,
                                              AssemblyContextResolver assemblyContextResolver) {
@@ -76,8 +80,12 @@ public class ConfigurationAnnotationConfigurer extends InstantiationAwareBeanPos
 
     @Override
     public boolean postProcessAfterInstantiation(Object bean, String beanName) throws BeansException {
-        injectConfiguration(bean);
-        injectEnvironment(bean);
+        try {
+            if (beanFactory != null && beanFactory.isSingleton(beanName)) {
+                injectConfiguration(bean);
+                injectEnvironment(bean);
+            }
+        } catch (NoSuchBeanDefinitionException e) {}
         return true;
     }
 
@@ -143,5 +151,10 @@ public class ConfigurationAnnotationConfigurer extends InstantiationAwareBeanPos
             }
             return constructorsWithConfigureAnnotation[0];
         }
+    }
+
+    @Override
+    public void setBeanFactory(final BeanFactory beanFactory) throws BeansException {
+        this.beanFactory = beanFactory;
     }
 }

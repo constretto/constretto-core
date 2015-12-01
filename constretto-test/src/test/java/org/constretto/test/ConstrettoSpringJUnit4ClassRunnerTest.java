@@ -10,6 +10,9 @@
  */
 package org.constretto.test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.constretto.annotation.Tags;
 import org.constretto.spring.annotation.Environment;
 import org.constretto.test.helper.Color;
@@ -17,10 +20,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author <a href="mailto:kaare.nilsen@gmail.com">Kaare Nilsen</a>
@@ -32,19 +33,30 @@ import java.util.List;
 @ContextConfiguration
 public class ConstrettoSpringJUnit4ClassRunnerTest {
 
-    @Tags
-    List<String> currentEnvironment;
+    @Autowired @Qualifier("testBean")
+    TestBean testBean;
 
-    @Autowired
-    Color color;
+    @Autowired @Qualifier("prototypeScopedTestBean")
+    TestBean prototypeScopedTestBean;
 
     @Test
     public void givenEnvironmentAnnotationOnTestClassWhenRunningTestThenConstrettoKnowsEnvironment() {
         List<String> expected = new ArrayList<String>() {{
             add("springjunit");
         }};
-        Assert.assertArrayEquals(expected.toArray(new String[0]), currentEnvironment.toArray(new String[0]));
-        Assert.assertEquals("green", color.name());
+        Assert.assertArrayEquals(expected.toArray(new String[0]), testBean.currentEnvironment.toArray(new String[0]));
+        Assert.assertEquals("green", testBean.color.name());
+        Assert.assertNull(prototypeScopedTestBean.currentEnvironment);
+        Assert.assertEquals("green", prototypeScopedTestBean.color.name());
+    }
+
+    static class TestBean {
+
+        @Autowired
+        Color color;
+
+        @Tags
+        List<String> currentEnvironment;
     }
 
 }

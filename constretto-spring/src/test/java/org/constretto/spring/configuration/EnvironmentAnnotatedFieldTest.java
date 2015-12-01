@@ -16,6 +16,9 @@ import org.constretto.spring.annotation.Environment;
 import org.constretto.spring.assembly.helper.AlwaysDevelopmentEnvironmentResolver;
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 
 import java.util.List;
 
@@ -26,11 +29,18 @@ public class EnvironmentAnnotatedFieldTest {
 
     @Test
     public void givenClassWithEnvironmentAnnotatedPropertyThenInjectEnvironment() throws Exception {
-        TestClazz testClazz = new TestClazz();
         ConfigurationAnnotationConfigurer annotationConfigurer = new ConfigurationAnnotationConfigurer(
                 new DefaultConstrettoConfiguration(null), new AlwaysDevelopmentEnvironmentResolver());
+
+        TestClazz testClazz = new TestClazz();
+        annotationConfigurer.setBeanFactory(new TestBeanFactory(true));
         annotationConfigurer.postProcessAfterInstantiation(testClazz, "testBean");
         Assert.assertTrue(testClazz.getEnvironments().contains("development"));
+
+        TestClazz notSingletonTestClazz = new TestClazz();
+        annotationConfigurer.setBeanFactory(new TestBeanFactory(false));
+        annotationConfigurer.postProcessAfterInstantiation(notSingletonTestClazz, "testBean");
+        Assert.assertNull(notSingletonTestClazz.getEnvironments());
     }
 
     private class TestClazz {
@@ -40,6 +50,65 @@ public class EnvironmentAnnotatedFieldTest {
 
         public List<String> getEnvironments() {
             return environments;
+        }
+    }
+
+    private class TestBeanFactory implements BeanFactory {
+
+        private boolean singleton;
+
+        TestBeanFactory(boolean singleton) {
+            this.singleton = singleton;
+        }
+
+        @Override
+        public Object getBean(final String name) throws BeansException {
+            throw new UnsupportedOperationException("Not implemented");
+        }
+
+        @Override
+        public <T> T getBean(final String name, final Class<T> requiredType) throws BeansException {
+            throw new UnsupportedOperationException("Not implemented");
+        }
+
+        @Override
+        public <T> T getBean(final Class<T> requiredType) throws BeansException {
+            throw new UnsupportedOperationException("Not implemented");
+        }
+
+        @Override
+        public Object getBean(final String name, final Object... args) throws BeansException {
+            throw new UnsupportedOperationException("Not implemented");
+        }
+
+        @Override
+        public boolean containsBean(final String name) {
+            throw new UnsupportedOperationException("Not implemented");
+        }
+
+        @Override
+        public boolean isSingleton(final String name) throws NoSuchBeanDefinitionException {
+            return singleton;
+        }
+
+        @Override
+        public boolean isPrototype(final String name) throws NoSuchBeanDefinitionException {
+            throw new UnsupportedOperationException("Not implemented");
+        }
+
+        @Override
+        public boolean isTypeMatch(final String name, final Class<?> targetType) throws NoSuchBeanDefinitionException {
+            throw new UnsupportedOperationException("Not implemented");
+        }
+
+        @Override
+        public Class<?> getType(final String name) throws NoSuchBeanDefinitionException {
+            throw new UnsupportedOperationException("Not implemented");
+        }
+
+        @Override
+        public String[] getAliases(final String name) {
+            throw new UnsupportedOperationException("Not implemented");
         }
     }
 }
