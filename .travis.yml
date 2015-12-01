@@ -4,6 +4,7 @@ env:
   - secure: njJrgrBWrEHK86vEK8UlmM5SxlptsyU7ghWOPsQl5Dr0WvseZWtT/7A9bDPmcNxp2EJBx4xt0BAIDnhnqcHwdKDrYjpHPabneDipEchdm2p+vI96lqb1zZ5Du+xvQGzZlXPhf1VocWSFXRACAJ2+Nky6nbTrhKCr101kBA8oSe4=
 language: java
 jdk:
+- openjdk6
 - openjdk7
 - oraclejdk7
 - oraclejdk8
