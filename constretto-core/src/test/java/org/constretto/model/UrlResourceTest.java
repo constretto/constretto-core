@@ -35,11 +35,6 @@ public class UrlResourceTest {
         assertFalse(urlResource.exists());
     }
 
-    @Test
-    public void validUrlsThatDoExistShouldWork() throws Exception {
-        final UrlResource urlResource = new UrlResource("http://vg.no");
-        assertTrue(urlResource.exists());
-    }
 
     @Test
     public void testToString() throws Exception {
