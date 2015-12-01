@@ -114,6 +114,7 @@
         <slf4j.version>1.7.6</slf4j.version>
         <apacheds.version>1.5.7</apacheds.version>
         <system-rules.version>1.6.0</system-rules.version>
+        <embedded-ldap-junit.version>0.5.2</embedded-ldap-junit.version>
         <maven-javadoc-plugin.version>2.9.1</maven-javadoc-plugin.version>
         <maven-source-plugin.version>2.3</maven-source-plugin.version>
         <maven-gpg-plugin.version>1.5</maven-gpg-plugin.version>
