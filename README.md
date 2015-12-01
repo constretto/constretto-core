@@ -12,6 +12,13 @@ All current releases are compiled with target JDK 1.6. Starting with Constretto 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.constretto/constretto-core/badge.svg)](http://mvnrepository.com/artifact/org.constretto/constretto-core)
 [![Coverage Status](https://img.shields.io/coveralls/constretto/constretto-core.svg)](https://coveralls.io/r/constretto/constretto-core)
 
+## What's new in 2.2.3
+* fix issue affecting singleton in constretto-spring contributed by @nicolasyanncouturier in PR #59 
+* add support for "file://"-urls in the FileResource class. Contributed by @kenglxn in PR #58 
+* streamline build by removing the dependency on ApacheDS for building. Instead it will no use the [embedded-ldap-junit] (https://github.com/zapodot/embedded-ldap-junit) library for testing the LDAP integration
+* stop building with JDK6 (though still providing JDK6-compatible bytecode)
+* update deps: JUnit 4.12 (was 4.11), ini4j 0.5.4 (was 0.5.2) and snakeyml 1.16 (was 1.14)
+
 ## What's new in 2.2.2
 * Support for YAML store contributed by [hamnis](//github.com/hamnis) - pull request #48
 * Change scope of Constretto-test in the Constretto Spring module to "test" - pull request #47
