@@ -15,7 +15,7 @@ All current releases are compiled with target JDK 1.6. Starting with Constretto 
 ## What's new in 2.2.3
 * fix issue affecting singleton in constretto-spring contributed by @nicolasyanncouturier in PR #59 
 * add support for "file://"-urls in the FileResource class. Contributed by @kenglxn in PR #58 
-* streamline build by removing the dependency on ApacheDS for building. Instead it will no use the [embedded-ldap-junit] (https://github.com/zapodot/embedded-ldap-junit) library for testing the LDAP integration
+* streamline build by removing the build dependency on ApacheDS  in favour of the [embedded-ldap-junit] (https://github.com/zapodot/embedded-ldap-junit) library. 
 * stop building with JDK6 (though still providing JDK6-compatible bytecode)
 * update deps: JUnit 4.12 (was 4.11), ini4j 0.5.4 (was 0.5.2) and snakeyml 1.16 (was 1.14)
 
