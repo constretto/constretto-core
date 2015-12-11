@@ -3,6 +3,7 @@ package org.constretto.model;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertArrayEquals;
@@ -32,7 +33,7 @@ public class CArrayTest {
 
     @Test
     public void testReferencedKeys() throws Exception {
-        assertEquals(0, cArray.referencedKeys().size());
+        assertEquals(false, cArray.referencedKeys().iterator().hasNext());
     }
 
     @Test(expected = NullPointerException.class)
@@ -44,7 +45,13 @@ public class CArrayTest {
     @Test
     public void testReplace() throws Exception {
         final CArray arrayWithKey = new CArray(Arrays.<CValue>asList(new CPrimitive("#{key}")));
-        assertEquals(1, arrayWithKey.referencedKeys().size());
+
+        ArrayList<String> objects = new ArrayList<String>();
+        for (String s : arrayWithKey.referencedKeys()) {
+            objects.add(s);
+        }
+
+        assertEquals(1, objects.size());
         arrayWithKey.replace("key", VALUE_ONE);
         assertArrayEquals(new CValue[]{PRIMITIVE_ONE}, arrayWithKey.data().toArray(new CValue[]{}));
 

@@ -1,8 +1,11 @@
 package org.constretto.model;
 
-import org.apache.commons.lang.StringUtils;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
-import java.util.*;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * @author <a href="mailto:kaare.nilsen@arktekk.no">Kaare Nilsen</a>
@@ -23,12 +26,13 @@ public class CArray extends CValue {
     }
 
     @Override
-    public Set<String> referencedKeys() {
-        Set<String> referencedKeys = new HashSet<String>();
+    public Iterable<String> referencedKeys() {
+        List<Iterable<String>> referencedKeys = new ArrayList<Iterable<String>>();
         for (CValue value : data) {
-            referencedKeys.addAll(value.referencedKeys());
+            referencedKeys.add(value.referencedKeys());
         }
-        return referencedKeys;
+        return new Iter<String>(referencedKeys.toArray(new Iterable[0]));
+
     }
 
     @Override

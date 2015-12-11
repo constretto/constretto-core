@@ -119,6 +119,18 @@ public abstract class AbstractConfigurationProviderLookupTest {
     }
 
     @Test
+    public void simpleLookupForKeyContainingReferencesToOtherKeyRecurive() {
+        ConstrettoConfiguration constrettoConfiguration = prepareTests();
+        assertEquals("recursive works at end", constrettoConfiguration.evaluateToString("recursive"));
+    }
+
+    @Test
+    public void simpleLookupForKeyContainingReferencesToOtherKeyNested() {
+        ConstrettoConfiguration constrettoConfiguration = prepareTests();
+        assertEquals("testuser", constrettoConfiguration.evaluateToString("nested"));
+    }
+
+    @Test
     public void taggedLookupForKeyContainingReferencesToOtherKeys() {
         ConstrettoConfiguration constrettoConfiguration = prepareTests();
         assertEquals("http://webservice/customer", constrettoConfiguration.evaluateToString("webservice.customer"));
