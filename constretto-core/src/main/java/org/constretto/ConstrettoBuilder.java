@@ -38,17 +38,27 @@ public class ConstrettoBuilder {
     private final boolean enableSystemProps;
     private final Parser parser = new GsonParser();
 
+    /**
+     * @deprecated use the factory method @link{#empty} instead
+     */
+    @Deprecated
     public ConstrettoBuilder() {
         this(new DefaultConfigurationContextResolver(), true);
     }
 
+    /**
+     * @param enableSystemProps a boolean that decides whether system properties are added to the configuration or not
+     * @deprecated use the factory method @link{#empty(boolean)} instead
+     */
+    @Deprecated
     public ConstrettoBuilder(boolean enableSystemProps) {
         this(new DefaultConfigurationContextResolver(), enableSystemProps);
     }
 
+
     public ConstrettoBuilder(ConfigurationContextResolver configurationContextResolver, boolean enableSystemProps) {
-        this.configurationStores = new ArrayList<ConfigurationStore>();
-        this.tags = new ArrayList<String>();
+        this.configurationStores = new ArrayList<>();
+        this.tags = new ArrayList<>();
         this.enableSystemProps = enableSystemProps;
         for (String tag : configurationContextResolver.getTags()) {
             addCurrentTag(tag);
@@ -58,17 +68,81 @@ public class ConstrettoBuilder {
         }
     }
 
+
     private ConstrettoBuilder(List<ConfigurationStore> configurationStores, List<String> tags, boolean enableSystemProps) {
         this.enableSystemProps = enableSystemProps;
         this.configurationStores = configurationStores;
         this.tags = tags;
     }
 
+    /**
+     * Creates a new ConstrettoBuilder with a system properties store added
+     *
+     * @param contextResolver the contextResolver implementation to use to find out what the context should be
+     * @return a new ConstrettoBuilder instance
+     */
+    public static ConstrettoBuilder withSystemProperties(final ConfigurationContextResolver contextResolver) {
+        return new ConstrettoBuilder(contextResolver, true);
+    }
+
+    /**
+     * Creates a new ConstrettoBuilder with a system properties store added and using
+     * the DefaultConfigurationContextResolver to resolve configuration context
+     *
+     * @return a new ConstrettoBuilder instance
+     */
+    public static ConstrettoBuilder withSystemProperties() {
+        return withSystemProperties(new DefaultConfigurationContextResolver());
+    }
+
+    /**
+     * Creates an empty ConstrettoBuilder using the DefaultConfigurationContextResolver to resolve
+     * the configuration context
+     *
+     * @return a new ConstrettoBuilder
+     */
+    public static ConstrettoBuilder empty() {
+        return empty(new DefaultConfigurationContextResolver());
+    }
+
+    /**
+     * Creates an empty ConstrettoBuilder
+     *
+     * @param configurationContextResolver the ConfigurationContextResolver to use to resolve the context
+     * @return a new ConstrettoBuilder
+     */
+    public static ConstrettoBuilder empty(final ConfigurationContextResolver configurationContextResolver) {
+        return new ConstrettoBuilder(configurationContextResolver, false);
+    }
+
+    /**
+     * Creates a new ConstrettoBuilder instance based on an existing configuration. Configuration keys are considered be tagged with the default tag
+     *
+     * @param constrettoConfiguration      an existing constrettoConfiguration instance
+     * @param configurationContextResolver the configurationContextResolver to use for the resulting constrettoConfiguration
+     * @return a new builder with the existing configuration added
+     */
+    public static ConstrettoBuilder fromExistingConfiguration(final ConstrettoConfiguration constrettoConfiguration, final ConfigurationContextResolver configurationContextResolver) {
+        Objects.requireNonNull(constrettoConfiguration, "The \"constrettoConfiguration\" argument can not be null");
+        Objects.requireNonNull(configurationContextResolver, "The \"configurationContextResolver\" argument can not be null");
+        return new ConstrettoBuilder(configurationContextResolver, false).addExistingConfiguration(constrettoConfiguration);
+    }
+
+    /**
+     * Creates a new ConstrettoBuilder instance based on an existing constrettoConfiguration using the default ConfigurationContextResolver
+     *
+     * @param constrettoConfiguration an existing constrettoConfiguration instance
+     * @return a new builder with the existing configuration added
+     */
+    public static ConstrettoBuilder fromExistingConfiguration(final ConstrettoConfiguration constrettoConfiguration) {
+        return fromExistingConfiguration(constrettoConfiguration, new DefaultConfigurationContextResolver());
+    }
+
 
     public ConstrettoConfiguration getConfiguration() {
         addOverrideStores();
 
-        Map<String, List<ConfigurationValue>> configuration = new HashMap<String, List<ConfigurationValue>>();
+        Map<String, List<ConfigurationValue>> configuration = new HashMap<>();
         Collection<TaggedPropertySet> taggedPropertySets = loadPropertySets();
         for (TaggedPropertySet taggedPropertySet : taggedPropertySets) {
             Map<String, String> properties = taggedPropertySet.getProperties();
@@ -76,13 +150,13 @@ public class ConstrettoBuilder {
                 if (configuration.containsKey(entry.getKey())) {
                     List<ConfigurationValue> values = configuration.get(entry.getKey());
                     if (values == null) {
-                        values = new ArrayList<ConfigurationValue>();
+                        values = new ArrayList<>();
                     }
                     values.add(new ConfigurationValue(parser.parse(entry.getValue()), taggedPropertySet.tag()));
                     configuration.put(entry.getKey(), values);
 
                 } else {
-                    List<ConfigurationValue> values = new ArrayList<ConfigurationValue>();
+                    List<ConfigurationValue> values = new ArrayList<>();
                     values.add(new ConfigurationValue(parser.parse(entry.getValue()), taggedPropertySet.tag()));
                     configuration.put(entry.getKey(), values);
                 }
@@ -120,9 +194,26 @@ public class ConstrettoBuilder {
         return new ConstrettoBuilder(configurationStores, tags, enableSystemProps);
     }
 
+    /**
+     * Add configuration store to the builder
+     *
+     * @param configurationStore the store to added
+     * @return the same ConstrettoBuilder with the given ConfigurationStore added
+     */
     public ConstrettoBuilder addConfigurationStore(ConfigurationStore configurationStore) {
         configurationStores.add(configurationStore);
         return new ConstrettoBuilder(configurationStores, tags, enableSystemProps);
+    }
+
+    /**
+     * Adds an existing configuration to be used as a configuration source
+     *
+     * @param constrettoConfiguration the configuration to be added
+     * @return
+     */
+    public ConstrettoBuilder addExistingConfiguration(final ConstrettoConfiguration constrettoConfiguration) {
+        addConfigurationStore(new NestedConfigurationStore(constrettoConfiguration));
+        return this;
     }
 
     public PropertiesStoreBuilder createPropertiesStore() {
@@ -155,7 +246,7 @@ public class ConstrettoBuilder {
     }
 
     private Collection<TaggedPropertySet> loadPropertySets() {
-        List<TaggedPropertySet> taggedPropertySets = new ArrayList<TaggedPropertySet>();
+        List<TaggedPropertySet> taggedPropertySets = new ArrayList<>();
         for (ConfigurationStore configurationStore : configurationStores) {
             taggedPropertySets.addAll(configurationStore.parseConfiguration());
         }
@@ -172,7 +263,7 @@ public class ConstrettoBuilder {
 //
 
     private interface StoreBuilder {
-        public ConstrettoBuilder done();
+        ConstrettoBuilder done();
     }
 
     private abstract class ContributingStoreBuilder implements StoreBuilder {
@@ -324,7 +415,7 @@ public class ConstrettoBuilder {
 
     }
 
-    public class WrappedLdapConfigurationStoreBuilder extends ContributingStoreBuilder{
+    public class WrappedLdapConfigurationStoreBuilder extends ContributingStoreBuilder {
 
         private LdapConfigurationStoreBuilder ldapConfigurationStoreBuilder;
 
@@ -333,8 +424,8 @@ public class ConstrettoBuilder {
         }
 
         public WrappedLdapConfigurationStoreBuilder addDsnWithKey(final String key,
-                                                           final String distinguishedName,
-                                                           final String... tags) {
+                                                                  final String distinguishedName,
+                                                                  final String... tags) {
             ldapConfigurationStoreBuilder.addDsnWithKey(key, distinguishedName, tags);
             return this;
         }
@@ -345,8 +436,8 @@ public class ConstrettoBuilder {
         }
 
         public WrappedLdapConfigurationStoreBuilder addUsingSearch(final String searchBase,
-                                                            final String filter,
-                                                            final String keyAttribute, final String... tags) {
+                                                                   final String filter,
+                                                                   final String keyAttribute, final String... tags) {
             ldapConfigurationStoreBuilder.addUsingSearch(searchBase, filter, keyAttribute, tags);
             return this;
         }
@@ -357,7 +448,6 @@ public class ConstrettoBuilder {
         }
 
     }
-
 
 
 }

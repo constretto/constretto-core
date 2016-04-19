@@ -22,6 +22,11 @@ import org.constretto.exception.ConstrettoException;
 import org.constretto.internal.ConstrettoUtils;
 import org.constretto.model.ConfigurationValue;
 import org.constretto.model.TaggedPropertySet;
+import org.reflections.Reflections;
+import org.reflections.scanners.MethodParameterScanner;
+import org.reflections.scanners.TypeAnnotationsScanner;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
 
 import java.beans.PropertyDescriptor;
 import java.util.*;
@@ -33,7 +38,7 @@ public class ObjectConfigurationStore implements ConfigurationStore {
     private final List<Object> configurationObjects;
 
     public ObjectConfigurationStore() {
-        configurationObjects = new ArrayList<Object>();
+        configurationObjects = new ArrayList<>();
     }
 
     private ObjectConfigurationStore(List<Object> configurationObjects) {
@@ -46,7 +51,8 @@ public class ObjectConfigurationStore implements ConfigurationStore {
     }
 
     public Collection<TaggedPropertySet> parseConfiguration() {
-        Map<String, TaggedPropertySet> propertySets = new HashMap<String, TaggedPropertySet>();
+        Map<String, TaggedPropertySet> propertySets = new HashMap<>();
+
         for (Object configurationObject : configurationObjects) {
             TaggedPropertySet taggedPropertySet = createPropertySetForObject(configurationObject);
             if (propertySets.containsKey(taggedPropertySet.tag())) {
@@ -61,6 +67,15 @@ public class ObjectConfigurationStore implements ConfigurationStore {
         return propertySets.values();
     }
 
+    private Reflections createReflections() {
+        final ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
+        configurationBuilder.setScanners(new TypeAnnotationsScanner(), new MethodParameterScanner());
+        for (Object configurationObject : configurationObjects) {
+            configurationBuilder.addUrls(ClasspathHelper.forClass(configurationObject.getClass(), configurationObject.getClass().getClassLoader()));
+        }
+        return new Reflections(configurationBuilder);
+    }
+
     private TaggedPropertySet createPropertySetForObject(Object configurationObject) {
         String tag = ConfigurationValue.DEFAULT_TAG;
         String basePath = "";
@@ -73,6 +88,7 @@ public class ObjectConfigurationStore implements ConfigurationStore {
             }
             basePath = configurationAnnotation.basePath();
         }
+
 
         for (PropertyDescriptor propertyDescriptor : PropertyUtils.getPropertyDescriptors(configurationObject)) {
             boolean canRead = propertyDescriptor.getReadMethod() != null;

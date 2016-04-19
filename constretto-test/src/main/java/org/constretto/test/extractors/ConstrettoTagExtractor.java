@@ -8,15 +8,21 @@ import org.junit.runner.Description;
  *
  * @author <a href=mailto:zapodot@gmail.com>Sondre Eikanger Kval&oslash;</a>
  */
-public class ConstrettoTagExtractor {
+public class ConstrettoTagExtractor implements TagExtractor {
 
-    public static String[] findTagValueForDescription(final Description description) {
-        final Tags tagValues = getClassAnnotation(description);
+
+    @Override
+    public String[] findTagsForTest(final Description testDescription) {
+        final Tags tagValues = getClassAnnotation(testDescription);
         if (tagValues == null) {
             return null;
         } else {
             return tagValues.value();
         }
+    }
+
+    public static String[] findTagValueForDescription(final Description description) {
+        return new ConstrettoTagExtractor().findTagsForTest(description);
     }
 
     private static Tags getClassAnnotation(final Description description) {

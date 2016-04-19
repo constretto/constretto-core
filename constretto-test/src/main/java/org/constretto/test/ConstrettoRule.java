@@ -19,7 +19,6 @@ import org.junit.runners.model.Statement;
 
 import static org.constretto.internal.ConstrettoUtils.asCsv;
 import static org.constretto.internal.resolver.DefaultConfigurationContextResolver.TAGS;
-import static org.constretto.spring.internal.resolver.DefaultAssemblyContextResolver.ASSEMBLY_KEY;
 
 /**
  * Sets the <code>CONSTRETTO_TAGS</code> and <code>CONSTRETTO_ENV</code> system properties corresponding to
@@ -28,6 +27,8 @@ import static org.constretto.spring.internal.resolver.DefaultAssemblyContextReso
  * @author <a href="mailto:from.github@nisgits.net">Stig Kleppe-Jorgensen</a>, 2013.01.14
  */
 public class ConstrettoRule implements TestRule {
+
+    private static final String ASSEMBLY_KEY = "CONSTRETTO_ENV";
 
     @Override
     public Statement apply(final Statement base, final Description description) {
