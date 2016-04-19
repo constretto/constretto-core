@@ -1,10 +1,11 @@
 package org.constretto.test.extractors;
 
-import org.constretto.spring.annotation.Environment;
+import org.constretto.exception.ConstrettoException;
 import org.junit.runner.Description;
-import org.reflections.Reflections;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * Class that helps extracting environment information from a test Class. Used by the {@link org.constretto.test.ConstrettoRule} class.
@@ -16,19 +17,19 @@ public class ConstrettoEnvironmentExtractor implements TagExtractor {
     @Override
     public String[] findTagsForTest(final Description testDescription) {
         Class<? extends Annotation> environmentAnnotationType = environmentAnnotation();
-        return environmentAnnotationType == null ? null : testDescription.getTestClass().getAnnotation(environmentAnnotationType).
-        final Environment environment = testDescription.getTestClass().getAnnotation();
-        return environment == null ? null : environment.value();
-    }
-
-    private <T extends Annotation> T extractAnnotationValueForTestClass(final Class<?> testClazz) {
-        Class<? extends Annotation> environmentAnnotationType = environmentAnnotation();
-        if (environmentAnnotationType != null) {
-            final Annotation annotation = testClazz.getAnnotation(environmentAnnotationType);
-            new Reflections()
-        } else {
+        final Annotation envAnnotation = testDescription.getTestClass().getAnnotation(environmentAnnotationType);
+        if (envAnnotation == null) {
             return null;
+        } else {
+            try {
+                final Method valueMethod;
+                valueMethod = envAnnotation.getClass().getMethod("value");
+                return (String[]) valueMethod.invoke(envAnnotation);
+            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                throw new ConstrettoException("Could not extract environment from test class", e);
+            }
         }
+
     }
 
     private Class<? extends Annotation> environmentAnnotation() {
@@ -40,9 +41,8 @@ public class ConstrettoEnvironmentExtractor implements TagExtractor {
     }
 
 
-
     /**
-     * Extracts the value of the {@link Environment} annotation for the test class containing the given test method.
+     * Extracts the value of the {@link org.constretto.spring.annotation.Environment} annotation for the test class containing the given test method.
      *
      * @param description
      * @return an array with the specified values or null
