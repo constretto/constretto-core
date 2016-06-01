@@ -33,6 +33,11 @@ public class ClassPathResourceTest {
     public void testToString() throws Exception {
         final ClassPathResource classPathResource = new ClassPathResource(NON_EXISITING_CLASSPATH_RESOURCE);
         assertEquals("ClassPathResource{path='" + NON_EXISITING_CLASSPATH_RESOURCE + "'}", classPathResource.toString());
+    }
 
+    @Test
+    public void testGetPath() throws Exception {
+        final ClassPathResource classPathResource = new ClassPathResource(NON_EXISITING_CLASSPATH_RESOURCE);
+        assertEquals(NON_EXISITING_CLASSPATH_RESOURCE, classPathResource.getPath());
     }
 }

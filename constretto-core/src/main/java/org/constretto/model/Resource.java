@@ -52,4 +52,8 @@ public abstract class Resource {
         sb.append('}');
         return sb.toString();
     }
+
+    public String getPath(){
+        return this.path;
+    }
 }
