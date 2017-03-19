@@ -11,6 +11,7 @@ All current releases are compiled with target JDK 1.6. Starting with Constretto 
 [![Build Status](https://travis-ci.org/constretto/constretto-core.png)](https://travis-ci.org/constretto/constretto-core)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.constretto/constretto-core/badge.svg)](http://mvnrepository.com/artifact/org.constretto/constretto-core)
 [![Coverage Status](https://img.shields.io/coveralls/constretto/constretto-core.svg)](https://coveralls.io/r/constretto/constretto-core)
+[![Libraries.io for GitHub](https://img.shields.io/librariesio/github/constretto/constretto-core.svg)](https://libraries.io/github/constretto/constretto-core)
 
 ## What's new in 2.2.3
 * fix issue affecting singleton in constretto-spring contributed by @nicolasyanncouturier in PR #59 
