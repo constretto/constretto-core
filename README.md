@@ -513,7 +513,7 @@ somedb.username=default username
 @systest.somedb.username=username in system test
 ```
 
-###Ini Files
+### Ini Files
 
 Constretto also supports Ini files and here, sections are used as tags
 
