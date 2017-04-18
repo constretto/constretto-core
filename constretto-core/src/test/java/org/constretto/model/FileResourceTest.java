@@ -59,6 +59,13 @@ public class FileResourceTest {
         assertEquals("FileResource{path='file:src/test/resources/cache1.ini'}", fileResource.toString());
     }
 
+    @Test
+    public void testGetPath() throws Exception {
+        String testPath = "file:src/test/resources/cache1.ini";
+        final FileResource fileResource = new FileResource(testPath);
+        assertEquals(fileResource.getPath(), testPath);
+    }
+
     /**
      * If file name starts with file: chances are it is a file url.
      * Constretto should decode this url since it uses new File(String) which does not support

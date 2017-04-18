@@ -40,7 +40,13 @@ public class UrlResourceTest {
     public void testToString() throws Exception {
         final UrlResource urlResource = new UrlResource("http://vg.no");
         assertEquals("UrlResource{path='http://vg.no'}", urlResource.toString());
+    }
 
+
+    @Test
+    public void testGetPath() throws Exception {
+        final UrlResource urlResource = new UrlResource("http://vg.no");
+        assertEquals(urlResource.getPath(), "http://vg.no");
     }
 
 }
