@@ -37,6 +37,7 @@ public class ConstrettoBuilder {
     private final List<String> tags;
     private final boolean enableSystemProps;
     private final Parser parser = new GsonParser();
+    private final Map<String, RemoteConfigurationStore> remoteConfigurationStore;
 
     public ConstrettoBuilder() {
         this(new DefaultConfigurationContextResolver(), true);
@@ -48,6 +49,7 @@ public class ConstrettoBuilder {
 
     public ConstrettoBuilder(ConfigurationContextResolver configurationContextResolver, boolean enableSystemProps) {
         this.configurationStores = new ArrayList<ConfigurationStore>();
+        this.remoteConfigurationStore = new HashMap<String, RemoteConfigurationStore>();
         this.tags = new ArrayList<String>();
         this.enableSystemProps = enableSystemProps;
         for (String tag : configurationContextResolver.getTags()) {
@@ -58,9 +60,10 @@ public class ConstrettoBuilder {
         }
     }
 
-    private ConstrettoBuilder(List<ConfigurationStore> configurationStores, List<String> tags, boolean enableSystemProps) {
+    private ConstrettoBuilder(List<ConfigurationStore> configurationStores, Map<String, RemoteConfigurationStore> remoteConfigurationStores, List<String> tags, boolean enableSystemProps) {
         this.enableSystemProps = enableSystemProps;
         this.configurationStores = configurationStores;
+        this.remoteConfigurationStore = remoteConfigurationStores;
         this.tags = tags;
     }
 
@@ -88,7 +91,7 @@ public class ConstrettoBuilder {
                 }
             }
         }
-        return new DefaultConstrettoConfiguration(configuration, tags);
+        return new DefaultConstrettoConfiguration(configuration, remoteConfigurationStore, tags);
     }
 
     private void addOverrideStores() {
@@ -117,12 +120,17 @@ public class ConstrettoBuilder {
 
     public ConstrettoBuilder addCurrentTag(String tag) {
         tags.add(tag);
-        return new ConstrettoBuilder(configurationStores, tags, enableSystemProps);
+        return new ConstrettoBuilder(configurationStores, remoteConfigurationStore, tags, enableSystemProps);
     }
 
     public ConstrettoBuilder addConfigurationStore(ConfigurationStore configurationStore) {
         configurationStores.add(configurationStore);
-        return new ConstrettoBuilder(configurationStores, tags, enableSystemProps);
+        return new ConstrettoBuilder(configurationStores, remoteConfigurationStore, tags, enableSystemProps);
+    }
+
+    public ConstrettoBuilder addRemoteConfigurationStore(String schema, RemoteConfigurationStore remote) {
+        remoteConfigurationStore.put(schema, remote);
+        return new ConstrettoBuilder(configurationStores, remoteConfigurationStore, tags, enableSystemProps);
     }
 
     public PropertiesStoreBuilder createPropertiesStore() {
@@ -143,7 +151,7 @@ public class ConstrettoBuilder {
 
     public ConstrettoBuilder createSystemPropertiesStore() {
         configurationStores.add(new SystemPropertiesStore());
-        return new ConstrettoBuilder(configurationStores, tags, enableSystemProps);
+        return new ConstrettoBuilder(configurationStores, remoteConfigurationStore, tags, enableSystemProps);
     }
 
     public ObjectConfigurationStoreBuilder createObjectConfigurationStore() {
@@ -182,7 +190,7 @@ public class ConstrettoBuilder {
         @Override
         final public ConstrettoBuilder done() {
             configurationStores.add(createStore());
-            return new ConstrettoBuilder(configurationStores, tags, enableSystemProps);
+            return new ConstrettoBuilder(configurationStores, remoteConfigurationStore, tags, enableSystemProps);
         }
     }
 

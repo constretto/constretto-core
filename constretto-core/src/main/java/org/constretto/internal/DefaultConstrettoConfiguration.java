@@ -21,6 +21,7 @@ import org.constretto.ConfigurationDefaultValueFactory;
 import org.constretto.ConstrettoConfiguration;
 import org.constretto.GenericConverter;
 import org.constretto.Property;
+import org.constretto.RemoteConfigurationStore;
 import org.constretto.annotation.Configuration;
 import org.constretto.annotation.Configure;
 import org.constretto.annotation.Tags;
@@ -32,12 +33,15 @@ import org.constretto.internal.introspect.Constructors;
 import org.constretto.model.CPrimitive;
 import org.constretto.model.CValue;
 import org.constretto.model.ConfigurationValue;
+import org.constretto.model.RemoteProperty;
 
 import java.lang.annotation.Annotation;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.*;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static java.util.Arrays.asList;
 import static org.constretto.internal.GenericCollectionTypeResolver.*;
@@ -51,17 +55,20 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     private final Paranamer paranamer = new BytecodeReadingParanamer();
 
     protected final Map<String, List<ConfigurationValue>> configuration;
+    protected final Map<String, RemoteConfigurationStore> remoteConfigurationStore;
     private Set<WeakReference<Object>> configuredObjects = new CopyOnWriteArraySet<WeakReference<Object>>();
     private final List<String> originalTags = new ArrayList<String>();
     protected final List<String> currentTags = new ArrayList<String>();
 
-    public DefaultConstrettoConfiguration(Map<String, List<ConfigurationValue>> configuration, List<String> originalTags) {
+    public DefaultConstrettoConfiguration(Map<String, List<ConfigurationValue>> configuration, Map<String, RemoteConfigurationStore> remoteConfigurationStore, List<String> originalTags) {
         this.configuration = configuration;
+        this.remoteConfigurationStore = remoteConfigurationStore;
         this.originalTags.addAll(originalTags);
         this.currentTags.addAll(originalTags);
     }
 
     public DefaultConstrettoConfiguration(Map<String, List<ConfigurationValue>> configuration) {
+        this.remoteConfigurationStore = new HashMap<String, RemoteConfigurationStore>();
         this.configuration = configuration;
     }
 
@@ -266,13 +273,28 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
     }
 
     protected ConfigurationValue findElementOrThrowException(String expression) {
-        if (!configuration.containsKey(expression)) {
+        ConfigurationValue elementOrNull = findElementOrNull(expression);
+        if (elementOrNull == null) {
             throw new ConstrettoExpressionException(expression, currentTags);
         }
-        List<ConfigurationValue> values = configuration.get(expression);
+        return elementOrNull;
+    }
+
+
+    protected ConfigurationValue findElementOrNull(String expression) {
+        List<ConfigurationValue> values;
+        if (startsWithSchema(expression)) {
+            values = getRemoteValue(expression);
+        }
+        else {
+            if (!configuration.containsKey(expression)) {
+                return null;
+            }
+            values = configuration.get(expression);
+        }
         ConfigurationValue resolvedNode = resolveMatch(values);
         if (resolvedNode == null) {
-            throw new ConstrettoExpressionException(expression, currentTags);
+            return null;
         }
         if (resolvedNode.value().containsVariables()) {
             for (String key : resolvedNode.value().referencedKeys()) {
@@ -282,22 +304,28 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
         return resolvedNode;
     }
 
-
-    protected ConfigurationValue findElementOrNull(String expression) {
-        if (!configuration.containsKey(expression)) {
-            return null;
-        }
-        List<ConfigurationValue> values = configuration.get(expression);
-        ConfigurationValue resolvedNode = resolveMatch(values);
-        if (resolvedNode == null) {
-            return null;
-        }
-        if (resolvedNode.value().containsVariables()) {
-            for (String key : resolvedNode.value().referencedKeys()) {
-                resolvedNode.value().replace(key, evaluateToString(key));
+    private List<ConfigurationValue> getRemoteValue(String expression) {
+        List<ConfigurationValue> values;
+        String[] schemaAndExpression = expression.split(":", 2);
+        if (remoteConfigurationStore.containsKey(schemaAndExpression[0])) {
+            RemoteProperty value = remoteConfigurationStore.get(schemaAndExpression[0]).getValue(schemaAndExpression[1], currentTags);
+            if (value.exists()) {
+                values = asList(new ConfigurationValue(new CPrimitive(value.getProperty()), ConfigurationValue.ALL_TAG));
+            }
+            else {
+                values = Collections.emptyList();
             }
         }
-        return resolvedNode;
+        else {
+            throw new ConstrettoException("Schema " + schemaAndExpression[0] + ": is not registered, and therefore could not resolve" + expression);
+        }
+        return values;
+    }
+
+    private boolean startsWithSchema(String expression) {
+        Pattern compile = Pattern.compile("^\\w+:");
+        Matcher matcher = compile.matcher(expression);
+        return matcher.find();
     }
 
     @SuppressWarnings("unchecked")
