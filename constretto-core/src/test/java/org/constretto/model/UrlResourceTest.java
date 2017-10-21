@@ -37,14 +37,14 @@ public class UrlResourceTest {
 
     @Test
     public void validUrlsThatDoExistShouldWork() throws Exception {
-        final UrlResource urlResource = new UrlResource("http://vg.no");
+        final UrlResource urlResource = new UrlResource("http://google.com");
         assertTrue(urlResource.exists());
     }
 
     @Test
     public void testToString() throws Exception {
-        final UrlResource urlResource = new UrlResource("http://vg.no");
-        assertEquals("UrlResource{path='http://vg.no'}", urlResource.toString());
+        final UrlResource urlResource = new UrlResource("http://google.com");
+        assertEquals("UrlResource{path='http://google.com'}", urlResource.toString());
 
     }
 
