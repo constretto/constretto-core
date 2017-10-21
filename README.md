@@ -18,12 +18,12 @@ Constretto is built with maven and deployed to the central maven repository, so 
 <dependency>
     <groupId>org.constretto</groupId>
     <artifactId>constretto-api</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>3.0.0-BETA-1</version>
 </dependency>
 <dependency>
     <groupId>org.constretto</groupId>
     <artifactId>constretto-core</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>3.0.0-BETA-1</version>
     <scope>runtime</scope>
 </dependency>
 ```
@@ -44,7 +44,7 @@ If you would like to use the Constretto Junit support add:
 <dependency>
     <groupId>org.constretto</groupId>
     <artifactId>constretto-test</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>3.0.0-BETA-1</version>
     <scope>test</scope>
 </dependency>
 ```
