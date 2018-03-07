@@ -10,6 +10,7 @@ Starting with Constretto 3 all releases requires Java 7 or later
 [![Build Status](https://travis-ci.org/constretto/constretto-core.png)](https://travis-ci.org/constretto/constretto-core)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.constretto/constretto-core/badge.svg)](http://mvnrepository.com/artifact/org.constretto/constretto-core)
 [![Coverage Status](https://img.shields.io/coveralls/constretto/constretto-core.svg)](https://coveralls.io/r/constretto/constretto-core)
+[![Open Source Helpers](https://www.codetriage.com/constretto/constretto-core/badges/users.svg)](https://www.codetriage.com/constretto/constretto-core)
 
 ## How to Install?
 Constretto is built with maven and deployed to the central maven repository, so if you are using maven, you can simply add Constretto as dependencies in your pom:
