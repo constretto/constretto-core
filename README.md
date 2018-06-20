@@ -35,9 +35,10 @@ If you would like to use the Spring support add:
 <dependency>
     <groupId>org.constretto</groupId>
     <artifactId>constretto-spring</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>3.0.0-BETA1</version>
 </dependency>
 ```
+*Note*: The Spring extension is now a [separate project](//github.com/constretto/constretto-spring)
 
 If you would like to use the Constretto Junit support add:
 
