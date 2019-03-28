@@ -45,6 +45,7 @@ public class ConfigurationAnnotationsTest {
         setProperty("password", "password");
         setProperty("vendor", "derby");
         setProperty("version", "10");
+        setProperty("derby.system.home", "C:\\home\\Derby\\");
         setProperty("array", "[\"one\",\"two\",\"three\"]");
         setProperty("map", "{\"1\":\"10\",\"2\":\"20\"}");
         configuration = new ConstrettoBuilder().createSystemPropertiesStore().getConfiguration();
@@ -69,6 +70,7 @@ public class ConfigurationAnnotationsTest {
         assertEquals("username", customerDataSource.getUsername());
         assertEquals("jdbc://url", customerDataSource.getUrl());
         assertEquals("password", customerDataSource.getPassword());
+        assertEquals("C:\\home\\Derby\\", customerDataSource.homeDir);
         assertEquals(new Integer(10), customerDataSource.getVersion());
     }
 
