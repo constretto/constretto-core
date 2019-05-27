@@ -98,7 +98,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <mockito.version>1.9.5</mockito.version>
+        <mockito.version>1.10.19</mockito.version>
         <jsr250.version>1.0</jsr250.version>
         <ini4j.version>0.5.4</ini4j.version>
         <snakeyaml.version>1.17</snakeyaml.version>
