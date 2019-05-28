@@ -103,7 +103,7 @@
         <ini4j.version>0.5.4</ini4j.version>
         <snakeyaml.version>1.17</snakeyaml.version>
         <commons-lang.version>2.6</commons-lang.version>
-        <jasypt.version>1.9.1</jasypt.version>
+        <jasypt.version>1.9.3</jasypt.version>
         <gson.version>2.2.4</gson.version>
         <commons-beanutils.version>1.9.2</commons-beanutils.version>
         <paranamer.version>2.5.2</paranamer.version>
