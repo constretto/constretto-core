@@ -1,15 +1,12 @@
 package org.constretto.model;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Iterator;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author <a href="mailto:kaare.nilsen@arktekk.no">Kaare Nilsen</a>
  */
 public class CPrimitive extends CValue {
-    private static final Pattern VARIABLE_PATTERN = Pattern.compile("#\\{(.*?)}");
     private String value;
 
     public CPrimitive(String value) {
@@ -25,14 +22,53 @@ public class CPrimitive extends CValue {
     }
 
     @Override
-    public Set<String> referencedKeys() {
-        Set<String> referencedKeys = new HashSet<String>();
-        Matcher matcher = VARIABLE_PATTERN.matcher(value);
-        while (matcher.find()) {
-            String group = matcher.group(1);
-            referencedKeys.add(group);
-        }
-        return referencedKeys;
+    public Iterable<String> referencedKeys() {
+
+        final Iterator<String> iterator = new Iterator<String>() {
+
+            Boolean hasNext;
+            String s;
+
+            @Override
+            public boolean hasNext() {
+                if (hasNext != null) {
+                    return hasNext;
+                }
+
+                String prefix = "#{", postfix = "}";
+
+                int startIndex = value.lastIndexOf(prefix);
+                if (startIndex < 0) {
+                    hasNext = false;
+                    return false;
+                }
+                int endIndex = value.indexOf(postfix, startIndex);
+                if (endIndex < 0) {
+                    hasNext = false;
+                    return false;
+                }
+                s = value.substring(startIndex + prefix.length(), endIndex);
+
+                return true;
+            }
+
+            @Override
+            public String next() {
+                return s;
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException("Remove not supported");
+            }
+        };
+
+        return new Iterable<String>() {
+            @Override
+            public Iterator<String> iterator() {
+                return iterator;
+            }
+        };
     }
 
     @Override

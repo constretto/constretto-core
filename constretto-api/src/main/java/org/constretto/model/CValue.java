@@ -1,5 +1,6 @@
 package org.constretto.model;
 
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -7,10 +8,10 @@ import java.util.Set;
  */
 public abstract class CValue {
 
-    public abstract Set<String> referencedKeys();
+    public abstract Iterable<String> referencedKeys();
 
     public boolean containsVariables() {
-        return !referencedKeys().isEmpty();
+        return referencedKeys().iterator().hasNext();
     }
 
     public boolean isArray(){
