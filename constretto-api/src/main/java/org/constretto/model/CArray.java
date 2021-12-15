@@ -12,7 +12,7 @@ public class CArray extends CValue {
 
     public CArray(final List<CValue> data) {
 
-        if(data == null) {
+        if (data == null) {
             throw new NullPointerException("The \"data\" argument can not be null");
         }
         this.data = Arrays.asList(data.toArray(new CValue[]{}));
@@ -26,7 +26,9 @@ public class CArray extends CValue {
     public Set<String> referencedKeys() {
         Set<String> referencedKeys = new HashSet<String>();
         for (CValue value : data) {
-            referencedKeys.addAll(value.referencedKeys());
+            if (value != null) {
+                referencedKeys.addAll(value.referencedKeys());
+            }
         }
         return referencedKeys;
     }
@@ -34,7 +36,9 @@ public class CArray extends CValue {
     @Override
     public void replace(String key, String resolvedValue) {
         for (CValue value : data) {
-            value.replace(key, resolvedValue);
+            if (value != null) {
+                value.replace(key, resolvedValue);
+            }
         }
     }
 
