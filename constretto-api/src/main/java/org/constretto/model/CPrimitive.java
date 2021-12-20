@@ -37,7 +37,9 @@ public class CPrimitive extends CValue {
 
     @Override
     public void replace(String key, String resolvedValue) {
-        value = value.replaceAll("#\\{" + key + "\\}", Matcher.quoteReplacement(resolvedValue));
+        if (value != null) {
+            value = value.replaceAll("#\\{" + key + "\\}", Matcher.quoteReplacement(resolvedValue));
+        }
     }
 
     @Override

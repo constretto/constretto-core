@@ -12,7 +12,7 @@ public class CObject extends CValue {
 
     public CObject(Map<String, CValue> data) {
 
-        if(data == null) {
+        if (data == null) {
             throw new NullPointerException("The \"data\" argument can not be null");
         }
         this.data = data;
@@ -26,7 +26,9 @@ public class CObject extends CValue {
     public Set<String> referencedKeys() {
         Set<String> referencedKeys = new HashSet<String>();
         for (CValue value : data.values()) {
-            referencedKeys.addAll(value.referencedKeys());
+            if (value != null) {
+                referencedKeys.addAll(value.referencedKeys());
+            }
         }
         return referencedKeys;
     }
@@ -34,7 +36,9 @@ public class CObject extends CValue {
     @Override
     public void replace(String key, String resolvedValue) {
         for (CValue value : data.values()) {
-            value.replace(key, resolvedValue);
+            if (value != null) {
+                value.replace(key, resolvedValue);
+            }
         }
     }
 
@@ -46,9 +50,9 @@ public class CObject extends CValue {
         for (Map.Entry<String, CValue> entry : data.entrySet()) {
             stringBuilder.append(entry.getKey());
             stringBuilder.append(':');
-            stringBuilder.append(entry.getValue().toString());
+            stringBuilder.append(entry.getValue() == null ? "null" : entry.getValue().toString());
             elementsAdded++;
-            if(elementsAdded < length) {
+            if (elementsAdded < length) {
                 stringBuilder.append(", ");
             }
         }
