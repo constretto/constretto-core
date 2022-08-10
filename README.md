@@ -7,7 +7,7 @@ It allows you to “tag” configuration values, so that Constretto could choose
 It also works as a bridge between different configuration formats, and currently Java property files, Ini files, and Java Beans are supported.
 Starting with Constretto 3 all releases requires Java 7 or later   
 
-[![Build Status](https://travis-ci.org/constretto/constretto-core.png)](https://travis-ci.org/constretto/constretto-core)
+[![Java CI with Maven](https://github.com/constretto/constretto-core/actions/workflows/maven.yml/badge.svg)](https://github.com/constretto/constretto-core/actions/workflows/maven.yml)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.constretto/constretto-core/badge.svg)](http://mvnrepository.com/artifact/org.constretto/constretto-core)
 [![Coverage Status](https://img.shields.io/coveralls/constretto/constretto-core.svg)](https://coveralls.io/r/constretto/constretto-core)
 [![Open Source Helpers](https://www.codetriage.com/constretto/constretto-core/badges/users.svg)](https://www.codetriage.com/constretto/constretto-core)
