@@ -56,7 +56,7 @@ public interface ConstrettoConfiguration extends Iterable<Property> {
 
     /**
      * Looks up an expression in the configuration.
-     * <p/>
+     *
      * Will then instead of using the more simple conversion rules defined
      * for the other methods in the API, allow the client to supply
      * it's own converter for the Data.
@@ -84,13 +84,14 @@ public interface ConstrettoConfiguration extends Iterable<Property> {
 
     /**
      * Looks up an expression in the configuration.
-     * <p/>
+     * <p>
      * Uses json array syntax for the value, and will return a list of each element
      * using a converter for the target class.
-     * <p/>
+     * </p>
+     * <p>
      * This method works best on arrays with json primitives, not json objects.
      * If you need more complex array parsing use evaluateWith and create your own custom parser instead.
-     *
+     * </p>
      * @param targetClass the type for each element in the array
      * @param expression  the expression to lookup
      * @param <K>         the target type for conversion
@@ -103,17 +104,18 @@ public interface ConstrettoConfiguration extends Iterable<Property> {
 
     /**
      * Looks up an expression in the configuration.
-     * <p/>
+     * <p>
      * Uses json object syntax for the value, and will return a Map representing the json structure.
-     * using a converter for both the key and value classes.
-     * <p/>
+     * using a converter for both the key and value classes.</p>
+     * <p>
      * This method works best on maps with simple key/value pairs where all the keys and all the values have the same type representation.
-     * If you need more complex object parsing use evaluateWith and create your own custom parser instead.
+     * If you need more complex object parsing use evaluateWith and create your own custom parser instead.</p>
      *
      * @param keyClass   the type for the keys
      * @param valueClass the type for the values
      * @param expression the expression to lookup
      * @param <K>        the target type for conversion
+     * @param <V>        the target type for the values
      * @return list with each element converted.
      * @throws ConstrettoExpressionException if the expression is malformed, or a value not found for the expression
      * @throws ConstrettoConversionException If a conversion error occurs for the resolved value
@@ -211,8 +213,8 @@ public interface ConstrettoConfiguration extends Iterable<Property> {
 
     /**
      * Will instantiate a given class by reflection, and inject with configuration.
-     * <p/>
-     * The class will need to have a default constructor.
+     * <p>
+     * The class will need to have a default constructor.</p>
      *
      * @param configurationClass the class to instantiate
      * @param <T>                the target type

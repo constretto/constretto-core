@@ -32,8 +32,8 @@ public @interface Configuration {
 
     /**
      * The expression of the property to lookup in constretto.
-     * <p/>
-     * It is important that environment prefixes is not used in this attribute
+     * <p>
+     * It is important that environment prefixes is not used in this attribute</p>
      */
     String value() default "";
 
@@ -46,8 +46,8 @@ public @interface Configuration {
     /**
      * States the default value to be injected if no value found associated for the expression specified in the
      * value attribute.
-     * <p/>
-     * When a default value is set, the required attribute will be ignored.
+     * <p>
+     * When a default value is set, the required attribute will be ignored.</p>
      */
     String defaultValue() default "N/A";
 
@@ -59,15 +59,15 @@ public @interface Configuration {
 
     /**
      * Declares whether it is required to find the specified property key.
-     * <p/>
-     * Defaults to <code>true</code>.
+     * <p>
+     * Defaults to <code>true</code>.</p>
      */
     boolean required() default true;
 
     //
     // helper
     //
-    public static class EmptyValueFactory implements ConfigurationDefaultValueFactory<Object> {
+    class EmptyValueFactory implements ConfigurationDefaultValueFactory<Object> {
         public Object getDefaultValue() {
             return null;
         }
