@@ -5,7 +5,7 @@ Constretto is as configuration management framework for Java applications.
 It allows you to “tag” configuration values, so that Constretto could choose the correct value at runtime.
 
 It also works as a bridge between different configuration formats, and currently Java property files, Ini files, and Java Beans are supported.
-Starting with Constretto 3 all releases requires Java 7 or later   
+Starting with Constretto 3 all releases requires Java 8 or later   
 
 [![Java CI with Maven](https://github.com/constretto/constretto-core/actions/workflows/maven.yml/badge.svg)](https://github.com/constretto/constretto-core/actions/workflows/maven.yml)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.constretto/constretto-core/badge.svg)](http://mvnrepository.com/artifact/org.constretto/constretto-core)
