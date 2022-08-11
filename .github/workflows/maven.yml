@@ -31,8 +31,8 @@ jobs:
         restore-keys: ${{ runner.os }}-m2    
     - name: Build with Maven and Java ${{ matrix.java-version }}
       run: mvn -B package  --no-transfer-progress --file pom.xml
-#    - name: Generate JaCoCo report ${{ matrix.java-version }}
-#      run: mvn -B jacoco:report --no-transfer-progress --file pom.xml
+    - name: Generate JaCoCo report ${{ matrix.java-version }}
+      run: mvn -B jacoco:report --no-transfer-progress --file pom.xml
 #    - name: Upload coverage to Codecov
 #      uses: codecov/codecov-action@v1
 #      with:
