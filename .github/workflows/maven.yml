@@ -38,5 +38,5 @@ jobs:
         flags: tests-java-${{ matrix.java-version }}
         verbose: true
     - name: Upload coverage to Coveralls
-      run: mvn -B coveralls:report -DrepoToken=${{ secrets.GITHUB_TOKEN }}
+      run: mvn -B coveralls:report -DrepoToken=${{ secrets.COVERALLS_TOKEN }}
 
