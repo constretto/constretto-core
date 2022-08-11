@@ -304,10 +304,8 @@
                 </executions>
                 <configuration>
                     <links>
-                        <link>https://docs.oracle.com/javase/7/docs/api/</link>
+                        <link>https://docs.oracle.com/javase/8/docs/api/</link>
                         <link>https://docs.oracle.com/javaee/5/api/</link>
-                        <link>https://docs.spring.io/spring/docs/4.1.x/javadoc-api/</link>
-                        <link>https://paranamer.codehaus.org/javadoc/</link>
                     </links>
                     <encoding>UTF-8</encoding>
                 </configuration>
@@ -322,7 +320,7 @@
                 <artifactId>cobertura-maven-plugin</artifactId>
                 <version>2.7</version>
                 <configuration>
-                    <check>trus</check>
+                    <check>true</check>
                     <format>xml</format>
                     <maxmem>256m</maxmem>
                     <aggregate>true</aggregate>
