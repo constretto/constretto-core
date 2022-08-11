@@ -17,9 +17,6 @@
     <inceptionYear>2008</inceptionYear>
     <url>http://constretto.github.io</url>
     <packaging>pom</packaging>
-    <prerequisites>
-        <maven>3.2.1</maven>
-    </prerequisites>
     <description>
         This project aims to help java application developers to manage
         their configuration issues.
