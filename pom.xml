@@ -26,7 +26,6 @@
         <module>constretto-api</module>
         <module>constretto-core</module>
         <module>constretto-test</module>
-        <module>constretto-report</module>
     </modules>
 
     <scm>
