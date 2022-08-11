@@ -28,13 +28,13 @@ jobs:
       with:
         path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-        restore-keys: ${{ runner.os }}-m2    
+        restore-keys: ${{ runner.os }}-m2
     - name: Build with Maven and Java ${{ matrix.java-version }}
-      run: mvn -B package  --no-transfer-progress --file pom.xml
-    - name: Generate JaCoCo report ${{ matrix.java-version }}
-      run: mvn -B jacoco:report --no-transfer-progress --file pom.xml
-#    - name: Upload coverage to Codecov
-#      uses: codecov/codecov-action@v1
-#      with:
-#        flags: tests-java-${{ matrix.java-version }}
-#        verbose: true
+      run: mvn -B package --no-transfer-progress --file pom.xml
+    - name: Run tests with coverage for Java ${{ matrix.java-version }}
+      run: mvn -B cobertura:cobertura --no-transfer-progress --file pom.xml
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        flags: tests-java-${{ matrix.java-version }}
+        verbose: true
