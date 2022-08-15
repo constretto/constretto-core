@@ -8,8 +8,8 @@ It also works as a bridge between different configuration formats, and currently
 Starting with Constretto 3 all releases requires Java 8 or later   
 
 [![Java CI with Maven](https://github.com/constretto/constretto-core/actions/workflows/maven.yml/badge.svg)](https://github.com/constretto/constretto-core/actions/workflows/maven.yml)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.constretto/constretto-core/badge.svg)](http://mvnrepository.com/artifact/org.constretto/constretto-core)
-[![Coverage Status](https://img.shields.io/coveralls/constretto/constretto-core.svg)](https://coveralls.io/r/constretto/constretto-core)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.constretto/constretto-core/badge.svg)](https://mvnrepository.com/artifact/org.constretto/constretto-core)
+[![Coverage](https://codecov.io/gh/constretto/constretto-core/branch/master/graph/badge.svg?token=BQ9RdTTfL6)](https://codecov.io/gh/constretto/constretto-core)
 [![Open Source Helpers](https://www.codetriage.com/constretto/constretto-core/badges/users.svg)](https://www.codetriage.com/constretto/constretto-core)
 
 ## How to Install?
