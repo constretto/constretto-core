@@ -25,7 +25,7 @@ public class ConstrettoConfigurationTest {
         assertNotNull(configuration);
     }
 
-    @Test(expected = ConstrettoExpressionException.class) //TODO perhaps a more specific expeption
+    @Test(expected = ConstrettoExpressionException.class) //TODO perhaps a more specific exception
     public void shouldThrowExceptionIfTryingToMapWithoutNeededAllTagsProvided() throws Exception {
         new ConstrettoBuilder(false)
                 .createPropertiesStore()

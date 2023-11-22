@@ -415,7 +415,7 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
                 try {
                     if (field.isAnnotationPresent(Configuration.class)) {
                         Configuration configurationAnnotation = field.getAnnotation(Configuration.class);
-                        String expression = "".equals(configurationAnnotation.value()) ? field.getName() : configurationAnnotation.value();
+                        String expression = getExpression(objectToConfigure, field, configurationAnnotation);
                         field.setAccessible(true);
                         Class<?> fieldType = field.getType();
                         if (hasValue(expression)) {
@@ -452,6 +452,29 @@ public class DefaultConstrettoConfiguration implements ConstrettoConfiguration {
                 }
             }
         } while ((objectToConfigureClass = objectToConfigureClass.getSuperclass()) != null);
+    }
+
+    /**
+     * If @Configuration() has value, this is used;
+     * if field is non-empty String, its value is used;
+     * otherwise, field name is used.
+     *
+     * @return Property key
+     */
+    private static <T> String getExpression(T objectToConfigure, Field field, Configuration configurationAnnotation) {
+        String expression = configurationAnnotation.value();
+        if ("".equals(configurationAnnotation.value())) {
+            expression = field.getName();
+            if (String.class.equals(field.getType())) {
+                try {
+                    String value = (String) field.get(objectToConfigure);
+                    if (value != null && value.length() > 0) {
+                        expression = value;
+                    }
+                } catch (IllegalAccessException  ile) { }
+            }
+        }
+        return expression;
     }
 
     private boolean hasAnnotationDefaults(Configuration configurationAnnotation) {
